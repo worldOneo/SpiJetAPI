@@ -20,6 +20,9 @@ repositories {
 }
 
 dependencies {
+    //Particle legacy sup
+    compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
+
     compileOnly "org.spigotmc:spigot-api:${MCVERSION}"
     shadow "com.zaxxer:HikariCP:3.4.5"
     shadow "org.slf4j:slf4j-nop:1.7.30"
@@ -33,7 +36,7 @@ processResources {
 }
 
 shadowJar {
-    archiveName ("Shadowed-${rootProject.name}-${VERSION}.jar")
+    archiveName("Shadowed-${rootProject.name}-${VERSION}.jar")
     configurations = [project.configurations.shadow]
     relocate 'com.zaxxer.hikari', 'de.worldOneo.spiJetAPI.hikari'
 }

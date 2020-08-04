@@ -24,21 +24,44 @@ public class SQLQueryBuilder {
     public CachedRowSet executeUpdate(HikariDataSource hikariDataSource) {
         CachedRowSet cachedRowSet = null;
         try (Connection connection = hikariDataSource.getConnection()) {
-
-            Statement statement = connection.createStatement();
-            statement.executeUpdate(String.format("USE %s;", database));
+            selectDB(connection);
 
             PreparedStatement preparedStatement = connection.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS);
             for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
             }
+            preparedStatement.executeUpdate();
+
             cachedRowSet = new CachedRowSetImpl();
             cachedRowSet.populate(preparedStatement.getGeneratedKeys());
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
+        return cachedRowSet;
+    }
+
+    public CachedRowSet executeQuery(HikariDataSource hikariDataSource) {
+        CachedRowSet cachedRowSet = null;
+        try (Connection connection = hikariDataSource.getConnection()) {
+            selectDB(connection);
+
+            PreparedStatement preparedStatement = connection.prepareStatement(query.toString());
+            for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
+                preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
+            }
+
+            cachedRowSet = new CachedRowSetImpl();
+            cachedRowSet.populate(preparedStatement.executeQuery());
             preparedStatement.executeUpdate();
         } catch (SQLException throwables) {
             throwables.printStackTrace();
         }
         return cachedRowSet;
+    }
+
+    private void selectDB(Connection connection) throws SQLException {
+        Statement statement = connection.createStatement();
+        statement.executeUpdate(String.format("USE %s;", database));
     }
 
     public SQLQueryBuilder setParameter(int key, Object value) {
