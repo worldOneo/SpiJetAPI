@@ -1,6 +1,7 @@
 package de.worldOneo.spiJetAPI.particles;
 
 import org.bukkit.Location;
+import org.bukkit.World;
 import org.bukkit.entity.Player;
 
 import java.util.Collection;
@@ -76,6 +77,30 @@ public abstract class ParticleWrapper implements IParticleWrapper {
                     location.getY() + dy * c,
                     location.getZ() + dz * c);
             createParticle(particle, newLocation, 1, players);
+        }
+    }
+
+
+    /**
+     * Draw a line from x,y,z to x1,x2,x3 in world world
+     * <p>
+     * O(p*Amount)
+     *
+     * @param x,y,z the first coordinate (From)
+     * @param x1,y1,z2 the second coordinate (To)
+     * @param world the world to create the particles in
+     */
+    @Override
+    public void createLine(Object particle, World world, int amount, double x, double y, double z, double x1, double y1, double z1, Collection<? extends Player> players) {
+        Random random = new Random();
+        double factor, x2, y2, z2;
+        for (int i = 0; i < amount; i++) {
+            factor = random.nextDouble();
+            x2 = factor * (x1 - x) + x;
+            y2 = factor * (y1 - y) + y;
+            z2 = factor * (z1 - z) + z;
+            Location location = new Location(world, x2, y2, z2);
+            createParticle(particle, location, 1, players);
         }
     }
 }
