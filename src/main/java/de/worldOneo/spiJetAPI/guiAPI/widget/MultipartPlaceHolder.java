@@ -1,8 +1,8 @@
 package de.worldOneo.spiJetAPI.guiAPI.widget;
 
+import de.worldOneo.spiJetAPI.guiAPI.widgets.AbstractMultipartWidget;
 import de.worldOneo.spiJetAPI.utils.Pair;
 import de.worldOneo.spiJetAPI.utils.SpiJetUtils;
-import de.worldOneo.spiJetAPI.guiAPI.widgets.AbstractMultipartWidget;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;

@@ -4,7 +4,7 @@ public class ParticleUtils {
     private static final ParticleUtils instance = new ParticleUtils();
     private final IParticleWrapper particleWrapper;
 
-    private ParticleUtils(){
+    private ParticleUtils() {
         IParticleWrapper tempParticleWrapper;
         try {
             Class.forName("org.bukkit.Particle");
@@ -15,7 +15,7 @@ public class ParticleUtils {
         particleWrapper = tempParticleWrapper;
     }
 
-    public static IParticleWrapper getWrapper(){
+    public static IParticleWrapper getWrapper() {
         return instance.particleWrapper;
     }
 }

@@ -28,6 +28,6 @@ public class SQLManager implements SQLExecutor<SQLQueryBuilder> {
 
     @Override
     public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) {
-        return sqlQueryBuilder.executeUpdate(hikariDataSource);
+        return sqlQueryBuilder.executeQuery(hikariDataSource);
     }
 }

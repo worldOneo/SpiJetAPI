@@ -2,6 +2,7 @@ package de.worldOneo.spiJetAPI.sql;
 
 import com.sun.rowset.CachedRowSetImpl;
 import com.zaxxer.hikari.HikariDataSource;
+import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.Connection;
@@ -11,7 +12,7 @@ import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
 
-public class SQLQueryBuilder {
+public class SQLQueryBuilder implements SpiJetBuilder<String> {
     private final StringBuffer query;
     private final String database;
     private final Map<Integer, Object> parameterMap = new HashMap<>();
@@ -69,4 +70,13 @@ public class SQLQueryBuilder {
         return this;
     }
 
+    /**
+     * I believe im to lazy to do.
+     *
+     * @return null
+     */
+    @Override
+    public String build() {
+        return query.toString();
+    }
 }
