@@ -2,10 +2,10 @@ package de.worldOneo.spiJetAPI.particles;
 
 public class ParticleUtils {
     private static final ParticleUtils instance = new ParticleUtils();
-    private final IParticleWrapper particleWrapper;
+    private final ParticleWrapper particleWrapper;
 
     private ParticleUtils() {
-        IParticleWrapper tempParticleWrapper;
+        ParticleWrapper tempParticleWrapper;
         try {
             Class.forName("org.bukkit.Particle");
             tempParticleWrapper = new ParticleNew();
@@ -15,7 +15,7 @@ public class ParticleUtils {
         particleWrapper = tempParticleWrapper;
     }
 
-    public static IParticleWrapper getWrapper() {
+    public static ParticleWrapper getWrapper() {
         return instance.particleWrapper;
     }
 }

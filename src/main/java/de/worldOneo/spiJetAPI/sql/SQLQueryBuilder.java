@@ -11,8 +11,9 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.Future;
 
-public class SQLQueryBuilder implements SpiJetBuilder<String> {
+public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> implements SpiJetBuilder<String>, SQLExecutor<HikariDataSource> {
     private final StringBuffer query;
     private final String database;
     private final Map<Integer, Object> parameterMap = new HashMap<>();
@@ -22,6 +23,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<String> {
         this.database = database;
     }
 
+    @Override
     public CachedRowSet executeUpdate(HikariDataSource hikariDataSource) {
         CachedRowSet cachedRowSet = null;
         try (Connection connection = hikariDataSource.getConnection()) {
@@ -41,6 +43,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<String> {
         return cachedRowSet;
     }
 
+    @Override
     public CachedRowSet executeQuery(HikariDataSource hikariDataSource) {
         CachedRowSet cachedRowSet = null;
         try (Connection connection = hikariDataSource.getConnection()) {
@@ -78,5 +81,15 @@ public class SQLQueryBuilder implements SpiJetBuilder<String> {
     @Override
     public String build() {
         return query.toString();
+    }
+
+    @Override
+    public Future<CachedRowSet> executeUpdateAsync(HikariDataSource arg) {
+        return submit(() -> executeUpdate(arg));
+    }
+
+    @Override
+    public Future<CachedRowSet> executeQueryAsync(HikariDataSource arg) {
+        return submit(() -> executeQuery(arg));
     }
 }

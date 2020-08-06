@@ -5,8 +5,9 @@ import com.zaxxer.hikari.HikariDataSource;
 import lombok.NonNull;
 
 import javax.sql.rowset.CachedRowSet;
+import java.util.concurrent.Future;
 
-public class SQLManager implements SQLExecutor<SQLQueryBuilder> {
+public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements SQLExecutor<SQLQueryBuilder> {
     private final HikariDataSource hikariDataSource;
 
     public SQLManager(@NonNull HikariDataSource hikariDataSource) {
@@ -29,5 +30,15 @@ public class SQLManager implements SQLExecutor<SQLQueryBuilder> {
     @Override
     public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) {
         return sqlQueryBuilder.executeQuery(hikariDataSource);
+    }
+
+    @Override
+    public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
+        return submit(() -> executeUpdate(arg));
+    }
+
+    @Override
+    public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
+        return submit(() -> executeUpdate(arg));
     }
 }

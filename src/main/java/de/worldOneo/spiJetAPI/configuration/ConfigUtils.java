@@ -48,6 +48,15 @@ public class ConfigUtils {
         return null;
     }
 
+    public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) {
+        if (!file.exists()) {
+            file.getParentFile().mkdirs();
+            saveJson(file, defaultData);
+        }
+        return loadJson(file, classOfT);
+    }
+
+
     public static boolean saveJson(File file, Object dataObject) {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
