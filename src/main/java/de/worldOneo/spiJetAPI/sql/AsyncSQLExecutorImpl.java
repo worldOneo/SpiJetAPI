@@ -1,15 +1,13 @@
 package de.worldOneo.spiJetAPI.sql;
 
+import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
+
 import javax.sql.rowset.CachedRowSet;
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.Future;
 
-public abstract class AsyncSQLExecutorImpl<T> implements AsyncSQLExecutor<T> {
-    private static ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
-    private static ExecutorService getExecutorService() {
-        return executorService;
-    }
-
+public abstract class AsyncSQLExecutorImpl<T> extends AsyncExecutor implements AsyncSQLExecutor<T> {
     public Future<CachedRowSet> submit(Callable<CachedRowSet> cachedRowSetCallable) {
-        return executorService.submit(cachedRowSetCallable);
+        return getExecutorService().submit(cachedRowSetCallable);
     }
 }

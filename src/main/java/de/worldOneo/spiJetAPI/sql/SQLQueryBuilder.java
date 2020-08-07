@@ -53,7 +53,6 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
             for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
             }
-
             cachedRowSet = new CachedRowSetImpl();
             cachedRowSet.populate(preparedStatement.executeQuery());
             preparedStatement.executeUpdate();
