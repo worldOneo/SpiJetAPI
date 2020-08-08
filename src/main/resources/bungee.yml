@@ -1,0 +1,3 @@
+name: SpiJetAPI
+main: de.worldOneo.spiJetAPI.BungeeSpiJetAPI
+version: ${VERSION}

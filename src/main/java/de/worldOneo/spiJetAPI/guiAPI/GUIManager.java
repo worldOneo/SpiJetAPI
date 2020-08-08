@@ -1,5 +1,6 @@
 package de.worldOneo.spiJetAPI.guiAPI;
 
+import de.worldOneo.spiJetAPI.SpiJetAPI;
 import de.worldOneo.spiJetAPI.guiAPI.gui.IGUI;
 import de.worldOneo.spiJetAPI.utils.Pair;
 import de.worldOneo.spiJetAPI.utils.SpiJetUtils;
@@ -16,7 +17,8 @@ public class GUIManager {
     private final HashMap<Player, Pair<String, IGUI>> playerIGUIMap = new HashMap<>();
 
     private GUIManager() {
-
+        SpiJetAPI spiJetAPI = SpiJetAPI.getInstance();
+        spiJetAPI.getServer().getPluginManager().registerEvents(new OnInventoryClickListener(), spiJetAPI);
     }
 
     public static GUIManager getInstance() {
