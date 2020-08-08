@@ -75,6 +75,6 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
 
     @Override
     public ItemStack build() {
-        return itemStack;
+        return itemStack.clone();
     }
 }
