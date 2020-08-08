@@ -2,14 +2,13 @@ package de.worldOneo.spiJetAPI.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
-import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
 import lombok.NonNull;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
 import java.util.concurrent.Future;
 
-public class SQLManager extends AsyncExecutor implements SQLExecutor<SQLQueryBuilder>, AsyncSQLExecutor<SQLQueryBuilder> {
+public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements SQLExecutor<SQLQueryBuilder> {
     private final HikariDataSource hikariDataSource;
 
     public SQLManager(@NonNull HikariDataSource hikariDataSource) {
@@ -36,11 +35,15 @@ public class SQLManager extends AsyncExecutor implements SQLExecutor<SQLQueryBui
 
     @Override
     public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
-        return getExecutorService().submit(() -> executeUpdate(arg));
+        return submit(() -> executeUpdate(arg));
     }
 
     @Override
     public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
-        return getExecutorService().submit(() -> executeUpdate(arg));
+        return submit(() -> executeUpdate(arg));
+    }
+
+    public StringSQLManager toStringSQLManager() {
+        return new StringSQLManager(hikariDataSource);
     }
 }
