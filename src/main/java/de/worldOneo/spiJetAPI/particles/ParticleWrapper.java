@@ -86,9 +86,9 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      * <p>
      * O(p*Amount)
      *
-     * @param x,y,z the first coordinate (From)
+     * @param x,y,z    the first coordinate (From)
      * @param x1,y1,z2 the second coordinate (To)
-     * @param world the world to create the particles in
+     * @param world    the world to create the particles in
      */
     @Override
     public void createLine(Object particle, World world, int amount, double x, double y, double z, double x1, double y1, double z1, Collection<? extends Player> players) {

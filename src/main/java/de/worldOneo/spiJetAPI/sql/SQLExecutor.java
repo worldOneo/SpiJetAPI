@@ -1,9 +1,10 @@
 package de.worldOneo.spiJetAPI.sql;
 
 import javax.sql.rowset.CachedRowSet;
+import java.sql.SQLException;
 
 public interface SQLExecutor<T> {
-    CachedRowSet executeUpdate(T arg);
+    CachedRowSet executeUpdate(T arg) throws SQLException;
 
-    CachedRowSet executeQuery(T arg);
+    CachedRowSet executeQuery(T arg) throws SQLException;
 }

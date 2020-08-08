@@ -1,12 +1,14 @@
 package de.worldOneo.spiJetAPI.sql;
 
 import com.google.gson.Gson;
+import com.zaxxer.hikari.HikariDataSource;
 import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
 import lombok.Getter;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
 import java.util.UUID;
+import java.util.concurrent.Future;
 
 public class JsonSQLStorage extends AsyncExecutor {
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
@@ -30,39 +32,50 @@ public class JsonSQLStorage extends AsyncExecutor {
         }
     }
 
-    public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName, String databaseName) {
+    public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName, String databaseName) throws SQLException {
         this.sqlExecutor = sqlExecutor;
         this.tableName = tableName;
         this.databaseName = databaseName;
         setup();
     }
 
-    private void setup() {
+    public JsonSQLStorage(DataSourceBuilder dataSourceBuilder, String tableName, String databaseName) throws SQLException {
+        this(new SQLManager(dataSourceBuilder), tableName, databaseName);
+    }
+
+    public JsonSQLStorage(HikariDataSource hikariDataSource, String tableName, String databaseName) throws SQLException {
+        this(new SQLManager(hikariDataSource), tableName, databaseName);
+    }
+
+    private void setup() throws SQLException {
         String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, formattedCreationString);
         sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
-    public <T> T getData(UUID uuid, Class<T> classOfT) {
+    public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
         String formattedString = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString());
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, formattedString);
         CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
         if (cachedRowSet == null) {
             return null;
         }
-        try {
-            return GSON.fromJson(cachedRowSet.getString("json"), classOfT);
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
-        }
-        return null;
+        return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
     }
 
-    public boolean setData(UUID uuid, Object dataObject) {
+    public boolean setData(UUID uuid, Object dataObject) throws SQLException {
         String data = GSON.toJson(dataObject);
         String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString(), data);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, format);
         CachedRowSet cachedRowSet = sqlExecutor.executeUpdate(sqlQueryBuilder);
         return cachedRowSet != null;
+    }
+
+    public Future<Boolean> setDataAsync(UUID uuid, Object dataObject) {
+        return getExecutorService().submit(() -> setData(uuid, dataObject));
+    }
+
+    public <T> Future<T> getDataAsync(UUID uuid, Class<T> classOfT) {
+        return getExecutorService().submit(() -> getData(uuid, classOfT));
     }
 }

@@ -24,8 +24,8 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
     }
 
     @Override
-    public CachedRowSet executeUpdate(HikariDataSource hikariDataSource) {
-        CachedRowSet cachedRowSet = null;
+    public CachedRowSet executeUpdate(HikariDataSource hikariDataSource) throws SQLException {
+        CachedRowSet cachedRowSet;
         try (Connection connection = hikariDataSource.getConnection()) {
             selectDB(connection);
 
@@ -37,15 +37,13 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
 
             cachedRowSet = new CachedRowSetImpl();
             cachedRowSet.populate(preparedStatement.getGeneratedKeys());
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
         return cachedRowSet;
     }
 
     @Override
-    public CachedRowSet executeQuery(HikariDataSource hikariDataSource) {
-        CachedRowSet cachedRowSet = null;
+    public CachedRowSet executeQuery(HikariDataSource hikariDataSource) throws SQLException {
+        CachedRowSet cachedRowSet;
         try (Connection connection = hikariDataSource.getConnection()) {
             selectDB(connection);
 
@@ -56,8 +54,6 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
             cachedRowSet = new CachedRowSetImpl();
             cachedRowSet.populate(preparedStatement.executeQuery());
             preparedStatement.executeUpdate();
-        } catch (SQLException throwables) {
-            throwables.printStackTrace();
         }
         return cachedRowSet;
     }

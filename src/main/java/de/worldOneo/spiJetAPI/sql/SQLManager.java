@@ -2,12 +2,14 @@ package de.worldOneo.spiJetAPI.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
 import lombok.NonNull;
 
 import javax.sql.rowset.CachedRowSet;
+import java.sql.SQLException;
 import java.util.concurrent.Future;
 
-public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements SQLExecutor<SQLQueryBuilder> {
+public class SQLManager extends AsyncExecutor implements SQLExecutor<SQLQueryBuilder>, AsyncSQLExecutor<SQLQueryBuilder> {
     private final HikariDataSource hikariDataSource;
 
     public SQLManager(@NonNull HikariDataSource hikariDataSource) {
@@ -23,22 +25,22 @@ public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements
     }
 
     @Override
-    public CachedRowSet executeUpdate(SQLQueryBuilder sqlQueryBuilder) {
+    public CachedRowSet executeUpdate(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
         return sqlQueryBuilder.executeUpdate(hikariDataSource);
     }
 
     @Override
-    public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) {
+    public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
         return sqlQueryBuilder.executeQuery(hikariDataSource);
     }
 
     @Override
     public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
+        return getExecutorService().submit(() -> executeUpdate(arg));
     }
 
     @Override
     public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
+        return getExecutorService().submit(() -> executeUpdate(arg));
     }
 }
