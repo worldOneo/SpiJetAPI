@@ -13,7 +13,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.concurrent.Future;
 
-public class StringSQLManager extends AsyncSQLExecutorImpl<String> implements SQLExecutor<String> {
+public class StringSQLManager extends SQLManager<String> {
     private final HikariDataSource hikariDataSource;
 
     public StringSQLManager(@NonNull HikariDataSource hikariDataSource) {
@@ -59,7 +59,7 @@ public class StringSQLManager extends AsyncSQLExecutorImpl<String> implements SQ
         }
     }
 
-    public SQLManager toSqlManager() {
-        return new SQLManager(hikariDataSource);
+    public QuerySQLManager toSqlManager() {
+        return new QuerySQLManager(hikariDataSource);
     }
 }

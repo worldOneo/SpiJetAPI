@@ -3,48 +3,29 @@ package de.worldOneo.spiJetAPI.sql;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
-import lombok.NonNull;
 
-import javax.sql.rowset.CachedRowSet;
-import java.sql.SQLException;
-import java.util.concurrent.Future;
-
-public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements SQLExecutor<SQLQueryBuilder> {
-    private final HikariDataSource hikariDataSource;
-
-    public SQLManager(@NonNull HikariDataSource hikariDataSource) {
-        this.hikariDataSource = hikariDataSource;
-    }
-
-    public SQLManager(@NonNull HikariConfig hikariConfig) {
-        this(new HikariDataSource(hikariConfig));
-    }
-
-    public SQLManager(@NonNull SpiJetBuilder<HikariDataSource> dataSourceBuilder) {
-        this(dataSourceBuilder.build());
-    }
-
-    @Override
-    public CachedRowSet executeUpdate(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
-        return sqlQueryBuilder.executeUpdate(hikariDataSource);
-    }
-
-    @Override
-    public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
-        return sqlQueryBuilder.executeQuery(hikariDataSource);
-    }
-
-    @Override
-    public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
-    }
-
-    @Override
-    public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
-    }
-
-    public StringSQLManager toStringSQLManager() {
+public abstract class SQLManager<T> extends AsyncSQLExecutorImpl<T> implements SQLExecutor<T> {
+    public static SQLManager<String> createStringManager(HikariDataSource hikariDataSource) {
         return new StringSQLManager(hikariDataSource);
+    }
+
+    public static SQLManager<String> createStringManager(SpiJetBuilder<HikariDataSource> hikariDataSourceBuilder) {
+        return createStringManager(hikariDataSourceBuilder.build());
+    }
+
+    public static SQLManager<SQLQueryBuilder> createQueryManager(HikariDataSource hikariDataSource) {
+        return new QuerySQLManager(hikariDataSource);
+    }
+
+    public static SQLManager<SQLQueryBuilder> createQueryManager(SpiJetBuilder<HikariDataSource> hikariDataSourceBuilder) {
+        return createQueryManager(hikariDataSourceBuilder.build());
+    }
+
+    public static SQLManager<SQLQueryBuilder> createQueryManager(HikariConfig hikariConfig) {
+        return new QuerySQLManager(hikariConfig);
+    }
+
+    public static SQLManager<String> createStringManager(HikariConfig hikariConfig) {
+        return new StringSQLManager(hikariConfig);
     }
 }

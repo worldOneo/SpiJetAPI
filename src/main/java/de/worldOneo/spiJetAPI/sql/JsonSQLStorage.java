@@ -3,6 +3,7 @@ package de.worldOneo.spiJetAPI.sql;
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
+import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
 import lombok.Getter;
 
 import javax.sql.rowset.CachedRowSet;
@@ -39,12 +40,12 @@ public class JsonSQLStorage extends AsyncExecutor {
         setup();
     }
 
-    public JsonSQLStorage(DataSourceBuilder dataSourceBuilder, String tableName, String databaseName) throws SQLException {
-        this(new SQLManager(dataSourceBuilder), tableName, databaseName);
+    public JsonSQLStorage(SpiJetBuilder<HikariDataSource> dataSourceBuilder, String tableName, String databaseName) throws SQLException {
+        this(new QuerySQLManager(dataSourceBuilder), tableName, databaseName);
     }
 
     public JsonSQLStorage(HikariDataSource hikariDataSource, String tableName, String databaseName) throws SQLException {
-        this(new SQLManager(hikariDataSource), tableName, databaseName);
+        this(new QuerySQLManager(hikariDataSource), tableName, databaseName);
     }
 
     private void setup() throws SQLException {
