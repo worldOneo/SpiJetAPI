@@ -30,7 +30,7 @@ Particles are supported in multiple versions where the particle is either `Parti
 player.setVelocity(player.getVelocity().addVelocity(new Velocity(0,2,0)))
 
 //Gets you the right wrapper for your version
-IParticleWrapper particleWrapper = ParticleUtils.getWrapper();
+ParticleWrapper particleWrapper = ParticleUtils.getWrapper();
 
 //Create 100 particles at the location of the player in the shape of a circle with the radius of 2 for all players
 particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 0, 2, Bukkit.getOnlinePlayers());
@@ -49,8 +49,8 @@ File jsonConfig = new File(getDataFolder(), "config.json");
 //Get yml config write default if not exist
 YamlConfiguration yamlConfiguration = ConfigUtils.load(ymlConfig, getResource("config.yml"));
 
-//Get json config (Can be any kind of data class)
-MyOptionClass myOptionClass = ConfigUtils.loadJson(jsonConfig, MyOptionClass.class);
+//Get json config write default if not exist (Can be any kind of data class) 
+MyOptionClass myOptionClass = ConfigUtils.loadJson(jsonConfig, MyOptionClass.class, new MyOptionClass());
 
 //Save data
 //Save yml data
