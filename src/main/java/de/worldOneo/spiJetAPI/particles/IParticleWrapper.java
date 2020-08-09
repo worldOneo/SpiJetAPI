@@ -18,4 +18,6 @@ public interface IParticleWrapper {
 
     void createLine(Object particle, World world, int amount, double x, double y, double z,
                     double x1, double y1, double z1, Collection<? extends Player> players);
+
+    void createCircle(Object particle, Location location, int amount, double radius, Collection<? extends Player> players);
 }

@@ -8,6 +8,8 @@ import java.util.Collection;
 import java.util.Random;
 
 public abstract class ParticleWrapper implements IParticleWrapper {
+    private static final double TWO_PI = 2 * Math.PI;
+
     /**
      * Create a field of particles around the location.
      * <p>
@@ -102,5 +104,28 @@ public abstract class ParticleWrapper implements IParticleWrapper {
             Location location = new Location(world, x2, y2, z2);
             createParticle(particle, location, 1, players);
         }
+    }
+
+    /**
+     * Create a circle out of particles.
+     *
+     * @param particle The Particle/Effect to create
+     * @param location The location of the circle
+     * @param amount   The total amount of particles
+     * @param radius   The radius of the circle
+     * @param players  The players to send the particle
+     */
+    @Override
+    public void createCircle(Object particle, Location location, int amount, double radius, Collection<? extends Player> players) {
+        Random random = new Random();
+        double r, dx, dz;
+        for (int i = 0; i < amount; i++) {
+            r = random.nextDouble() * TWO_PI;
+            dx = Math.cos(r) * radius;
+            dz = Math.sin(r) * radius;
+            Location newLocation = new Location(location.getWorld(), location.getX() + dx, location.getY(), location.getZ() + dz);
+            createParticle(particle, newLocation, 1, players);
+        }
+
     }
 }

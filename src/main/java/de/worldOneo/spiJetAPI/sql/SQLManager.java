@@ -2,6 +2,7 @@ package de.worldOneo.spiJetAPI.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
 import lombok.NonNull;
 
 import javax.sql.rowset.CachedRowSet;
@@ -19,7 +20,7 @@ public class SQLManager extends AsyncSQLExecutorImpl<SQLQueryBuilder> implements
         this(new HikariDataSource(hikariConfig));
     }
 
-    public SQLManager(@NonNull DataSourceBuilder dataSourceBuilder) {
+    public SQLManager(@NonNull SpiJetBuilder<HikariDataSource> dataSourceBuilder) {
         this(dataSourceBuilder.build());
     }
 
