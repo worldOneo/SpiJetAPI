@@ -2,6 +2,7 @@ package de.worldOneo.spiJetAPI.utils;
 
 import org.bukkit.Material;
 import org.bukkit.enchantments.Enchantment;
+import org.bukkit.inventory.ItemFlag;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
 
@@ -54,13 +55,18 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
 
     }
 
+    public ItemStackBuilder setFlags(ItemFlag... itemFlags) {
+        changeItemMeta(itemMeta -> itemMeta.addItemFlags(itemFlags));
+        return this;
+    }
+
     public ItemStackBuilder addLore(List<String> lore) {
         changeItemMeta(itemMeta -> {
-            if(itemMeta.hasLore() && itemMeta.getLore() != null){
+            if (itemMeta.hasLore() && itemMeta.getLore() != null) {
                 List<String> currentLores = itemMeta.getLore();
                 currentLores.addAll(lore);
                 itemMeta.setLore(currentLores);
-            }else{
+            } else {
                 itemMeta.setLore(lore);
             }
         });
