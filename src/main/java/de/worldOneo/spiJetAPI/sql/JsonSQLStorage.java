@@ -2,7 +2,7 @@ package de.worldOneo.spiJetAPI.sql;
 
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
-import de.worldOneo.spiJetAPI.utils.AsyncExecutor;
+import de.worldOneo.spiJetAPI.utils.ScalingAsyncExecutor;
 import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
 import lombok.Getter;
 
@@ -11,7 +11,7 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-public class JsonSQLStorage extends AsyncExecutor {
+public class JsonSQLStorage extends ScalingAsyncExecutor {
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
     private final String databaseName;
@@ -73,10 +73,10 @@ public class JsonSQLStorage extends AsyncExecutor {
     }
 
     public Future<Boolean> setDataAsync(UUID uuid, Object dataObject) {
-        return getThreadPoolExecutor().submit(() -> setData(uuid, dataObject));
+        return submit(() -> setData(uuid, dataObject));
     }
 
     public <T> Future<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return getThreadPoolExecutor().submit(() -> getData(uuid, classOfT));
+        return submit(() -> getData(uuid, classOfT));
     }
 }
