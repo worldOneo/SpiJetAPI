@@ -1,12 +1,20 @@
 package de.worldOneo.spiJetAPI.utils;
 
-import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
+import java.util.concurrent.ThreadPoolExecutor;
 
 public class AsyncExecutor {
-    private static final ExecutorService executorService = Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    private final ThreadPoolExecutor threadPoolExecutor;
 
-    protected static ExecutorService getExecutorService() {
-        return executorService;
+    public AsyncExecutor() {
+        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+    }
+
+    public AsyncExecutor(int corePoolSize) {
+        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(corePoolSize);
+    }
+
+    protected ThreadPoolExecutor getThreadPoolExecutor() {
+        return threadPoolExecutor;
     }
 }

@@ -73,10 +73,10 @@ public class JsonSQLStorage extends AsyncExecutor {
     }
 
     public Future<Boolean> setDataAsync(UUID uuid, Object dataObject) {
-        return getExecutorService().submit(() -> setData(uuid, dataObject));
+        return getThreadPoolExecutor().submit(() -> setData(uuid, dataObject));
     }
 
     public <T> Future<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return getExecutorService().submit(() -> getData(uuid, classOfT));
+        return getThreadPoolExecutor().submit(() -> getData(uuid, classOfT));
     }
 }
