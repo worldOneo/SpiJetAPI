@@ -55,13 +55,20 @@ public class JsonSQLStorage extends ScalingAsyncExecutor {
     }
 
     public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
-        String formattedString = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString());
+        String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName, uuid.toString());
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, formattedString);
         CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
         if (cachedRowSet == null) {
             return null;
         }
-        return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
+        if (!cachedRowSet.next()) {
+            return null;
+        }
+        try {
+            return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
+        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
+            return null;
+        }
     }
 
     public boolean setData(UUID uuid, Object dataObject) throws SQLException {

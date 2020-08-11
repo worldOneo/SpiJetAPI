@@ -53,7 +53,6 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
             }
             cachedRowSet = new CachedRowSetImpl();
             cachedRowSet.populate(preparedStatement.executeQuery());
-            preparedStatement.executeUpdate();
         }
         return cachedRowSet;
     }
