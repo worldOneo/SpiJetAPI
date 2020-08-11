@@ -14,7 +14,7 @@ public abstract class ScalingAsyncExecutor extends AsyncExecutor {
     }
 
     public <T> Future<T> submit(Callable<T> cachedRowSetCallable) {
-        if (getThreadPoolExecutor().getQueue().size() >= getThreadPoolExecutor().getMaximumPoolSize()) {
+        if (getThreadPoolExecutor().getActiveCount()+getThreadPoolExecutor().getQueue().size() >= getThreadPoolExecutor().getMaximumPoolSize()) {
             getThreadPoolExecutor().setMaximumPoolSize(getThreadPoolExecutor().getMaximumPoolSize() + 1);
         }
         return getThreadPoolExecutor().submit(cachedRowSetCallable);
