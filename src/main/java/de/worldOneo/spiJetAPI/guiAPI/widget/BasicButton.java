@@ -27,7 +27,7 @@ public class BasicButton extends AbstractButton {
      *
      * @param inventoryClickEventConsumer the function which is called when the Button is clicked
      */
-    BasicButton(Consumer<InventoryClickEvent> inventoryClickEventConsumer) {
+    public BasicButton(Consumer<InventoryClickEvent> inventoryClickEventConsumer) {
         super(inventoryClickEventConsumer);
     }
 
