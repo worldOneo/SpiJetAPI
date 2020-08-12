@@ -1,5 +1,5 @@
 plugins {
-    id 'java'
+    id 'java-library'
     id 'io.freefair.lombok' version "5.1.1"
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
@@ -41,6 +41,9 @@ processResources {
 }
 
 shadowJar {
+    from('licenses') {
+        include '*'
+    }
     archiveName("Shadowed-${rootProject.name}-${VERSION}.jar")
     configurations = [project.configurations.shadow]
     relocate 'com.zaxxer.hikari', 'de.worldOneo.spiJetAPI.hikari'
