@@ -1,6 +1,5 @@
 package de.worldOneo.spiJetAPI.sql;
 
-import com.sun.rowset.CachedRowSetImpl;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
@@ -43,7 +42,7 @@ public class StringSQLManager extends SQLManager<String> {
         try (Connection connection = hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.executeUpdate();
-            CachedRowSetImpl cachedRowSet = new CachedRowSetImpl();
+            CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
             cachedRowSet.populate(preparedStatement.getResultSet());
             return cachedRowSet;
         }
@@ -53,7 +52,7 @@ public class StringSQLManager extends SQLManager<String> {
     public CachedRowSet executeQuery(String arg) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg);
-            CachedRowSetImpl cachedRowSet = new CachedRowSetImpl();
+            CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
             cachedRowSet.populate(preparedStatement.executeQuery());
             return cachedRowSet;
         }

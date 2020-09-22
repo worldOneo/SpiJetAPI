@@ -1,6 +1,5 @@
 package de.worldOneo.spiJetAPI.sql;
 
-import com.sun.rowset.CachedRowSetImpl;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldOneo.spiJetAPI.utils.SpiJetBuilder;
 
@@ -25,7 +24,6 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
 
     @Override
     public CachedRowSet executeUpdate(HikariDataSource hikariDataSource) throws SQLException {
-        CachedRowSet cachedRowSet;
         try (Connection connection = hikariDataSource.getConnection()) {
             selectDB(connection);
 
@@ -35,15 +33,14 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
             }
             preparedStatement.executeUpdate();
 
-            cachedRowSet = new CachedRowSetImpl();
+            CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
             cachedRowSet.populate(preparedStatement.getGeneratedKeys());
+            return cachedRowSet;
         }
-        return cachedRowSet;
     }
 
     @Override
     public CachedRowSet executeQuery(HikariDataSource hikariDataSource) throws SQLException {
-        CachedRowSet cachedRowSet;
         try (Connection connection = hikariDataSource.getConnection()) {
             selectDB(connection);
 
@@ -51,10 +48,11 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
             for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
             }
-            cachedRowSet = new CachedRowSetImpl();
+
+            CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
             cachedRowSet.populate(preparedStatement.executeQuery());
+            return cachedRowSet;
         }
-        return cachedRowSet;
     }
 
     private void selectDB(Connection connection) throws SQLException {
