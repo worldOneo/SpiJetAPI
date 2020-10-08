@@ -3,7 +3,7 @@ package de.worldoneo.spijetapi.utils;
 import java.util.concurrent.Callable;
 import java.util.concurrent.Future;
 
-public abstract class ScalingAsyncExecutor extends AsyncExecutor {
+public class ScalingAsyncExecutor extends AsyncExecutor {
 
     public ScalingAsyncExecutor() {
         super();
