@@ -14,7 +14,6 @@ import java.util.concurrent.Future;
 public class JsonSQLStorage extends ScalingAsyncExecutor {
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
-    private final String databaseName;
     private static final Gson GSON = new Gson();
 
     @Getter
@@ -33,30 +32,29 @@ public class JsonSQLStorage extends ScalingAsyncExecutor {
         }
     }
 
-    public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName, String databaseName) throws SQLException {
+    public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName) throws SQLException {
         this.sqlExecutor = sqlExecutor;
         this.tableName = tableName;
-        this.databaseName = databaseName;
         setup();
     }
 
-    public JsonSQLStorage(SpiJetBuilder<HikariDataSource> dataSourceBuilder, String tableName, String databaseName) throws SQLException {
-        this(new QuerySQLManager(dataSourceBuilder), tableName, databaseName);
+    public JsonSQLStorage(SpiJetBuilder<HikariDataSource> dataSourceBuilder, String tableName) throws SQLException {
+        this(new QuerySQLManager(dataSourceBuilder), tableName);
     }
 
-    public JsonSQLStorage(HikariDataSource hikariDataSource, String tableName, String databaseName) throws SQLException {
-        this(new QuerySQLManager(hikariDataSource), tableName, databaseName);
+    public JsonSQLStorage(HikariDataSource hikariDataSource, String tableName) throws SQLException {
+        this(new QuerySQLManager(hikariDataSource), tableName);
     }
 
     private void setup() throws SQLException {
         String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), tableName);
-        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, formattedCreationString);
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedCreationString);
         sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
     public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
         String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName, uuid.toString());
-        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, formattedString);
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedString);
         CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
         if (cachedRowSet == null) {
             return null;
@@ -74,7 +72,7 @@ public class JsonSQLStorage extends ScalingAsyncExecutor {
     public boolean setData(UUID uuid, Object dataObject) throws SQLException {
         String data = GSON.toJson(dataObject);
         String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString(), data);
-        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(databaseName, format);
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(format);
         CachedRowSet cachedRowSet = sqlExecutor.executeUpdate(sqlQueryBuilder);
         return cachedRowSet != null;
     }

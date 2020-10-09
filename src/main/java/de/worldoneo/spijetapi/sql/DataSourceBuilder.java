@@ -16,6 +16,7 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
     private String password;
     private String jdbcUrl;
     private String dataSourceClassName;
+    private String driverClassName;
     private int poolSize = 3;
     private boolean autoCommit = true;
     private long connectionTimeout = 30000;
@@ -32,18 +33,11 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
 
     public HikariDataSource build() {
         HikariDataSource hikariDataSource = new HikariDataSource();
-        if (username != null) {
-            hikariDataSource.setUsername(username);
-        }
-        if (password != null) {
-            hikariDataSource.setPassword(password);
-        }
-        if (jdbcUrl != null) {
-            hikariDataSource.setJdbcUrl(jdbcUrl);
-        }
-        if (dataSourceClassName != null) {
-            hikariDataSource.setDataSourceClassName(dataSourceClassName);
-        }
+        if (username != null) hikariDataSource.setUsername(username);
+        if (password != null) hikariDataSource.setPassword(password);
+        if (jdbcUrl != null) hikariDataSource.setJdbcUrl(jdbcUrl);
+        if (dataSourceClassName != null) hikariDataSource.setDataSourceClassName(dataSourceClassName);
+        if (driverClassName != null) hikariDataSource.setDriverClassName(driverClassName);
         hikariDataSource.setMaximumPoolSize(poolSize);
         hikariDataSource.setAutoCommit(autoCommit);
         hikariDataSource.setConnectionTimeout(connectionTimeout);
