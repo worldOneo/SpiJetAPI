@@ -48,5 +48,5 @@ shadowJar {
     }
     archiveName("Shadowed-${rootProject.name}-v${VERSION}.jar")
     configurations = [project.configurations.shadow]
-    relocate 'com.zaxxer.hikari', 'de.worldOneo.spiJetAPI.hikari'
+    relocate 'com.zaxxer.hikari', 'de.worldoneo.spjetapi.hikari'
 }

@@ -38,6 +38,10 @@ public class ConfigSynchronizer {
 
     public void saveConfig(String key, Path config) throws IOException, SQLException {
         byte[] bytes = Files.readAllBytes(config);
+        saveConfig(key, bytes);
+    }
+
+    public void saveConfig(String key, byte[] bytes) throws SQLException{
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] base64 = encoder.encode(bytes);
         String base64String = new String(base64);
