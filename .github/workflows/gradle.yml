@@ -4,7 +4,8 @@
 name: Java CI with Gradle
 
 on:
-  [ push ]
+  push:
+    branches: [ master ]
 
 jobs:
   release:
@@ -51,8 +52,8 @@ jobs:
           # The URL for uploading assets to the release
           upload_url: ${{ steps.create_release.outputs.upload_url }}
           # The path to the asset you want to upload
-          asset_path: build/libs/GUI-API.jar
+          asset_path: build/libs/Shadowed-SpiJetAPI-${{ github.event.commits[0].message }}.jar
           # The name of the asset you want to upload
-          asset_name: GUI-API${{ github.event.commits[0].message }}.jar
+          asset_name: SpiJetAPI-${{ github.event.commits[0].message }}.jar
           # The content-type of the asset you want to upload. See the supported Media Types here: https://www.iana.org/assignments/media-types/media-types.xhtml for more information
           asset_content_type: application/java-archive
