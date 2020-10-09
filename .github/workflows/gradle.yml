@@ -31,7 +31,7 @@ jobs:
       - name: Build with Gradle
         run: |
           chmod +x ./gradlew
-          ./gradlew build
+          ./gradlew shadowJar
 
       #Create a Release
       - name: Create Release
