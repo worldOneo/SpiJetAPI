@@ -2,8 +2,10 @@ package de.worldoneo.spijetapi.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import org.bukkit.configuration.InvalidConfigurationException;
-import org.bukkit.configuration.file.YamlConfiguration;
+import org.jetbrains.annotations.Nullable;
+import org.yaml.snakeyaml.DumperOptions;
+import org.yaml.snakeyaml.Yaml;
+import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -11,31 +13,61 @@ import java.nio.file.Files;
 public class ConfigUtils {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
-    public static YamlConfiguration load(File file, InputStream defaultConfig) {
+    /**
+     * Saves an Object to a YAML file
+     * @param file The file to save the object to
+     * @param object The object written to the file
+     * @throws IOException When the file couldn't be created/opened.
+     */
+    public static void save(File file, Object object) throws IOException {
+        DumperOptions options = new DumperOptions();
+        options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
+        options.setPrettyFlow(true);
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            try {
-                Files.copy(defaultConfig, file.toPath());
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+            file.createNewFile();
         }
-        return load(file);
+        FileWriter fileWriter = new FileWriter(file);
+        String content = new Yaml(options).dumpAsMap(object);
+        fileWriter.write(content);
+        fileWriter.close();
     }
 
-    public static YamlConfiguration load(File file, String defaultConfig) {
-        return load(file, new ByteArrayInputStream(defaultConfig.getBytes()));
+    /**
+     *
+     * @param file The file to load the config from
+     * @param defaultConfig The default settings.
+     * @param clazz The class which is stored in the file
+     * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
+     * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
+     */
+    @Nullable
+    public static <T> T load(File file, T defaultConfig, Class<T> clazz) throws IOException {
+        if (!file.exists()) {
+            save(file, defaultConfig);
+        }
+        T config = load(file, clazz);
+        save(file, config);
+        return config;
     }
 
-    public static YamlConfiguration load(File file) {
+    /**
+     * @param file  The file to load the config from
+     * @param clazz The class which is stored in the file
+     * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
+     * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
+     */
+    @Nullable
+    public static <T> T load(File file, Class<T> clazz) throws IOException {
         try {
-            YamlConfiguration yamlConfiguration = new YamlConfiguration();
-            yamlConfiguration.load(file);
-            return yamlConfiguration;
-        } catch (IOException | InvalidConfigurationException e) {
-            e.printStackTrace();
+            Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz.getClassLoader()));
+            FileInputStream fileInputStream = new FileInputStream(file);
+            Object o = yaml.loadAs(fileInputStream, clazz);
+            fileInputStream.close();
+            return clazz.cast(o);
+        } catch (ClassCastException ignored) {
+            return null;
         }
-        return null;
     }
 
     public static <T> T loadJson(File file, Class<T> classOfT) {

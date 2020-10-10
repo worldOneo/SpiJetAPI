@@ -22,7 +22,7 @@ import java.util.List;
 @Accessors(chain = true)
 @Getter
 @Setter
-public abstract class GUI implements IGUI {
+public class GUI implements IGUI {
     private String GUITitle = "Made by GUIAPI";
     private List<IWidget> widgets = new ArrayList<>();
     private List<IMultipartWidget> multipartWidgets = new ArrayList<>();
