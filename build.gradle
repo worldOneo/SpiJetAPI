@@ -23,14 +23,13 @@ repositories {
 }
 
 dependencies {
-    compile group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
-
     //Particle legacy sup
     compileOnly "org.spigotmc:spigot-api:1.8.8-R0.1-SNAPSHOT"
 
     compileOnly "org.spigotmc:spigot-api:${MCVERSION}"
-
     compileOnly "net.md-5:bungeecord-api:${BUNGEEVERSION}"
+    implementation group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+
     shadow "com.zaxxer:HikariCP:3.4.5"
     shadow "org.slf4j:slf4j-nop:1.7.30"
 }
@@ -49,4 +48,8 @@ shadowJar {
     archiveName("Shadowed-${rootProject.name}-v${VERSION}.jar")
     configurations = [project.configurations.shadow]
     relocate 'com.zaxxer.hikari', 'de.worldoneo.spjetapi.hikari'
+}
+
+test {
+    useJUnitPlatform()
 }

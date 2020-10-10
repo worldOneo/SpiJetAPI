@@ -39,6 +39,7 @@ public class ConfigUtils {
      * @param defaultConfig The default settings.
      * @param clazz The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
+     * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
      */
     @Nullable
     public static <T> T load(File file, T defaultConfig, Class<T> clazz) throws IOException {
@@ -54,6 +55,7 @@ public class ConfigUtils {
      * @param file  The file to load the config from
      * @param clazz The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
+     * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
      */
     @Nullable
     public static <T> T load(File file, Class<T> clazz) throws IOException {

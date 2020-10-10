@@ -73,7 +73,7 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
         return this;
     }
 
-    private void changeItemMeta(Consumer<ItemMeta> callable) {
+    public void changeItemMeta(Consumer<ItemMeta> callable) {
         ItemMeta itemMeta = itemStack.getItemMeta();
         callable.accept(itemMeta);
         itemStack.setItemMeta(itemMeta);

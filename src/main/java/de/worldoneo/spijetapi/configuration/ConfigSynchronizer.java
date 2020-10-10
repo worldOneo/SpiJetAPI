@@ -5,6 +5,7 @@ import de.worldoneo.spijetapi.sql.SQLQueryBuilder;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.RowSet;
+import java.io.File;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -53,6 +54,12 @@ public class ConfigSynchronizer {
         );
     }
 
+    /**
+     * Loads the config from a SQLExecutor.
+     * @param key The key under which the config is saved.
+     * @return the bytes of the config or null if it doesn't exists in the database
+     * @throws SQLException When the query couldn't be executed.
+     */
     @Nullable
     public byte[] loadConfig(String key) throws SQLException {
         RowSet rowSet = sqlExecutor.executeQuery(
@@ -62,5 +69,19 @@ public class ConfigSynchronizer {
         if (!rowSet.next()) return null;
         String content = rowSet.getString("content");
         return Base64.getDecoder().decode(content);
+    }
+
+    /**
+     * Loads the config from an SQLExecutor and writes it to a File.
+     * Creates any needed parent directories.
+     * @param key The key under which the config is saved.
+     * @param path The path to save the config to.
+     * @throws SQLException When the query couldn't be executed.
+     * @throws IOException When the config couldn't be created/written.
+     */
+    public void loadConfig(String key, Path path) throws SQLException, IOException {
+        File file = path.toFile();
+        if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+        Files.write(path, loadConfig(key));
     }
 }
