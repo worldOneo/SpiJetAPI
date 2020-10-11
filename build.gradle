@@ -46,7 +46,8 @@ shadowJar {
     from('licenses') {
         include '*'
     }
-    archiveName("Shadowed-${rootProject.name}-v${VERSION}.jar")
+
+    archiveName("$rootProject.name-$rootProject.version.${archiveExtension.get()}")
     configurations = [project.configurations.shadow]
     relocate 'com.zaxxer.hikari', 'de.worldoneo.spjetapi.hikari'
 }
