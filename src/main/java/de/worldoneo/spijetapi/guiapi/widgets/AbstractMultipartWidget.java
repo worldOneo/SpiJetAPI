@@ -14,7 +14,8 @@ public abstract class AbstractMultipartWidget implements IMultipartWidget {
     /**
      * The {@link IGUI} which this widget is on.
      *
-     * @param igui the {@link IGUI} of this widget <br /><b>THIS FUNCTION IS NOT RECOMMENDED AS YOU HAVE TO ADD THE WIDGET MANUEL TO THE {@link IGUI}<br />
+     * @param igui the {@link IGUI} of this widget
+     * <b>THIS FUNCTION IS NOT RECOMMENDED AS YOU HAVE TO ADD THE WIDGET MANUEL TO THE {@link IGUI}
      * USE {@link AbstractMultipartWidget#addToGUI(IGUI)} INSTEAD</b>
      * @return the {@link IGUI} of this Widget
      */

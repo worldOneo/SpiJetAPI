@@ -7,8 +7,8 @@ import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpiJetUtils {
     /**
-     * Translates the color codes of a string which is written with a '&'.
-     * E.g: "&aMy name is Joe"
+     * Translates the color codes of a string which is written with a '{@literal &}'.
+     * E.g: "{@literal &}aMy name is Joe"
      *
      * @param msg the string to Translate
      * @return the translated String
