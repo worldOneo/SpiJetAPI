@@ -23,10 +23,10 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
     private long idleTimeout = 600000;
 
     @Setter(AccessLevel.NONE)
-    private Map<String, String> customProperties = new HashMap<>();
+    private Map<String, Object> customProperties = new HashMap<>();
 
 
-    public DataSourceBuilder addProperty(String key, String value) {
+    public DataSourceBuilder addProperty(String key, Object value) {
         customProperties.put(key, value);
         return this;
     }
@@ -42,7 +42,7 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
         hikariDataSource.setAutoCommit(autoCommit);
         hikariDataSource.setConnectionTimeout(connectionTimeout);
         hikariDataSource.setIdleTimeout(idleTimeout);
-        for (Map.Entry<String, String> entry : customProperties.entrySet()) {
+        for (Map.Entry<String, Object> entry : customProperties.entrySet()) {
             hikariDataSource.addDataSourceProperty(entry.getKey(), entry.getValue());
         }
         return hikariDataSource;
