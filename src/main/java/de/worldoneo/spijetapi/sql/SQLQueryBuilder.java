@@ -52,6 +52,12 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
         }
     }
 
+    /**
+     * Sets a SQL parameter written as ?
+     * @param key the index starting at 1
+     * @param value the value to write
+     * @return this
+     */
     public SQLQueryBuilder setParameter(int key, Object value) {
         parameterMap.put(key, value);
         return this;

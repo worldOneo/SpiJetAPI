@@ -52,6 +52,7 @@ public class ConfigUtils {
     }
 
     /**
+     * Only works with JavaBean objects
      * @param file  The file to load the config from
      * @param clazz The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
