@@ -1,6 +1,7 @@
 package de.worldoneo.spijetapi.sql;
 
 import com.zaxxer.hikari.HikariDataSource;
+import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 
 import javax.sql.rowset.CachedRowSet;
@@ -12,7 +13,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.Future;
 
-public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<HikariDataSource> {
+public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<HikariDataSource>, AsyncSQLExecutor<HikariDataSource> {
+    private final AsyncExecutor asyncExecutor = SQLManager.asyncExecutor;
     private final StringBuffer query;
     private final Map<Integer, Object> parameterMap = new HashMap<>();
 
@@ -75,11 +77,11 @@ public class SQLQueryBuilder extends AsyncSQLExecutorImpl<HikariDataSource> impl
 
     @Override
     public Future<CachedRowSet> executeUpdateAsync(HikariDataSource arg) {
-        return submit(() -> executeUpdate(arg));
+        return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
     @Override
     public Future<CachedRowSet> executeQueryAsync(HikariDataSource arg) {
-        return submit(() -> executeQuery(arg));
+        return asyncExecutor.submit(() -> executeQuery(arg));
     }
 }

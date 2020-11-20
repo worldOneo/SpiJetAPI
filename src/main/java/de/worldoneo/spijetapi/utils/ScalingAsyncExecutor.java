@@ -26,6 +26,7 @@ public class ScalingAsyncExecutor extends AsyncExecutor {
         this.maxThreads = maxThreads;
     }
 
+    @Override
     public <T> Future<T> submit(Callable<T> cachedRowSetCallable) {
         getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
         return getThreadPoolExecutor().submit(cachedRowSetCallable);

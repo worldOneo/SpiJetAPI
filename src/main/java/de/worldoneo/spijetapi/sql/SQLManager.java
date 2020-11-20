@@ -2,9 +2,14 @@ package de.worldoneo.spijetapi.sql;
 
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
+import de.worldoneo.spijetapi.utils.AsyncExecutor;
+import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
+import lombok.Getter;
 
-public abstract class SQLManager<T> extends AsyncSQLExecutorImpl<T> implements SQLExecutor<T> {
+public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
+    protected static final AsyncExecutor asyncExecutor = new ScalingAsyncExecutor();
+
     public static SQLManager<String> createStringManager(HikariDataSource hikariDataSource) {
         return new StringSQLManager(hikariDataSource);
     }
