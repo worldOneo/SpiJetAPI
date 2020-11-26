@@ -6,6 +6,7 @@ import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
 import org.yaml.snakeyaml.constructor.CustomClassLoaderConstructor;
+import org.yaml.snakeyaml.representer.Representer;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -15,7 +16,8 @@ public class ConfigUtils {
 
     /**
      * Saves an Object to a YAML file
-     * @param file The file to save the object to
+     *
+     * @param file   The file to save the object to
      * @param object The object written to the file
      * @throws IOException When the file couldn't be created/opened.
      */
@@ -34,10 +36,9 @@ public class ConfigUtils {
     }
 
     /**
-     *
-     * @param file The file to load the config from
+     * @param file          The file to load the config from
      * @param defaultConfig The default settings.
-     * @param clazz The class which is stored in the file
+     * @param clazz         The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
      * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
      */
@@ -53,6 +54,7 @@ public class ConfigUtils {
 
     /**
      * Only works with JavaBean objects
+     *
      * @param file  The file to load the config from
      * @param clazz The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
@@ -61,7 +63,9 @@ public class ConfigUtils {
     @Nullable
     public static <T> T load(File file, Class<T> clazz) throws IOException {
         try {
-            Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz.getClassLoader()));
+            Representer representer = new Representer();
+            representer.getPropertyUtils().setSkipMissingProperties(true);
+            Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz.getClassLoader()), representer);
             FileInputStream fileInputStream = new FileInputStream(file);
             Object o = yaml.loadAs(fileInputStream, clazz);
             fileInputStream.close();
@@ -81,26 +85,40 @@ public class ConfigUtils {
         return null;
     }
 
+    /**
+     * Loads a JSON object from a file
+     *
+     * @param file        the file to load the object from
+     * @param classOfT    the class of the object
+     * @param defaultData default data to use and write if no file exists
+     * @param <T>         the class of the object
+     * @return the loaded class or null if an IOException occurred
+     */
+    @Nullable
     public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
-            saveJson(file, defaultData);
+            try {
+                saveJson(file, defaultData);
+            } catch (IOException exception) {
+                return null;
+            }
         }
         return loadJson(file, classOfT);
     }
 
-
-    public static boolean saveJson(File file, Object dataObject) {
+    /**
+     * Saves an object as JSON to a file
+     *
+     * @param file       the file to write the object to
+     * @param dataObject the object to write to the file
+     * @throws IOException when the file couldn't be written
+     */
+    public static void saveJson(File file, Object dataObject) throws IOException {
         if (!file.exists()) {
             file.getParentFile().mkdirs();
         }
         String data = gson.toJson(dataObject);
-        try {
-            Files.write(file.toPath(), data.getBytes());
-            return true;
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        return false;
+        Files.write(file.toPath(), data.getBytes());
     }
 }

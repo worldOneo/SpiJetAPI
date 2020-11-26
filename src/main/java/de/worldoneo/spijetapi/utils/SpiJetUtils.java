@@ -3,7 +3,6 @@ package de.worldoneo.spijetapi.utils;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 public class SpiJetUtils {
     /**
@@ -23,10 +22,6 @@ public class SpiJetUtils {
      * @return the named ItemStack
      */
     public static ItemStack createNamedItemStack(Material material, String name) {
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(name);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return new ItemStackBuilder(material).setDisplayName(name).build();
     }
 }
