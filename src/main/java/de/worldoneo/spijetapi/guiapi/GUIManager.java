@@ -7,6 +7,7 @@ import de.worldoneo.spijetapi.utils.SpiJetUtils;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryCloseEvent;
 import org.bukkit.inventory.Inventory;
 
 import java.util.HashMap;
@@ -59,5 +60,10 @@ public class GUIManager {
         }
         stringBuilder.append("&r");
         return SpiJetUtils.colorize(stringBuilder.toString());
+    }
+
+    public void close(InventoryCloseEvent e) {
+        Player player = (Player) e.getPlayer();
+        playerIGUIMap.remove(player);
     }
 }

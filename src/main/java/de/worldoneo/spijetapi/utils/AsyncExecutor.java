@@ -19,7 +19,11 @@ public class AsyncExecutor {
     public <T> Future<T> submit(Callable<T> callable) {
         return getThreadPoolExecutor().submit(callable);
     }
-    
+
+    public void submit(Runnable runnable) {
+        getThreadPoolExecutor().submit(runnable);
+    }
+
     protected ThreadPoolExecutor getThreadPoolExecutor() {
         return threadPoolExecutor;
     }

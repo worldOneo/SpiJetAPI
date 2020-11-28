@@ -29,12 +29,12 @@ public class StringSQLManager extends SQLManager<String> {
 
     @Override
     public Future<CachedRowSet> executeUpdateAsync(String arg) {
-        return submit(() -> executeUpdate(arg));
+        return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
     @Override
     public Future<CachedRowSet> executeQueryAsync(String arg) {
-        return submit(() -> executeQuery(arg));
+        return asyncExecutor.submit(() -> executeQuery(arg));
     }
 
     @Override

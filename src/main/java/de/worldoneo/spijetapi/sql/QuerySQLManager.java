@@ -36,12 +36,12 @@ public class QuerySQLManager extends SQLManager<SQLQueryBuilder> {
 
     @Override
     public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
+        return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
     @Override
     public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
-        return submit(() -> executeUpdate(arg));
+        return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
     public StringSQLManager toStringSQLManager() {

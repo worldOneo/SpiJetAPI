@@ -42,7 +42,7 @@ public class ConfigSynchronizer {
         saveConfig(key, bytes);
     }
 
-    public void saveConfig(String key, byte[] bytes) throws SQLException{
+    public void saveConfig(String key, byte[] bytes) throws SQLException {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] base64 = encoder.encode(bytes);
         String base64String = new String(base64);
@@ -56,6 +56,7 @@ public class ConfigSynchronizer {
 
     /**
      * Loads the config from a SQLExecutor.
+     *
      * @param key The key under which the config is saved.
      * @return the bytes of the config or null if it doesn't exists in the database
      * @throws SQLException When the query couldn't be executed.
@@ -74,14 +75,15 @@ public class ConfigSynchronizer {
     /**
      * Loads the config from an SQLExecutor and writes it to a File.
      * Creates any needed parent directories.
-     * @param key The key under which the config is saved.
+     *
+     * @param key  The key under which the config is saved.
      * @param path The path to save the config to.
      * @throws SQLException When the query couldn't be executed.
-     * @throws IOException When the config couldn't be created/written.
+     * @throws IOException  When the config couldn't be created/written.
      */
     public void loadConfig(String key, Path path) throws SQLException, IOException {
         File file = path.toFile();
-        if(!file.getParentFile().exists()) file.getParentFile().mkdirs();
+        if (!file.getParentFile().exists()) file.getParentFile().mkdirs();
         Files.write(path, loadConfig(key));
     }
 }

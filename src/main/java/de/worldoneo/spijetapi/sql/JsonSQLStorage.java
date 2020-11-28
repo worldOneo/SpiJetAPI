@@ -2,7 +2,7 @@ package de.worldoneo.spijetapi.sql;
 
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
-import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
+import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
 
@@ -11,7 +11,8 @@ import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.Future;
 
-public class JsonSQLStorage extends ScalingAsyncExecutor {
+public class JsonSQLStorage {
+    private final AsyncExecutor asyncExecutor = SQLManager.asyncExecutor;
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
     private static final Gson GSON = new Gson();
@@ -78,10 +79,10 @@ public class JsonSQLStorage extends ScalingAsyncExecutor {
     }
 
     public Future<Boolean> setDataAsync(UUID uuid, Object dataObject) {
-        return submit(() -> setData(uuid, dataObject));
+        return asyncExecutor.submit(() -> setData(uuid, dataObject));
     }
 
     public <T> Future<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return submit(() -> getData(uuid, classOfT));
+        return asyncExecutor.submit(() -> getData(uuid, classOfT));
     }
 }
