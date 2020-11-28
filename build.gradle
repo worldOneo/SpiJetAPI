@@ -49,7 +49,7 @@ shadowJar {
 
     archiveName("$rootProject.name-$rootProject.version.${archiveExtension.get()}")
     configurations = [project.configurations.shadow]
-    relocate 'com.zaxxer.hikari', 'de.worldoneo.spjetapi.hikari'
+    relocate 'com.zaxxer.hikari', 'de.worldoneo.spijetapi.hikari'
 }
 
 task sourcesJar(type: Jar, dependsOn: classes) {
