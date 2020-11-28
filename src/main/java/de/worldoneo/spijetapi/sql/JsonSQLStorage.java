@@ -3,10 +3,8 @@ package de.worldoneo.spijetapi.sql;
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
-import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
-import lombok.Setter;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;

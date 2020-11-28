@@ -10,6 +10,7 @@ public class OnInventoryClickListener implements Listener {
     public void onInventoryClickEvent(InventoryClickEvent e) {
         GUIManager.getInstance().handle(e);
     }
+
     @EventHandler
     public void onInventoryCloseEvent(InventoryCloseEvent e) {
         GUIManager.getInstance().close(e);

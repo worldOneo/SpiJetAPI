@@ -23,7 +23,7 @@ public class AsyncExecutor {
     public void submit(Runnable runnable) {
         getThreadPoolExecutor().submit(runnable);
     }
-    
+
     protected ThreadPoolExecutor getThreadPoolExecutor() {
         return threadPoolExecutor;
     }

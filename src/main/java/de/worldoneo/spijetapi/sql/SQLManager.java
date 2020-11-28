@@ -5,7 +5,6 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
-import lombok.Getter;
 
 public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
     protected static final AsyncExecutor asyncExecutor = new ScalingAsyncExecutor();
