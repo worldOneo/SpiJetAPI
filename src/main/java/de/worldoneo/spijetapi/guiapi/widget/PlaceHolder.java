@@ -15,6 +15,9 @@ import org.bukkit.inventory.meta.ItemMeta;
 public class PlaceHolder extends AbstractWidget {
     /**
      * The {@link Material} of this {@link PlaceHolder}
+     *
+     * @param material the material to render this placeholder
+     * @return the current material
      */
     private Material material;
 
