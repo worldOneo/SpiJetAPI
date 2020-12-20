@@ -32,9 +32,6 @@ public class SpiJetBoard {
     }
 
     public void setEntry(int score, String text) {
-        if (score > 15) {
-            return;
-        }
         for (String entry : scoreboard.getEntries()) {
             if (objective.getScore(entry).getScore() == score) {
                 if (entry.equals(text)) {
@@ -54,9 +51,6 @@ public class SpiJetBoard {
     }
 
     public void removeEntry(int score) {
-        if (score > 16) {
-            return;
-        }
         for (String entry : scoreboard.getEntries()) {
             if (objective.getScore(entry).getScore() == score) {
                 scoreboard.resetScores(entry);

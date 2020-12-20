@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
+import org.jetbrains.annotations.Nullable;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
@@ -21,7 +22,7 @@ public class JsonSQLStorage {
     private enum SQLStrings {
         TABLE_CREATION_STRING("CREATE TABLE IF NOT EXISTS `%s` (" +
                 "`uuid` TINYTEXT NOT NULL," +
-                "`jsonDocument` LONGTEXT NOT NULL COLLATE 'utf8mb4_bin'," +
+                "`jsonDocument` JSON NOT NULL COLLATE 'utf8mb4_bin'," +
                 "UNIQUE INDEX `UniqueID` (`uuid`(40))" +
                 ");"),
         GETTER_STRING("SELECT * from `%s` WHERE uuid='%s';"),
@@ -47,12 +48,26 @@ public class JsonSQLStorage {
         this(new QuerySQLManager(hikariDataSource), tableName);
     }
 
+    /**
+     * Tries to create a table based on the name.
+     * @throws SQLException if an error occurred while creating the table.
+     */
     private void setup() throws SQLException {
         String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedCreationString);
         sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
+    /**
+     * Gets the JSON item out of the database.
+     *
+     * @param uuid     the uuid this JSON item is identified with.
+     * @param classOfT the class of the JSON item to be parsed to.
+     * @param <T>      the class of th JSON item to be parsed to.
+     * @return The parsed Class or null if the class couldn't be found.
+     * @throws SQLException when there is an error while getting the data from the database.
+     */
+    @Nullable
     public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
         String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName, uuid.toString());
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedString);
@@ -63,22 +78,24 @@ public class JsonSQLStorage {
         if (!cachedRowSet.next()) {
             return null;
         }
-        try {
-            return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
-        } catch (IndexOutOfBoundsException indexOutOfBoundsException) {
-            return null;
-        }
+        return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
     }
 
-    public boolean setData(UUID uuid, Object dataObject) throws SQLException {
+    /**
+     * Inserts or update the data into the table with the uuid as its identifier
+     * @param uuid The uuid the JSON item is identified with.
+     * @param dataObject the object to write into the table.
+     * @return the generated rows.
+     * @throws SQLException if an error occurred while inserting or updating the data into the table.
+     */
+    public CachedRowSet setData(UUID uuid, Object dataObject) throws SQLException {
         String data = GSON.toJson(dataObject);
         String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString(), data);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(format);
-        CachedRowSet cachedRowSet = sqlExecutor.executeUpdate(sqlQueryBuilder);
-        return cachedRowSet != null;
+        return sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
-    public Future<Boolean> setDataAsync(UUID uuid, Object dataObject) {
+    public Future<CachedRowSet> setDataAsync(UUID uuid, Object dataObject) {
         return asyncExecutor.submit(() -> setData(uuid, dataObject));
     }
 

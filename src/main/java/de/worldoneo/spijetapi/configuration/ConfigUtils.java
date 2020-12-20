@@ -36,11 +36,13 @@ public class ConfigUtils {
     }
 
     /**
+     * @param <T>           The class defined by the third arg
      * @param file          The file to load the config from
      * @param defaultConfig The default settings.
      * @param clazz         The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
      * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
+     * @throws IOException                            When the file couldn't be read or written.
      */
     @Nullable
     public static <T> T load(File file, T defaultConfig, Class<T> clazz) throws IOException {
@@ -55,10 +57,12 @@ public class ConfigUtils {
     /**
      * Only works with JavaBean objects
      *
+     * @param <T>   Class defined by second arg
      * @param file  The file to load the config from
      * @param clazz The class which is stored in the file
      * @return The loaded config (as class) from the file or null if the config could <b>not</b> be casted as the class
      * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
+     * @throws IOException                            When the file couldn't be read.
      */
     @Nullable
     public static <T> T load(File file, Class<T> clazz) throws IOException {
@@ -91,7 +95,7 @@ public class ConfigUtils {
      * @param file        the file to load the object from
      * @param classOfT    the class of the object
      * @param defaultData default data to use and write if no file exists
-     * @param <T>         the class of the object
+     * @param <T>         Class defined by second arg
      * @return the loaded class or null if an IOException occurred
      */
     @Nullable

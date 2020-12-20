@@ -9,7 +9,6 @@ public class ScalingAsyncExecutor extends AsyncExecutor {
 
     public ScalingAsyncExecutor() {
         this(Runtime.getRuntime().availableProcessors());
-        this.maxThreads = DEFAULT_MAX_THREADS;
     }
 
     public ScalingAsyncExecutor(int corePoolSize) {

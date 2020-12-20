@@ -2,7 +2,6 @@ package de.worldoneo.spijetapi.configuration;
 
 import de.worldoneo.spijetapi.sql.SQLExecutor;
 import de.worldoneo.spijetapi.sql.SQLQueryBuilder;
-import org.jetbrains.annotations.Nullable;
 
 import javax.sql.RowSet;
 import java.io.File;
@@ -61,7 +60,6 @@ public class ConfigSynchronizer {
      * @return the bytes of the config or null if it doesn't exists in the database
      * @throws SQLException When the query couldn't be executed.
      */
-    @Nullable
     public byte[] loadConfig(String key) throws SQLException {
         RowSet rowSet = sqlExecutor.executeQuery(
                 new SQLQueryBuilder(String.format("SELECT * FROM `%s` WHERE file = ?;", table))
