@@ -9,7 +9,7 @@ public class AsyncExecutor {
     private final ThreadPoolExecutor threadPoolExecutor;
 
     public AsyncExecutor() {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(Runtime.getRuntime().availableProcessors());
+        this(Runtime.getRuntime().availableProcessors());
     }
 
     public AsyncExecutor(int corePoolSize) {
