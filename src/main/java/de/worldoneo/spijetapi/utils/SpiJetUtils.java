@@ -1,9 +1,9 @@
 package de.worldoneo.spijetapi.utils;
 
-import org.bukkit.ChatColor;
-import org.bukkit.Material;
-import org.bukkit.inventory.ItemStack;
+import lombok.experimental.UtilityClass;
+import net.md_5.bungee.api.ChatColor;
 
+@UtilityClass
 public class SpiJetUtils {
     /**
      * Translates the color codes of a string which is written with a '{@literal &}'.
@@ -13,15 +13,17 @@ public class SpiJetUtils {
      * @return the translated String
      */
     public static String colorize(String msg) {
-        return ChatColor.translateAlternateColorCodes('&', msg);
+        return colorize(msg, '&');
     }
 
     /**
-     * @param material the Material of the ItemStack
-     * @param name     the name of the ItemStack
-     * @return the named ItemStack
+     * Translate the color codes of a string which is written with the altColorChar
+     *
+     * @param message      the string to translate
+     * @param altColorChar the char to translate the color code from
+     * @return the translated string
      */
-    public static ItemStack createNamedItemStack(Material material, String name) {
-        return new ItemStackBuilder(material).setDisplayName(name).build();
+    public static String colorize(String message, char altColorChar) {
+        return ChatColor.translateAlternateColorCodes(altColorChar, message);
     }
 }

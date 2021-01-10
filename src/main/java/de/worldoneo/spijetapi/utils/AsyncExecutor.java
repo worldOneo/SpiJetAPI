@@ -27,4 +27,12 @@ public class AsyncExecutor {
     protected ThreadPoolExecutor getThreadPoolExecutor() {
         return threadPoolExecutor;
     }
+
+    public void setCorePoolSize(int corePoolSize) {
+        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
+    }
+
+    public int getCorePoolSize() {
+        return getThreadPoolExecutor().getCorePoolSize();
+    }
 }

@@ -79,6 +79,7 @@ public class ConfigUtils {
         }
     }
 
+    @Nullable
     public static <T> T loadJson(File file, Class<T> classOfT) {
         try (InputStream inputStream = new FileInputStream(file);
              Reader reader = new InputStreamReader(inputStream)) {
