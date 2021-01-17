@@ -2,11 +2,11 @@ package de.worldoneo.spijetapi;
 
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class SpiJetAPI extends JavaPlugin {
+public class SpigotSpiJetAPI extends JavaPlugin {
 
-    private static SpiJetAPI instance = null;
+    private static SpigotSpiJetAPI instance = null;
 
-    public static SpiJetAPI getInstance() {
+    public static SpigotSpiJetAPI getInstance() {
         return instance;
     }
 
