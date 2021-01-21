@@ -54,6 +54,9 @@ public class SpiTask implements Runnable {
         this.cancel();
     }
 
+    /**
+     * Cancels this task and removes it from the scheduler.
+     */
     public void cancel() {
         boolean wasRunning = running.getAndSet(false);
         if (wasRunning) {

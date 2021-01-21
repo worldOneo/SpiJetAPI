@@ -6,6 +6,11 @@ import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 
+import javax.sql.rowset.CachedRowSet;
+import java.sql.SQLException;
+import java.util.concurrent.CompletableFuture;
+import java.util.function.Supplier;
+
 public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
     protected static final AsyncExecutor asyncExecutor = new ScalingAsyncExecutor();
 
@@ -31,5 +36,40 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
 
     public static SQLManager<String> createStringManager(HikariConfig hikariConfig) {
         return new StringSQLManager(hikariConfig);
+    }
+
+    @FunctionalInterface
+    public interface SqlThrowingFunction<A, R> {
+        R apply(A t) throws SQLException;
+    }
+
+    protected Supplier<CachedRowSet> tryOrNull(SqlThrowingFunction<T, CachedRowSet> function, T arg) {
+        return () -> {
+            try {
+                return function.apply(arg);
+            } catch (SQLException sqlException) {
+                return null;
+            }
+        };
+    }
+
+    /**
+     * Executes the executeUpdate function async and returns the completable future or null and a error
+     *
+     * @param arg the argument used to execute the update with
+     * @return The completable which is completed with a CachedRowSet or null if failed
+     */
+    public CompletableFuture<CachedRowSet> executeUpdateAsync(T arg) {
+        return CompletableFuture.supplyAsync(tryOrNull(this::executeUpdate, arg), asyncExecutor.getThreadPoolExecutor());
+    }
+
+    /**
+     * Executes the executeUpdate function async and returns the completable future or null and a error
+     *
+     * @param arg the argument used to execute the update with
+     * @return The completable which is completed with a CachedRowSet or null if failed
+     */
+    public CompletableFuture<CachedRowSet> executeQueryAsync(T arg) {
+        return CompletableFuture.supplyAsync(tryOrNull(this::executeQuery, arg), asyncExecutor.getThreadPoolExecutor());
     }
 }

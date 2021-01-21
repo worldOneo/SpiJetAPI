@@ -24,7 +24,7 @@ public class AsyncExecutor {
         getThreadPoolExecutor().submit(runnable);
     }
 
-    protected ThreadPoolExecutor getThreadPoolExecutor() {
+    public final ThreadPoolExecutor getThreadPoolExecutor() {
         return threadPoolExecutor;
     }
 
