@@ -43,12 +43,12 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
         R apply(A t) throws SQLException;
     }
 
-    protected Supplier<CachedRowSet> tryOrNull(SqlThrowingFunction<T, CachedRowSet> function, T arg) {
+    protected Supplier<CachedRowSet> tryOrThrow(SqlThrowingFunction<T, CachedRowSet> function, T arg) {
         return () -> {
             try {
                 return function.apply(arg);
             } catch (SQLException sqlException) {
-                return null;
+                throw new RuntimeException(sqlException);
             }
         };
     }
@@ -60,7 +60,7 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeUpdateAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrNull(this::executeUpdate, arg), asyncExecutor.getThreadPoolExecutor());
+        return CompletableFuture.supplyAsync(tryOrThrow(this::executeUpdate, arg), asyncExecutor.getThreadPoolExecutor());
     }
 
     /**
@@ -70,6 +70,6 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeQueryAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrNull(this::executeQuery, arg), asyncExecutor.getThreadPoolExecutor());
+        return CompletableFuture.supplyAsync(tryOrThrow(this::executeQuery, arg), asyncExecutor.getThreadPoolExecutor());
     }
 }
