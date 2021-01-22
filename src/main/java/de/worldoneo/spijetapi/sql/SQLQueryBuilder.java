@@ -134,13 +134,18 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     }
 
     /**
-     * I believe im to lazy to do.
+     * Creates a clone of this SQLQueryBuilder
      *
-     * @return this
+     * @return the clone of this SQLQueryBuilder
      */
     @Override
     public SQLQueryBuilder build() {
-        return this;
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(query.toString());
+        for (Map.Entry<Integer, Object> parameter : parameterMap.entrySet()) {
+            sqlQueryBuilder.setParameter(parameter.getKey(), parameter.getValue());
+        }
+        sqlQueryBuilder.setAsyncExecutor(this.getAsyncExecutor());
+        return sqlQueryBuilder;
     }
 
     @Override

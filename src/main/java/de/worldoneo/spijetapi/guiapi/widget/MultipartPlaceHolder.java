@@ -3,6 +3,7 @@ package de.worldoneo.spijetapi.guiapi.widget;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
 import de.worldoneo.spijetapi.utils.SpiJetUtils;
+import de.worldoneo.spijetapi.utils.SpigotUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -40,7 +41,7 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
      */
     @Override
     public List<Pair<ItemStack, Integer>> render() {
-        ItemStack itemStack = SpiJetUtils.createNamedItemStack(material, " ");
+        ItemStack itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return slots.stream()
                 .map(integer -> new Pair<>(itemStack, integer))
                 .collect(Collectors.toList());

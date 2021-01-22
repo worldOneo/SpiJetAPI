@@ -3,6 +3,7 @@ package de.worldoneo.spijetapi.guiapi.widget;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
 import de.worldoneo.spijetapi.utils.SpiJetUtils;
+import de.worldoneo.spijetapi.utils.SpigotUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
@@ -69,8 +70,8 @@ public class ListWidget extends AbstractMultipartWidget {
 
     @RequiredArgsConstructor
     private enum MenuItems {
-        BACK(SpiJetUtils.createNamedItemStack(Material.ARROW, "Back")),
-        FORWARD(SpiJetUtils.createNamedItemStack(Material.ARROW, "Next"));
+        BACK(SpigotUtils.createNamedItemStack(Material.ARROW, "Back")),
+        FORWARD(SpigotUtils.createNamedItemStack(Material.ARROW, "Next"));
         @Getter
         private final ItemStack itemStack;
 

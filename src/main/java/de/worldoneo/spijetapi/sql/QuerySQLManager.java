@@ -7,7 +7,6 @@ import lombok.NonNull;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
-import java.util.concurrent.Future;
 
 public class QuerySQLManager extends SQLManager<SQLQueryBuilder> {
     private final HikariDataSource hikariDataSource;
@@ -32,16 +31,6 @@ public class QuerySQLManager extends SQLManager<SQLQueryBuilder> {
     @Override
     public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
         return sqlQueryBuilder.executeQuery(hikariDataSource);
-    }
-
-    @Override
-    public Future<CachedRowSet> executeUpdateAsync(SQLQueryBuilder arg) {
-        return asyncExecutor.submit(() -> executeUpdate(arg));
-    }
-
-    @Override
-    public Future<CachedRowSet> executeQueryAsync(SQLQueryBuilder arg) {
-        return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
     public StringSQLManager toStringSQLManager() {

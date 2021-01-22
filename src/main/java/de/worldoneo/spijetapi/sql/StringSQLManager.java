@@ -10,7 +10,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.concurrent.Future;
 
 public class StringSQLManager extends SQLManager<String> {
     private final HikariDataSource hikariDataSource;
@@ -25,16 +24,6 @@ public class StringSQLManager extends SQLManager<String> {
 
     public StringSQLManager(@NonNull SpiJetBuilder<HikariDataSource> dataSourceBuilder) {
         this(dataSourceBuilder.build());
-    }
-
-    @Override
-    public Future<CachedRowSet> executeUpdateAsync(String arg) {
-        return asyncExecutor.submit(() -> executeUpdate(arg));
-    }
-
-    @Override
-    public Future<CachedRowSet> executeQueryAsync(String arg) {
-        return asyncExecutor.submit(() -> executeQuery(arg));
     }
 
     @Override
