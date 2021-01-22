@@ -15,7 +15,7 @@ dsb.setUsername("Simpsons")
 HikariDataSource hds = dsb.build();
 
 //Query Something
-SQLQueryBuilder sqb = new SQLQueryBuilder("simpsons", "SELECT * FROM simpsons WHERE name=? AND age=?;");
+SQLQueryBuilder sqb = new SQLQueryBuilder("SELECT * FROM simpsons WHERE name=? AND age=?;");
 sqb.setParameter(1, "Homer");
 sqb.setParameter(2, 42);
 
@@ -26,9 +26,6 @@ CachedRowSet crs = sqb.executeQuery(hds);
 ## Particles
 Particles are supported in multiple versions where the particle is either `Particle.` or `Effect.`.
 ```Java
-//Jump boost with effect:
-player.setVelocity(player.getVelocity().addVelocity(new Velocity(0,2,0)))
-
 //Gets you the right wrapper for your version
 ParticleWrapper particleWrapper = ParticleUtils.getWrapper();
 
@@ -37,7 +34,7 @@ particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 0
 ```
 
 ## GuiAPI
-This is just a copy of my GuiApi for more information read: ![Gui API](https://github.com/worldOneo/GUI-API)
+This is just a copy of my GuiApi for more information read: [Gui API](https://github.com/worldOneo/GUI-API/wiki)
 
 ## Configurations
 The configuration utility of this plugin support JSON and YAML configs
