@@ -50,6 +50,7 @@ public class JsonSQLStorage {
 
     /**
      * Tries to create a table based on the name.
+     *
      * @throws SQLException if an error occurred while creating the table.
      */
     private void setup() throws SQLException {
@@ -83,7 +84,8 @@ public class JsonSQLStorage {
 
     /**
      * Inserts or update the data into the table with the uuid as its identifier
-     * @param uuid The uuid the JSON item is identified with.
+     *
+     * @param uuid       The uuid the JSON item is identified with.
      * @param dataObject the object to write into the table.
      * @return the generated rows.
      * @throws SQLException if an error occurred while inserting or updating the data into the table.

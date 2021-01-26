@@ -52,6 +52,15 @@ shadowJar {
     relocate 'com.zaxxer.hikari', 'de.worldoneo.spijetapi.hikari'
 }
 
+task githubJar(type: Copy, dependsOn: shadowJar) {
+    def libsDir = file(getLibsDirectory().get())
+    def shadowArchive = shadowJar.archiveFileName.get()
+    from(libsDir)
+    include shadowArchive
+    destinationDir libsDir
+    rename shadowArchive, 'SpiJetAPI-GitHub.jar'
+}
+
 task sourcesJar(type: Jar, dependsOn: classes) {
     classifier('sources')
     from sourceSets.main.allSource

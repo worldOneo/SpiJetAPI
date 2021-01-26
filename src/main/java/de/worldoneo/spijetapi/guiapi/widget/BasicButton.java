@@ -4,13 +4,13 @@ import de.worldoneo.spijetapi.guiapi.widgets.AbstractButton;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;
 
 @Accessors(chain = true)
-public class BasicButton extends AbstractButton {
+public class BasicButton<T extends Cancellable> extends AbstractButton<T> {
     /**
      * The ItemStack which will be displayed as button.
      *
@@ -25,10 +25,10 @@ public class BasicButton extends AbstractButton {
     /**
      * Create a simple GUI-Button
      *
-     * @param inventoryClickEventConsumer the function which is called when the Button is clicked
+     * @param clickEventConsumer the function which is called when the Button is clicked
      */
-    public BasicButton(Consumer<InventoryClickEvent> inventoryClickEventConsumer) {
-        super(inventoryClickEventConsumer);
+    public BasicButton(Consumer<T> clickEventConsumer) {
+        super(clickEventConsumer);
     }
 
     @Override

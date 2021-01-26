@@ -2,9 +2,11 @@ package de.worldoneo.spijetapi.scheduler;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import lombok.Setter;
 
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicBoolean;
+import java.util.function.Consumer;
 
 @Getter
 public class SpiTask implements Runnable {
@@ -14,6 +16,8 @@ public class SpiTask implements Runnable {
     private final long pause;
     private final SpiScheduler spiScheduler;
     private Throwable lastException;
+    @Setter
+    private Consumer<Throwable> exceptionHandler = (t) -> {};
 
     @Getter(AccessLevel.NONE)
     private final AtomicBoolean running = new AtomicBoolean(true);
@@ -42,6 +46,7 @@ public class SpiTask implements Runnable {
                 runnable.run();
             } catch (Throwable t) {
                 lastException = t;
+                exceptionHandler.accept(t);
             }
             if (pause <= 0) break;
             try {

@@ -1,8 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.gui;
 
-import de.worldoneo.spijetapi.guiapi.GUIManager;
-import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
-import de.worldoneo.spijetapi.guiapi.widgets.AbstractWidget;
+import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
 import de.worldoneo.spijetapi.utils.Pair;
@@ -12,6 +10,7 @@ import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
@@ -22,13 +21,15 @@ import java.util.List;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class GUI implements IGUI {
+public class GUI implements IGUI<InventoryClickEvent> {
     private String GUITitle = "Made by GUIAPI";
-    private List<IWidget> widgets = new ArrayList<>();
-    private List<IMultipartWidget> multipartWidgets = new ArrayList<>();
+    private List<IWidget<InventoryClickEvent>> widgets = new ArrayList<>();
+    private List<IMultipartWidget<InventoryClickEvent>> multipartWidgets = new ArrayList<>();
+    private InventoryType inventoryType = InventoryType.CHEST;
+    private boolean cancelClickDefault = true;
     private int size = 9;
-    private HashMap<Pair<ItemStack, Integer>, IWidget> pairWidgetHashMap = new HashMap<>();
-    private HashMap<Pair<ItemStack, Integer>, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
+    private HashMap<Pair<ItemStack, Integer>, IWidget<InventoryClickEvent>> pairWidgetHashMap = new HashMap<>();
+    private HashMap<Pair<ItemStack, Integer>, IMultipartWidget<InventoryClickEvent>> pairMultipartWidgetHashMap = new HashMap<>();
 
     /**
      * Opens the GUI for the player
@@ -36,7 +37,7 @@ public class GUI implements IGUI {
      * @param player to open this GUI for
      */
     public void open(Player player) {
-        GUIManager.getInstance().open(this, player);
+        InventoryGUIManager.getInstance().open(this, player);
     }
 
     /**
@@ -44,7 +45,11 @@ public class GUI implements IGUI {
      */
     @Override
     public Inventory render() {
-        Inventory inventory = Bukkit.createInventory(null, getSize(), getGUITitle());
+        pairMultipartWidgetHashMap.clear();
+        pairWidgetHashMap.clear();
+        Inventory inventory = getInventoryType() == InventoryType.CHEST
+                ? Bukkit.createInventory(null, getSize(), getGUITitle())
+                : Bukkit.createInventory(null, getInventoryType(), getGUITitle());
         getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
@@ -62,22 +67,18 @@ public class GUI implements IGUI {
     }
 
     /**
-     * It's recommended to use {@link AbstractWidget#setIgui(IGUI)} that the widgets can use AbstractWidget#open(Player);
-     *
      * @param widget add a widget to this gui
      */
     @Override
-    public void addWidget(IWidget widget) {
+    public void addWidget(IWidget<InventoryClickEvent> widget) {
         widgets.add(widget);
     }
 
     /**
-     * It's recommended to use {@link AbstractMultipartWidget#setIgui(IGUI)} that the widgets can use AbstractMultipartWidget#open(Player);
-     *
      * @param multipartWidget add a multipartWidget to this gui
      */
     @Override
-    public void addWidget(IMultipartWidget multipartWidget) {
+    public void addWidget(IMultipartWidget<InventoryClickEvent> multipartWidget) {
         multipartWidgets.add(multipartWidget);
     }
 
@@ -87,9 +88,10 @@ public class GUI implements IGUI {
         if (e.getCurrentItem() == null) {
             return;
         }
+        if (cancelClickDefault) e.setCancelled(true);
         Pair<ItemStack, Integer> pair = new Pair<>(e.getCurrentItem(), e.getSlot());
-        IWidget widget = pairWidgetHashMap.get(pair);
-        IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(pair);
+        IWidget<InventoryClickEvent> widget = pairWidgetHashMap.get(pair);
+        IMultipartWidget<InventoryClickEvent> multipartWidget = pairMultipartWidgetHashMap.get(pair);
         if (multipartWidget != null) {
             multipartWidget.clickEvent(e);
         }

@@ -1,25 +1,26 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractWidget;
+import de.worldoneo.spijetapi.utils.ItemStackBuilder;
+import de.worldoneo.spijetapi.utils.SpigotUtils;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public class PlaceHolder extends AbstractWidget {
+public class PlaceHolder<T extends Cancellable> extends AbstractWidget<T> {
     /**
-     * The {@link Material} of this {@link PlaceHolder}
+     * The {@link ItemStack} of this {@link PlaceHolder}
      *
-     * @param material the material to render this placeholder
+     * @param itemStack the material to render this placeholder
      * @return the current material
      */
-    private Material material;
+    private ItemStack itemStack = new ItemStack(Material.STONE);
 
     /**
      * Render this widget
@@ -28,18 +29,34 @@ public class PlaceHolder extends AbstractWidget {
      */
     @Override
     public ItemStack render() {
-        ItemStack itemStack = new ItemStack(material);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(" ");
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return new ItemStackBuilder(itemStack).setDisplayName(" ").build();
     }
 
     /**
      * This event is always just cancelled.
      */
     @Override
-    public void clickEvent(InventoryClickEvent e) {
+    public void clickEvent(T e) {
         e.setCancelled(true);
+    }
+
+    /**
+     * Sets the ItemStack to a new empty named ItemStack
+     *
+     * @param material the material of the new ItemStack
+     * @return this
+     */
+    public PlaceHolder<T> setMaterial(Material material) {
+        this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
+        return this;
+    }
+
+    /**
+     * Gets the material of the current ItemStack
+     *
+     * @return the material of the current ItemStack
+     */
+    public Material getMaterial() {
+        return itemStack.getType();
     }
 }
