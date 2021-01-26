@@ -1,13 +1,13 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractButton;
+import de.worldoneo.spijetapi.utils.ItemStackBuilder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
 
 import java.util.function.Consumer;
 
@@ -53,10 +53,6 @@ public class Button extends AbstractButton {
      */
     @Override
     public ItemStack render() {
-        ItemStack itemStack = new ItemStack(material, amount);
-        ItemMeta itemMeta = itemStack.getItemMeta();
-        itemMeta.setDisplayName(title);
-        itemStack.setItemMeta(itemMeta);
-        return itemStack;
+        return new ItemStackBuilder(material, amount, title).build();
     }
 }

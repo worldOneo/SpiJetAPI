@@ -2,11 +2,9 @@ package de.worldoneo.spijetapi.guiapi.widget;
 
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
-import de.worldoneo.spijetapi.utils.SpiJetUtils;
 import de.worldoneo.spijetapi.utils.SpigotUtils;
 import lombok.AccessLevel;
 import lombok.Getter;
-import lombok.RequiredArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
@@ -68,14 +66,15 @@ public class ListWidget extends AbstractMultipartWidget {
     @Setter(AccessLevel.NONE)
     private int index;
 
-    @RequiredArgsConstructor
-    private enum MenuItems {
-        BACK(SpigotUtils.createNamedItemStack(Material.ARROW, "Back")),
-        FORWARD(SpigotUtils.createNamedItemStack(Material.ARROW, "Next"));
-        @Getter
-        private final ItemStack itemStack;
+    /**
+     * The {@link ItemStack} of the back button
+     */
+    private ItemStack back = SpigotUtils.createNamedItemStack(Material.ARROW, "Back");
 
-    }
+    /**
+     * The {@link ItemStack} of the forward button
+     */
+    private ItemStack forward = SpigotUtils.createNamedItemStack(Material.ARROW, "Next");
 
     /**
      * Render the {@link ListWidget}
@@ -87,8 +86,8 @@ public class ListWidget extends AbstractMultipartWidget {
         List<Pair<ItemStack, Integer>> pairList = new ArrayList<>();
         int tempBackSlot = backSlot == null ? slots.get(0) : backSlot;
         int tempForwardSlot = forwardSlot == null ? slots.get(slots.size() - 1) : forwardSlot;
-        pairList.add(new Pair<>(MenuItems.BACK.getItemStack(), tempBackSlot));
-        pairList.add(new Pair<>(MenuItems.FORWARD.getItemStack(), tempForwardSlot));
+        pairList.add(new Pair<>(this.back, tempBackSlot));
+        pairList.add(new Pair<>(this.forward, tempForwardSlot));
         Iterator<Integer> iterator = slots.iterator();
         Iterator<ItemStack> itemStackIterator = itemStacks.stream().skip(index).limit(slots.size() - 2).iterator();
         while (iterator.hasNext() && itemStackIterator.hasNext()) {
@@ -113,11 +112,11 @@ public class ListWidget extends AbstractMultipartWidget {
         }
         e.setCancelled(true);
         ItemStack itemStack = e.getCurrentItem();
-        if (itemStack.equals(MenuItems.BACK.getItemStack())) {
+        if (itemStack.equals(this.back)) {
             index -= slots.size() - 2;
             index = index < 0 ? 0 : index;
             open((Player) e.getWhoClicked());
-        } else if (itemStack.equals(MenuItems.FORWARD.getItemStack())) {
+        } else if (itemStack.equals(forward)) {
             int tmpIndex = index + slots.size() - 2;
             if (itemStacks.stream().skip(tmpIndex).count() != 0) {
                 index = tmpIndex;

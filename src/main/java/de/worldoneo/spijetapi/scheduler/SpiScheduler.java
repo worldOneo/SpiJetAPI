@@ -45,7 +45,7 @@ public class SpiScheduler {
      * The delay of the task is 0 (it starts with no pause) and pauses then.
      *
      * @param runnable The task to
-     * @param pause    The pause between runs (in ms)
+     * @param pause    The pause between runs (in ms). A pause of 0 means only run once
      * @return the task which is running
      */
     public SpiTask schedule(Runnable runnable, long pause) {
@@ -56,7 +56,7 @@ public class SpiScheduler {
      * Runs a task in intervals.
      *
      * @param runnable The task to run
-     * @param pause    The pause between runs
+     * @param pause    The pause between runs. A pause of 0 means only run once
      * @param timeUnit the timeunit of the pause
      * @return the task which is running
      */
@@ -69,7 +69,7 @@ public class SpiScheduler {
      *
      * @param runnable The task to run
      * @param delay    The delay to wait before the run
-     * @param pause    The pause between runs
+     * @param pause    The pause between runs. A pause of 0 means only run once
      * @param timeUnit The timeunit of the pause and the delay
      * @return the task which is running
      */
