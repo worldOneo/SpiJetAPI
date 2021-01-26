@@ -7,13 +7,13 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public class PlaceHolder extends AbstractWidget {
+public class PlaceHolder<T extends Cancellable> extends AbstractWidget<T> {
     /**
      * The {@link ItemStack} of this {@link PlaceHolder}
      *
@@ -36,7 +36,7 @@ public class PlaceHolder extends AbstractWidget {
      * This event is always just cancelled.
      */
     @Override
-    public void clickEvent(InventoryClickEvent e) {
+    public void clickEvent(T e) {
         e.setCancelled(true);
     }
 
@@ -46,7 +46,7 @@ public class PlaceHolder extends AbstractWidget {
      * @param material the material of the new ItemStack
      * @return this
      */
-    public PlaceHolder setMaterial(Material material) {
+    public PlaceHolder<T> setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
     }

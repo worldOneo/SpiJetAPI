@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.function.Consumer;
@@ -14,7 +14,7 @@ import java.util.function.Consumer;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class Button extends AbstractButton {
+public class Button<T extends Cancellable> extends AbstractButton<T> {
     /**
      * The {@link Material} to use as button material
      *
@@ -40,10 +40,10 @@ public class Button extends AbstractButton {
     /**
      * Create a simple GUI-Button
      *
-     * @param inventoryClickEventConsumer the function which is called when the Button is clicked
+     * @param clickEventConsumer the function which is called when the Button is clicked
      */
-    public Button(Consumer<InventoryClickEvent> inventoryClickEventConsumer) {
-        super(inventoryClickEventConsumer);
+    public Button(Consumer<T> clickEventConsumer) {
+        super(clickEventConsumer);
     }
 
     /**

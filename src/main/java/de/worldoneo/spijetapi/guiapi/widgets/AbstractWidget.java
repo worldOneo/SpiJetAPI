@@ -1,18 +1,19 @@
 package de.worldoneo.spijetapi.guiapi.widgets;
 
 import de.worldoneo.spijetapi.guiapi.GUIManager;
+import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
 import de.worldoneo.spijetapi.guiapi.gui.IGUI;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public abstract class AbstractWidget implements IWidget {
+public abstract class AbstractWidget<T extends Cancellable> implements IWidget<T> {
     private int slot;
-    private IGUI igui;
 
 
     /**
@@ -20,9 +21,8 @@ public abstract class AbstractWidget implements IWidget {
      *
      * @param igui the GUI to add this Widget to
      */
-    public void addToGUI(IGUI igui) {
+    public void addToGUI(IGUI<T> igui) {
         igui.addWidget(this);
-        this.setIgui(igui);
     }
 
     /**
@@ -31,8 +31,10 @@ public abstract class AbstractWidget implements IWidget {
      * @param player The {@link Player} to open the {@link IGUI} for.
      */
     protected void open(Player player) {
-        if (this.igui != null) {
-            GUIManager.getInstance().open(this.igui, player);
-        }
+        open(player, InventoryGUIManager.getInstance());
+    }
+
+    protected <A extends Cancellable> void open(Player player, GUIManager<A> guiManager) {
+        guiManager.render(player);
     }
 }

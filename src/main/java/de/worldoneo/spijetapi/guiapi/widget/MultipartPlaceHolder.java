@@ -8,7 +8,7 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
-import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.List;
@@ -17,7 +17,7 @@ import java.util.stream.Collectors;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class MultipartPlaceHolder extends AbstractMultipartWidget {
+public class MultipartPlaceHolder<T extends Cancellable> extends AbstractMultipartWidget<T> {
     /**
      * The slots this {@link MultipartPlaceHolder} renders on
      *
@@ -51,7 +51,7 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
      * Just cancels the clickEvent
      */
     @Override
-    public void clickEvent(InventoryClickEvent e) {
+    public void clickEvent(T e) {
         e.setCancelled(true);
     }
 
@@ -62,7 +62,7 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
      * @param material the material of the new {@link ItemStack}
      * @return this
      */
-    public MultipartPlaceHolder setMaterial(Material material) {
+    public MultipartPlaceHolder<T> setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
     }

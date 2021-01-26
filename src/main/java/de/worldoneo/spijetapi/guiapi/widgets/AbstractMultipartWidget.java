@@ -1,34 +1,23 @@
 package de.worldoneo.spijetapi.guiapi.widgets;
 
 import de.worldoneo.spijetapi.guiapi.GUIManager;
+import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
 import de.worldoneo.spijetapi.guiapi.gui.IGUI;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 
 @Accessors(chain = true)
 @Setter
 @Getter
-public abstract class AbstractMultipartWidget implements IMultipartWidget {
+public abstract class AbstractMultipartWidget<T extends Cancellable> implements IMultipartWidget<T> {
     /**
-     * The {@link IGUI} which this widget is on.
-     *
-     * @param igui the {@link IGUI} of this widget
-     * <b>THIS FUNCTION IS NOT RECOMMENDED AS YOU HAVE TO ADD THE WIDGET MANUEL TO THE {@link IGUI}
-     * USE {@link AbstractMultipartWidget#addToGUI(IGUI)} INSTEAD</b>
-     * @return the {@link IGUI} of this Widget
-     */
-    private IGUI igui;
-
-    /**
-     * Adds this {@link IMultipartWidget} to the {@link IGUI} and also set the own variable to enable <code>open(Player player);</code>.
-     *
      * @param igui the {@link IGUI} on which to add the {@link AbstractMultipartWidget}
      */
-    public void addToGUI(IGUI igui) {
+    public void addToGUI(IGUI<T> igui) {
         igui.addWidget(this);
-        this.igui = igui;
     }
 
 
@@ -38,8 +27,10 @@ public abstract class AbstractMultipartWidget implements IMultipartWidget {
      * @param player The {@link Player} to open the {@link IGUI} for.
      */
     protected void open(Player player) {
-        if (this.igui != null) {
-            GUIManager.getInstance().open(this.igui, player);
-        }
+        open(player, InventoryGUIManager.getInstance());
+    }
+
+    protected <A extends Cancellable> void open(Player player, GUIManager<A> guiManager) {
+        guiManager.render(player);
     }
 }
