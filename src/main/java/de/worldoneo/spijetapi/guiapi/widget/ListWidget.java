@@ -1,8 +1,7 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
 import de.worldoneo.spijetapi.guiapi.GUIManager;
-import de.worldoneo.spijetapi.guiapi.HotbarGUIManager;
-import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
+import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
 import de.worldoneo.spijetapi.utils.SpigotUtils;
@@ -12,9 +11,7 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -26,7 +23,7 @@ import java.util.function.Consumer;
 @Accessors(chain = true)
 @Getter
 @Setter
-public class ListWidget<T extends Cancellable> extends AbstractMultipartWidget<T> {
+public class ListWidget extends AbstractMultipartWidget {
     /**
      * The slots the {@link ListWidget} is rendered on.
      *
@@ -117,20 +114,11 @@ public class ListWidget<T extends Cancellable> extends AbstractMultipartWidget<T
      * @param e The {@link InventoryClickEvent} to handle
      */
     @Override
-    public void clickEvent(T e) {
+    public void clickEvent(ClickContext e) {
         e.setCancelled(true);
-        ItemStack itemStack = null;
-        Player player = null;
-        GUIManager<?> guiManager = null;
-        if (e instanceof InventoryClickEvent) {
-            itemStack = ((InventoryClickEvent) e).getCurrentItem();
-            player = (Player) ((InventoryClickEvent) e).getWhoClicked();
-            guiManager = InventoryGUIManager.getInstance();
-        } else if (e instanceof PlayerInteractEvent) {
-            player = ((PlayerInteractEvent) e).getPlayer();
-            itemStack = player.getInventory().getItem(player.getInventory().getHeldItemSlot());
-            guiManager = HotbarGUIManager.getInstance();
-        }
+        ItemStack itemStack = e.getItemStack();
+        Player player = e.getPlayer();
+        GUIManager<?> guiManager = e.getGuiManager();
         if (itemStack == null) return;
 
         if (itemStack.equals(this.back)) {

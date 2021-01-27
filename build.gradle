@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
-    id 'maven'
-    id 'io.freefair.lombok' version "5.1.1"
+    id 'maven-publish'
+    id 'io.freefair.lombok' version "5.3.0"
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
@@ -47,7 +47,7 @@ shadowJar {
         include '*'
     }
 
-    archiveName("$rootProject.name-$rootProject.version.${archiveExtension.get()}")
+    archiveFileName = "$rootProject.name-$rootProject.version.${archiveExtension.get()}"
     configurations = [project.configurations.shadow]
     relocate 'com.zaxxer.hikari', 'de.worldoneo.spijetapi.hikari'
 }

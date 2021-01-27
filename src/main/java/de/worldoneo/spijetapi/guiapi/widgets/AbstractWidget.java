@@ -7,12 +7,11 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public abstract class AbstractWidget<T extends Cancellable> implements IWidget<T> {
+public abstract class AbstractWidget implements IWidget {
     private int slot;
 
 
@@ -21,7 +20,7 @@ public abstract class AbstractWidget<T extends Cancellable> implements IWidget<T
      *
      * @param igui the GUI to add this Widget to
      */
-    public void addToGUI(IGUI<T> igui) {
+    public void addToGUI(IGUI<?> igui) {
         igui.addWidget(this);
     }
 
@@ -34,7 +33,7 @@ public abstract class AbstractWidget<T extends Cancellable> implements IWidget<T
         open(player, InventoryGUIManager.getInstance());
     }
 
-    protected <A extends Cancellable> void open(Player player, GUIManager<A> guiManager) {
+    protected void open(Player player, GUIManager<?> guiManager) {
         guiManager.render(player);
     }
 }
