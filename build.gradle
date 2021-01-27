@@ -6,6 +6,7 @@ plugins {
 }
 
 version "${VERSION}"
+group "com.github.worldOneo"
 
 repositories {
     mavenCentral()
@@ -71,8 +72,14 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
     from javadoc.destinationDir
 }
 
-artifacts {
-    archives sourcesJar
-    archives javadocJar
-    archives shadowJar
+
+publishing {
+    publications {
+        mavenJava(MavenPublication) {
+            artifact javadocJar
+            artifact sourcesJar
+            artifact shadowJar
+            artifact jar
+        }
+    }
 }
