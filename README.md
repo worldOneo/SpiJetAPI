@@ -1,16 +1,21 @@
 ![logo](https://raw.githubusercontent.com/worldOneo/SpiJetAPI/master/resources/Logo.png)
+
+[![](https://jitpack.io/v/worldOneo/SpiJetAPI.svg)](https://jitpack.io/#worldOneo/SpiJetAPI)
+
 # SpiJetAPI
+
 An API Which contains all the small things I use in my Projects
 
 # Examples:
 
 ## SQL
+
 ```Java
 //SQL connections
 DataSourceBuilder dsb = new DataSourceBuilder();
 dsb.setUsername("Simpsons")
-   .setJdbcUrl("jdbc:mysql://127.0.0.1:3306/simpsons")
-   .setPassword("S1mp50ns!");
+        .setJdbcUrl("jdbc:mysql://127.0.0.1:3306/simpsons")
+        .setPassword("S1mp50ns!");
 
 HikariDataSource hds = dsb.build();
 
@@ -24,7 +29,9 @@ CachedRowSet crs = sqb.executeQuery(hds);
 ```
 
 ## Particles
+
 Particles are supported in multiple versions where the particle is either `Particle.` or `Effect.`.
+
 ```Java
 //Gets you the right wrapper for your version
 ParticleWrapper particleWrapper = ParticleUtils.getWrapper();
@@ -34,10 +41,13 @@ particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 0
 ```
 
 ## GuiAPI
+
 This is just a copy of my GuiApi for more information read: [Gui API](https://github.com/worldOneo/GUI-API/wiki)
 
 ## Configurations
+
 The configuration utility of this plugin support JSON and YAML configs
+
 ```Java
 File ymlConfig = new File(getDataFolder(), "config.yml");
 File jsonConfig = new File(getDataFolder(), "config.json");

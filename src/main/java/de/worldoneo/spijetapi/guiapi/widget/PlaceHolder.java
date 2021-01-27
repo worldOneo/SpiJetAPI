@@ -1,5 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
+import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractWidget;
 import de.worldoneo.spijetapi.utils.ItemStackBuilder;
 import de.worldoneo.spijetapi.utils.SpigotUtils;
@@ -7,13 +8,12 @@ import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
-import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public class PlaceHolder<T extends Cancellable> extends AbstractWidget<T> {
+public class PlaceHolder extends AbstractWidget {
     /**
      * The {@link ItemStack} of this {@link PlaceHolder}
      *
@@ -36,7 +36,7 @@ public class PlaceHolder<T extends Cancellable> extends AbstractWidget<T> {
      * This event is always just cancelled.
      */
     @Override
-    public void clickEvent(T e) {
+    public void clickEvent(ClickContext e) {
         e.setCancelled(true);
     }
 
@@ -46,7 +46,7 @@ public class PlaceHolder<T extends Cancellable> extends AbstractWidget<T> {
      * @param material the material of the new ItemStack
      * @return this
      */
-    public PlaceHolder<T> setMaterial(Material material) {
+    public PlaceHolder setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
     }

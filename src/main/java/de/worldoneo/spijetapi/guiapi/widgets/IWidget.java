@@ -1,10 +1,10 @@
 package de.worldoneo.spijetapi.guiapi.widgets;
 
-import org.bukkit.event.Cancellable;
+import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
-public interface IWidget<T extends Cancellable> {
+public interface IWidget {
     /**
      * Render this IWidget
      *
@@ -17,7 +17,7 @@ public interface IWidget<T extends Cancellable> {
      *
      * @param e the {@link InventoryClickEvent} which caused this function call
      */
-    void clickEvent(T e);
+    void clickEvent(ClickContext e);
 
     /**
      * @return the slot of this IWidget

@@ -23,13 +23,13 @@ import java.util.List;
 @Setter
 public class GUI implements IGUI<InventoryClickEvent> {
     private String GUITitle = "Made by GUIAPI";
-    private List<IWidget<InventoryClickEvent>> widgets = new ArrayList<>();
-    private List<IMultipartWidget<InventoryClickEvent>> multipartWidgets = new ArrayList<>();
+    private List<IWidget> widgets = new ArrayList<>();
+    private List<IMultipartWidget> multipartWidgets = new ArrayList<>();
     private InventoryType inventoryType = InventoryType.CHEST;
     private boolean cancelClickDefault = true;
     private int size = 9;
-    private HashMap<Pair<ItemStack, Integer>, IWidget<InventoryClickEvent>> pairWidgetHashMap = new HashMap<>();
-    private HashMap<Pair<ItemStack, Integer>, IMultipartWidget<InventoryClickEvent>> pairMultipartWidgetHashMap = new HashMap<>();
+    private HashMap<Pair<ItemStack, Integer>, IWidget> pairWidgetHashMap = new HashMap<>();
+    private HashMap<Pair<ItemStack, Integer>, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
 
     /**
      * Opens the GUI for the player
@@ -57,12 +57,11 @@ public class GUI implements IGUI<InventoryClickEvent> {
             inventory.setItem(slot, itemStack);
         });
 
-        getMultipartWidgets().forEach(multipartWidget ->
-                multipartWidget.render().forEach(itemStackIntegerPair -> {
-                    pairMultipartWidgetHashMap.put(itemStackIntegerPair, multipartWidget);
-                    inventory.setItem(itemStackIntegerPair.getValue(), itemStackIntegerPair.getKey());
-                })
-        );
+        multipartWidgets.forEach(multipartWidget ->
+                multipartWidget.render().forEach(p -> {
+                    pairMultipartWidgetHashMap.put(p, multipartWidget);
+                    inventory.setItem(p.getValue(), p.getKey());
+                }));
         return inventory;
     }
 
@@ -70,7 +69,7 @@ public class GUI implements IGUI<InventoryClickEvent> {
      * @param widget add a widget to this gui
      */
     @Override
-    public void addWidget(IWidget<InventoryClickEvent> widget) {
+    public void addWidget(IWidget widget) {
         widgets.add(widget);
     }
 
@@ -78,7 +77,7 @@ public class GUI implements IGUI<InventoryClickEvent> {
      * @param multipartWidget add a multipartWidget to this gui
      */
     @Override
-    public void addWidget(IMultipartWidget<InventoryClickEvent> multipartWidget) {
+    public void addWidget(IMultipartWidget multipartWidget) {
         multipartWidgets.add(multipartWidget);
     }
 
@@ -90,13 +89,15 @@ public class GUI implements IGUI<InventoryClickEvent> {
         }
         if (cancelClickDefault) e.setCancelled(true);
         Pair<ItemStack, Integer> pair = new Pair<>(e.getCurrentItem(), e.getSlot());
-        IWidget<InventoryClickEvent> widget = pairWidgetHashMap.get(pair);
-        IMultipartWidget<InventoryClickEvent> multipartWidget = pairMultipartWidgetHashMap.get(pair);
+        IWidget widget = pairWidgetHashMap.get(pair);
+        IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(pair);
+        ClickContext clickContext = new ClickContext(e.getCurrentItem(), (Player) e.getWhoClicked(), false,
+                InventoryGUIManager.getInstance(), this, e.getSlot());
         if (multipartWidget != null) {
-            multipartWidget.clickEvent(e);
+            multipartWidget.clickEvent(clickContext);
         }
         if (widget != null) {
-            widget.clickEvent(e);
+            widget.clickEvent(clickContext);
         }
     }
 }

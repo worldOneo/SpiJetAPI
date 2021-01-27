@@ -19,8 +19,8 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      * @param location the base location the "middle"
      * @param amount   the total amount of Particles
      * @param spreadx  the spreadx (Random spread on the x dimension)
-     * @param spready  the spready (Random spread on the x dimension)
-     * @param spreadz  the spreadz (Random spread on the x dimension)
+     * @param spready  the spready (Random spread on the y dimension)
+     * @param spreadz  the spreadz (Random spread on the z dimension)
      * @param players  the players to send the particle to
      */
     public void createField(Object particle, Location location, int amount,
@@ -88,9 +88,13 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      * <p>
      * O(p*Amount)
      *
-     * @param x,y,z    the first coordinate (From)
-     * @param x1,y1,z2 the second coordinate (To)
-     * @param world    the world to create the particles in
+     * @param x     From x
+     * @param y     From y
+     * @param z     From z
+     * @param x1    To x
+     * @param y1    to y
+     * @param z1    to z
+     * @param world the world to create the particles in
      */
     @Override
     public void createLine(Object particle, World world, int amount, double x, double y, double z, double x1, double y1, double z1, Collection<? extends Player> players) {
