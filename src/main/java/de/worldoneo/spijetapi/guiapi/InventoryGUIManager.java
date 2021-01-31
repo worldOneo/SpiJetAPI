@@ -62,7 +62,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
         char[] chars = "1234567890abcdeflnokm".toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             stringBuilder.append("&").append(chars[random.nextInt(chars.length)]);
         }
         stringBuilder.append("&r");
