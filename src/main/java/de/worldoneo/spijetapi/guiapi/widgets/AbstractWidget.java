@@ -16,8 +16,6 @@ public abstract class AbstractWidget implements IWidget {
 
 
     /**
-     * This function is used to support {@link AbstractWidget#open(Player)}
-     *
      * @param igui the GUI to add this Widget to
      */
     public void addToGUI(IGUI<?> igui) {

@@ -21,6 +21,8 @@ public class BasicButton extends AbstractButton {
     @Setter
     private ItemStack displayItem;
 
+    public BasicButton() {
+    }
 
     /**
      * Create a simple GUI-Button
