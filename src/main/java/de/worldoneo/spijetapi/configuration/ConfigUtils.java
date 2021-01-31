@@ -2,6 +2,7 @@ package de.worldoneo.spijetapi.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
 import org.yaml.snakeyaml.Yaml;
@@ -25,10 +26,7 @@ public class ConfigUtils {
         DumperOptions options = new DumperOptions();
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            file.createNewFile();
-        }
+        ensureFile(file);
         FileWriter fileWriter = new FileWriter(file);
         String content = new Yaml(options).dumpAsMap(object);
         fileWriter.write(content);
@@ -79,15 +77,12 @@ public class ConfigUtils {
         }
     }
 
-    @Nullable
-    public static <T> T loadJson(File file, Class<T> classOfT) {
+    @NotNull
+    public static <T> T loadJson(File file, Class<T> classOfT) throws IOException {
         try (InputStream inputStream = new FileInputStream(file);
              Reader reader = new InputStreamReader(inputStream)) {
             return gson.fromJson(reader, classOfT);
-        } catch (IOException e) {
-            e.printStackTrace();
         }
-        return null;
     }
 
     /**
@@ -99,17 +94,14 @@ public class ConfigUtils {
      * @param <T>         Class defined by second arg
      * @return the loaded class or null if an IOException occurred
      */
-    @Nullable
-    public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) {
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-            try {
-                saveJson(file, defaultData);
-            } catch (IOException exception) {
-                return null;
-            }
+    @NotNull
+    public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) throws IOException {
+        if (ensureFile(file)) {
+            saveJson(file, defaultData);
         }
-        return loadJson(file, classOfT);
+        T data = loadJson(file, classOfT);
+        saveJson(file, data);
+        return data;
     }
 
     /**
@@ -120,10 +112,27 @@ public class ConfigUtils {
      * @throws IOException when the file couldn't be written
      */
     public static void saveJson(File file, Object dataObject) throws IOException {
-        if (!file.exists()) {
-            file.getParentFile().mkdirs();
-        }
+        ensureFile(file);
         String data = gson.toJson(dataObject);
         Files.write(file.toPath(), data.getBytes());
+    }
+
+    /**
+     * Ensures the existence of the given file.
+     * If the file doesn't exists the required parent directories and the file will be created
+     *
+     * @param file the file to ensure the existence of
+     * @return whether the file was newly created
+     * @throws IOException if there was an error in creating the file
+     */
+    public static boolean ensureFile(File file) throws IOException {
+        if (!file.exists()) {
+            if ((file.getParentFile().exists() || file.getParentFile().mkdirs())
+                    || file.createNewFile()) {
+                throw new IOException("Unable to create the file " + file.getAbsolutePath());
+            }
+            return true;
+        }
+        return false;
     }
 }
