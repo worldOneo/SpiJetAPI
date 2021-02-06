@@ -129,9 +129,9 @@ public class ConfigUtils {
         if (!file.exists()) {
             if ((file.getParentFile().exists() || file.getParentFile().mkdirs())
                     || file.createNewFile()) {
-                throw new IOException("Unable to create the file " + file.getAbsolutePath());
+                return true;
             }
-            return true;
+            throw new IOException("Unable to create the file " + file.getAbsolutePath());
         }
         return false;
     }
