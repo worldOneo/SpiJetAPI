@@ -17,7 +17,7 @@ public class SpiTask implements Runnable {
     private final SpiScheduler spiScheduler;
     private Throwable lastException;
     @Setter
-    private Consumer<Throwable> exceptionHandler = (t) -> {};
+    private Consumer<Throwable> exceptionHandler = Throwable::printStackTrace;
 
     @Getter(AccessLevel.NONE)
     private final AtomicBoolean running = new AtomicBoolean(true);

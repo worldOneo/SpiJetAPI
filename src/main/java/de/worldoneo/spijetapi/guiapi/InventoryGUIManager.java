@@ -29,7 +29,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     public void open(IGUI<InventoryClickEvent> igui, Player player) {
         Inventory inventory = igui.render();
         String title = igui.getGUITitle();
-        title = title+generateID();
+        title = title + generateID();
         Inventory renamedInventory = inventory.getType() == InventoryType.CHEST
                 ? Bukkit.createInventory(null, inventory.getSize(), title)
                 : Bukkit.createInventory(null, inventory.getType(), title);

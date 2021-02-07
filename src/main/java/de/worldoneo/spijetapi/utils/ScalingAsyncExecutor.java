@@ -1,11 +1,7 @@
 package de.worldoneo.spijetapi.utils;
 
-import lombok.Getter;
-
 public class ScalingAsyncExecutor extends AsyncExecutor {
-    @Getter
-    private int maxThreads;
-    public static final int DEFAULT_MAX_THREADS = 128;
+    public static final int DEFAULT_MAX_THREADS = 64;
 
     public ScalingAsyncExecutor() {
         this(Runtime.getRuntime().availableProcessors());
@@ -17,12 +13,14 @@ public class ScalingAsyncExecutor extends AsyncExecutor {
 
     public ScalingAsyncExecutor(int corePoolSize, int maxThreads) {
         super(corePoolSize);
-        this.maxThreads = maxThreads;
-        getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
+        setMaxThreads(maxThreads);
     }
 
     public void setMaxThreads(int maxThreads) {
-        this.maxThreads = maxThreads;
         getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
+    }
+
+    public int getMaxThreads() {
+        return getThreadPoolExecutor().getMaximumPoolSize();
     }
 }

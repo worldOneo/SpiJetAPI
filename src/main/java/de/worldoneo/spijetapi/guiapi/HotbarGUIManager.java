@@ -49,12 +49,10 @@ public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
     }
 
     public void preventDrop(PlayerDropItemEvent event) {
-        if (event.isCancelled()) return;
-        event.setCancelled(playerIGUIHashMap.containsKey(event.getPlayer()));
+        if (!event.isCancelled()) event.setCancelled(playerIGUIHashMap.containsKey(event.getPlayer()));
     }
 
     public void preventMove(InventoryClickEvent event) {
-        if (event.isCancelled()) return;
-        event.setCancelled(playerIGUIHashMap.containsKey((Player) event.getWhoClicked()));
+        if (!event.isCancelled()) event.setCancelled(playerIGUIHashMap.containsKey((Player) event.getWhoClicked()));
     }
 }
