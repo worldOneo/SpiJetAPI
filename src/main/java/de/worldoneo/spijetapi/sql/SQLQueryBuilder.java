@@ -19,7 +19,7 @@ import java.util.function.Consumer;
 @Getter
 @Accessors(chain = true)
 public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<DataSource>, AsyncSQLExecutor<DataSource> {
-    private AsyncExecutor asyncExecutor = SQLManager.asyncExecutor;
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
     private StringBuffer query;
     private Map<Integer, Object> parameterMap = new HashMap<>();
 

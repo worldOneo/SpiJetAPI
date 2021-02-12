@@ -5,6 +5,7 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.rowset.CachedRowSet;
@@ -13,7 +14,8 @@ import java.util.UUID;
 import java.util.concurrent.Future;
 
 public class JsonSQLStorage {
-    private final AsyncExecutor asyncExecutor = SQLManager.asyncExecutor;
+    @Setter
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
     private static final Gson GSON = new Gson();

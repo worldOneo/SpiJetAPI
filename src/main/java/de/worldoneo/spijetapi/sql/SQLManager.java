@@ -5,6 +5,8 @@ import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
@@ -12,7 +14,10 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.Supplier;
 
 public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
-    protected static final AsyncExecutor asyncExecutor = new ScalingAsyncExecutor();
+    protected static final AsyncExecutor defaultAsyncExecutor = new ScalingAsyncExecutor();
+    @Getter
+    @Setter
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
 
     public static SQLManager<String> createStringManager(HikariDataSource hikariDataSource) {
         return new StringSQLManager(hikariDataSource);
@@ -60,7 +65,7 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeUpdateAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrThrow(this::executeUpdate, arg), asyncExecutor.getThreadPoolExecutor());
+        return CompletableFuture.supplyAsync(tryOrThrow(this::executeUpdate, arg), getAsyncExecutor().getThreadPoolExecutor());
     }
 
     /**
@@ -70,6 +75,6 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeQueryAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrThrow(this::executeQuery, arg), asyncExecutor.getThreadPoolExecutor());
+        return CompletableFuture.supplyAsync(tryOrThrow(this::executeQuery, arg), getAsyncExecutor().getThreadPoolExecutor());
     }
 }
