@@ -18,7 +18,7 @@ import java.util.function.Consumer;
 @Setter
 @Getter
 @Accessors(chain = true)
-public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<DataSource>, AsyncSQLExecutor<DataSource> {
+public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<DataSource> {
     private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
     private StringBuffer query;
     private Map<Integer, Object> parameterMap = new HashMap<>();
@@ -67,7 +67,9 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
+     * @deprecated No error handling use a SQLManager instead
      */
+    @Deprecated
     public void executeUpdate(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         try {
             CachedRowSet cachedRowSet = executeUpdate(dataSource);
@@ -81,7 +83,9 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
+     * @deprecated No error handling use a SQLManager instead
      */
+    @Deprecated
     public void executeQuery(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         try {
             CachedRowSet cachedRowSet = executeQuery(dataSource);
@@ -95,7 +99,9 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
+     * @deprecated No error handling use a SQLManager instead
      */
+    @Deprecated
     public void executeQueryAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         asyncExecutor.submit(() -> executeQuery(dataSource, consumer));
     }
@@ -105,7 +111,9 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
+     * @deprecated No error handling use a SQLManager instead
      */
+    @Deprecated
     public void executeUpdateAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         asyncExecutor.submit(() -> executeUpdate(dataSource, consumer));
     }
@@ -148,12 +156,22 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
         return sqlQueryBuilder;
     }
 
-    @Override
+    /**
+     * @param arg The datasource to get the connection from
+     * @return the future of this update
+     * @deprecated No error handling use a SQLManager instead
+     */
+    @Deprecated
     public Future<CachedRowSet> executeUpdateAsync(DataSource arg) {
         return asyncExecutor.submit(() -> executeUpdate(arg));
     }
 
-    @Override
+    /**
+     * @param arg The datasource to get the connection from
+     * @return the future of this query
+     * @deprecated No error handling use a SQLManager instead
+     */
+    @Deprecated
     public Future<CachedRowSet> executeQueryAsync(DataSource arg) {
         return asyncExecutor.submit(() -> executeQuery(arg));
     }
