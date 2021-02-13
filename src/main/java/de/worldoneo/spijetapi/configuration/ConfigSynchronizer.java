@@ -15,7 +15,7 @@ public class ConfigSynchronizer {
     public static final String CREATE_CODE = "CREATE TABLE IF NOT EXISTS `%s` (" +
             "`file` TEXT(65535) NOT NULL COLLATE 'utf8_bin'," +
             "`content` LONGTEXT NULL DEFAULT NULL COLLATE 'utf8_bin'," +
-            "UNIQUE INDEX `name` (`file`(50)) USING BTREE" +
+            "PRIMARY KEY (`file`(50)) USING BTREE" +
             ")" +
             "COLLATE='utf8_bin'" +
             "ENGINE=InnoDB" +
@@ -81,7 +81,7 @@ public class ConfigSynchronizer {
      */
     public void loadConfig(String key, Path path) throws SQLException, IOException {
         File file = path.toFile();
-        if (!file.getParentFile().exists()) file.getParentFile().mkdirs();
+        ConfigUtils.ensureFile(file);
         Files.write(path, loadConfig(key));
     }
 }

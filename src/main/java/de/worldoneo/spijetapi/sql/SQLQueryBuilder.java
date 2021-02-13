@@ -1,6 +1,7 @@
 package de.worldoneo.spijetapi.sql;
 
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
+import de.worldoneo.spijetapi.utils.RuntimeErrorWrapper;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
 import lombok.Setter;
@@ -12,25 +13,25 @@ import javax.sql.rowset.CachedRowSet;
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @Setter
 @Getter
 @Accessors(chain = true)
-public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<DataSource> {
+public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecutor<DataSource>, AsyncSQLExecutor<DataSource> {
     private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
-    private StringBuffer query;
+    private String query;
     private Map<Integer, Object> parameterMap = new HashMap<>();
 
     public SQLQueryBuilder(String sql) {
-        this.query = new StringBuffer(sql);
+        this.query = sql;
     }
 
     @Override
     public CachedRowSet executeUpdate(DataSource dataSource) throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query.toString(), Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
 
             for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
@@ -48,7 +49,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     @Override
     public CachedRowSet executeQuery(DataSource dataSource) throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query.toString())) {
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
 
             for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
@@ -67,7 +68,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
-     * @deprecated No error handling use a SQLManager instead
+     * @deprecated No error handling, use a {@link QuerySQLManager} instead
      */
     @Deprecated
     public void executeUpdate(DataSource dataSource, Consumer<CachedRowSet> consumer) {
@@ -83,7 +84,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
-     * @deprecated No error handling use a SQLManager instead
+     * @deprecated No error handling, use a {@link QuerySQLManager} instead
      */
     @Deprecated
     public void executeQuery(DataSource dataSource, Consumer<CachedRowSet> consumer) {
@@ -99,7 +100,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
-     * @deprecated No error handling use a SQLManager instead
+     * @deprecated No error handling, use a {@link QuerySQLManager} instead
      */
     @Deprecated
     public void executeQueryAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
@@ -111,7 +112,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      *
      * @param dataSource the datasource to get the connection from
      * @param consumer   the consumer used to pass the result to
-     * @deprecated No error handling use a SQLManager instead
+     * @deprecated No error handling, use a {@link QuerySQLManager} instead
      */
     @Deprecated
     public void executeUpdateAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
@@ -148,7 +149,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      */
     @Override
     public SQLQueryBuilder build() {
-        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(query.toString());
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(query);
         for (Map.Entry<Integer, Object> parameter : parameterMap.entrySet()) {
             sqlQueryBuilder.setParameter(parameter.getKey(), parameter.getValue());
         }
@@ -159,20 +160,16 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     /**
      * @param arg The datasource to get the connection from
      * @return the future of this update
-     * @deprecated No error handling use a SQLManager instead
      */
-    @Deprecated
-    public Future<CachedRowSet> executeUpdateAsync(DataSource arg) {
-        return asyncExecutor.submit(() -> executeUpdate(arg));
+    public CompletableFuture<CachedRowSet> executeUpdateAsync(DataSource arg) {
+        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, asyncExecutor.getThreadPoolExecutor());
     }
 
     /**
      * @param arg The datasource to get the connection from
      * @return the future of this query
-     * @deprecated No error handling use a SQLManager instead
      */
-    @Deprecated
-    public Future<CachedRowSet> executeQueryAsync(DataSource arg) {
-        return asyncExecutor.submit(() -> executeQuery(arg));
+    public CompletableFuture<CachedRowSet> executeQueryAsync(DataSource arg) {
+        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, asyncExecutor.getThreadPoolExecutor());
     }
 }

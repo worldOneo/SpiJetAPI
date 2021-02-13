@@ -93,6 +93,7 @@ public class ConfigUtils {
      * @param defaultData default data to use and write if no file exists
      * @param <T>         Class defined by second arg
      * @return the loaded class or null if an IOException occurred
+     * @throws IOException when the file couldn't be written/read
      */
     @NotNull
     public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) throws IOException {
@@ -128,7 +129,7 @@ public class ConfigUtils {
     public static boolean ensureFile(File file) throws IOException {
         if (!file.exists()) {
             if ((file.getParentFile().exists() || file.getParentFile().mkdirs())
-                    || file.createNewFile()) {
+                    && file.createNewFile()) {
                 return true;
             }
             throw new IOException("Unable to create the file " + file.getAbsolutePath());
