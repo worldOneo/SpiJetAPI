@@ -46,6 +46,9 @@ public class Button extends AbstractButton {
         super(clickEventConsumer);
     }
 
+    public Button() {
+    }
+
     /**
      * Renders the button to an ItemStack
      *

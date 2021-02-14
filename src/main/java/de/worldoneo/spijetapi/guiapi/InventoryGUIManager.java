@@ -29,7 +29,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     public void open(IGUI<InventoryClickEvent> igui, Player player) {
         Inventory inventory = igui.render();
         String title = igui.getGUITitle();
-        title = generateID() + title;
+        title = title + generateID();
         Inventory renamedInventory = inventory.getType() == InventoryType.CHEST
                 ? Bukkit.createInventory(null, inventory.getSize(), title)
                 : Bukkit.createInventory(null, inventory.getType(), title);
@@ -62,10 +62,9 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
         char[] chars = "1234567890abcdeflnokm".toCharArray();
         StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 2; i++) {
             stringBuilder.append("&").append(chars[random.nextInt(chars.length)]);
         }
-        stringBuilder.append("&r");
         return SpiJetUtils.colorize(stringBuilder.toString());
     }
 }

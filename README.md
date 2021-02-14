@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/worldOneo/SpiJetAPI.svg)](https://jitpack.io/#worldOneo/SpiJetAPI)
 
-# SpiJetAPI
+# SpiJetAPI - (1.8.8 - 1.16)
 
 An API Which contains all the small things I use in my Projects
 
@@ -24,8 +24,10 @@ SQLQueryBuilder sqb = new SQLQueryBuilder("SELECT * FROM simpsons WHERE name=? A
 sqb.setParameter(1, "Homer");
 sqb.setParameter(2, 42);
 
-//Query
+//Query sync
 CachedRowSet crs = sqb.executeQuery(hds);
+//Query async
+CompletableFuture<CachedRowSet> future = sqb.executeQueryAsync(hds);
 ```
 
 ## Particles
@@ -36,13 +38,30 @@ Particles are supported in multiple versions where the particle is either `Parti
 //Gets you the right wrapper for your version
 ParticleWrapper particleWrapper = ParticleUtils.getWrapper();
 
-//Create 100 particles at the location of the player in the shape of a circle with the radius of 2 for all players
-particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 0, 2, Bukkit.getOnlinePlayers());
+//Create 100 particles at the location of the player in the shape of a sphere with the radius of 2 for all players
+particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 2, 2);
 ```
 
-## GuiAPI
+## GUI-API
 
-This is just a copy of my GuiApi for more information read: [Gui API](https://github.com/worldOneo/GUI-API/wiki)
+The "normal" ways to create GUIs is often based on slot and/or string comparison of the item used as a button and the InventoryClickEvent.
+This GUI-API aims to connect the events and the creation of the API to create GUIs easier.
+
+```java
+GUI gui = new GUI();
+gui
+ .setSize(27) //3 rows
+ .setGUITitle("My First GUI!");
+Button button = new Button(this::action); //This function (this::action) is called on click
+button
+ .setSlot(13) //Define the position of the button
+ .setMaterial(Material.PAPER) //Define the material
+ .setTitle("Click me!"); //Set the name
+gui.addWidget(button); //Add the button to the gui
+InventoryGUIManager.getInstance().open(gui, player); //open the gui as inventory
+
+```
+That's all no need to check stuff. No need to register listeners.
 
 ## Configurations
 

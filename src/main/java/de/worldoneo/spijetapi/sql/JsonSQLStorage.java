@@ -3,17 +3,21 @@ package de.worldoneo.spijetapi.sql;
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
+import de.worldoneo.spijetapi.utils.RuntimeErrorWrapper;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
+import lombok.Setter;
 import org.jetbrains.annotations.Nullable;
 
 import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
 import java.util.UUID;
-import java.util.concurrent.Future;
+import java.util.concurrent.CompletableFuture;
 
+@Setter
+@Getter
 public class JsonSQLStorage {
-    private final AsyncExecutor asyncExecutor = SQLManager.asyncExecutor;
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
     private static final Gson GSON = new Gson();
@@ -21,12 +25,12 @@ public class JsonSQLStorage {
     @Getter
     private enum SQLStrings {
         TABLE_CREATION_STRING("CREATE TABLE IF NOT EXISTS `%s` (" +
-                "`uuid` TINYTEXT NOT NULL," +
+                "`uuid` VARCHAR(36) NOT NULL," +
                 "`jsonDocument` JSON NOT NULL COLLATE 'utf8mb4_bin'," +
-                "UNIQUE INDEX `UniqueID` (`uuid`(40))" +
+                "PRIMARY KEY (`uuid`(8))" +
                 ");"),
-        GETTER_STRING("SELECT * from `%s` WHERE uuid='%s';"),
-        SETTER_STRING("INSERT INTO `%s` (uuid, jsonDocument) VALUES ('%s', '%3$s') ON DUPLICATE KEY UPDATE jsonDocument='%3$s';");
+        GETTER_STRING("SELECT * from `%s` WHERE uuid=?;"),
+        SETTER_STRING("INSERT INTO `%s` (uuid, jsonDocument) VALUES (?, ?) ON DUPLICATE KEY UPDATE jsonDocument=?;");
         final String string;
 
         SQLStrings(String string) {
@@ -70,8 +74,9 @@ public class JsonSQLStorage {
      */
     @Nullable
     public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
-        String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName, uuid.toString());
+        String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedString);
+        sqlQueryBuilder.setParameter(1, uuid.toString());
         CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
         if (cachedRowSet == null) {
             return null;
@@ -92,16 +97,19 @@ public class JsonSQLStorage {
      */
     public CachedRowSet setData(UUID uuid, Object dataObject) throws SQLException {
         String data = GSON.toJson(dataObject);
-        String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName, uuid.toString(), data);
+        String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(format);
+        sqlQueryBuilder.setParameter(1, uuid.toString());
+        sqlQueryBuilder.setParameter(2, data);
+        sqlQueryBuilder.setParameter(3, data);
         return sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
-    public Future<CachedRowSet> setDataAsync(UUID uuid, Object dataObject) {
-        return asyncExecutor.submit(() -> setData(uuid, dataObject));
+    public CompletableFuture<CachedRowSet> setDataAsync(UUID uuid, Object dataObject) {
+        return RuntimeErrorWrapper.tryOrThrow(d -> this.setData(uuid, d), dataObject, asyncExecutor.getThreadPoolExecutor());
     }
 
-    public <T> Future<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return asyncExecutor.submit(() -> getData(uuid, classOfT));
+    public <T> CompletableFuture<T> getDataAsync(UUID uuid, Class<T> classOfT) {
+        return RuntimeErrorWrapper.tryOrThrow(c -> getData(uuid, c), classOfT, asyncExecutor.getThreadPoolExecutor());
     }
 }

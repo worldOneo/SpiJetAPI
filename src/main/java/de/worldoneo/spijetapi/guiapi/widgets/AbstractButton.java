@@ -10,7 +10,11 @@ import java.util.function.Consumer;
 @Setter
 @Getter
 public abstract class AbstractButton extends AbstractWidget {
-    private final Consumer<ClickContext> clickEventConsumer;
+    private Consumer<ClickContext> clickEventConsumer = c -> {
+    };
+
+    public AbstractButton() {
+    }
 
     public AbstractButton(Consumer<ClickContext> clickEventConsumer) {
         this.clickEventConsumer = clickEventConsumer;

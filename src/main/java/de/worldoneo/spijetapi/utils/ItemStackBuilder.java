@@ -23,17 +23,18 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
     }
 
     public ItemStackBuilder(Material material, int amount) {
-        this(new ItemStack(material));
+        this(material);
         setAmount(amount);
+    }
+
+    public ItemStackBuilder(Material material) {
+        this(new ItemStack(material));
     }
 
     public ItemStackBuilder(ItemStack itemStack) {
         this.itemStack = itemStack;
     }
 
-    public ItemStackBuilder(Material material) {
-        this.itemStack = new ItemStack(material);
-    }
 
     public ItemStackBuilder setDisplayName(String displayName) {
         changeItemMeta(itemMeta -> itemMeta.setDisplayName(displayName));

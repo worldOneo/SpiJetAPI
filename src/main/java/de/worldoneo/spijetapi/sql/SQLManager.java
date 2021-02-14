@@ -3,16 +3,20 @@ package de.worldoneo.spijetapi.sql;
 import com.zaxxer.hikari.HikariConfig;
 import com.zaxxer.hikari.HikariDataSource;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
+import de.worldoneo.spijetapi.utils.RuntimeErrorWrapper;
 import de.worldoneo.spijetapi.utils.ScalingAsyncExecutor;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
+import lombok.Getter;
+import lombok.Setter;
 
 import javax.sql.rowset.CachedRowSet;
-import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Supplier;
 
 public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
-    protected static final AsyncExecutor asyncExecutor = new ScalingAsyncExecutor();
+    protected static final AsyncExecutor defaultAsyncExecutor = new ScalingAsyncExecutor();
+    @Getter
+    @Setter
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
 
     public static SQLManager<String> createStringManager(HikariDataSource hikariDataSource) {
         return new StringSQLManager(hikariDataSource);
@@ -38,38 +42,25 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
         return new StringSQLManager(hikariConfig);
     }
 
-    @FunctionalInterface
-    public interface SqlThrowingFunction<A, R> {
-        R apply(A t) throws SQLException;
-    }
-
-    protected Supplier<CachedRowSet> tryOrThrow(SqlThrowingFunction<T, CachedRowSet> function, T arg) {
-        return () -> {
-            try {
-                return function.apply(arg);
-            } catch (SQLException sqlException) {
-                throw new RuntimeException(sqlException);
-            }
-        };
-    }
-
     /**
-     * Executes the executeUpdate function async and returns the completable future or null and a error
+     * Executes the executeUpdate function async and returns the completable future
+     * which is completed which the fetched {@link javax.sql.RowSet} as {@link CachedRowSet}
      *
      * @param arg the argument used to execute the update with
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeUpdateAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrThrow(this::executeUpdate, arg), asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, getAsyncExecutor().getThreadPoolExecutor());
     }
 
     /**
-     * Executes the executeUpdate function async and returns the completable future or null and a error
+     * Executes the executeQuery function async and returns the completable future
+     * which is completed with the generated rows as {@link CachedRowSet}
      *
      * @param arg the argument used to execute the update with
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeQueryAsync(T arg) {
-        return CompletableFuture.supplyAsync(tryOrThrow(this::executeQuery, arg), asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, getAsyncExecutor().getThreadPoolExecutor());
     }
 }
