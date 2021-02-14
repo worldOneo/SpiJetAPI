@@ -43,7 +43,8 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
     }
 
     /**
-     * Executes the executeUpdate function async and returns the completable future or null and a error
+     * Executes the executeUpdate function async and returns the completable future
+     * which is completed which the fetched {@link javax.sql.RowSet} as {@link CachedRowSet}
      *
      * @param arg the argument used to execute the update with
      * @return The completable which is completed with a CachedRowSet or null if failed
@@ -53,7 +54,8 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
     }
 
     /**
-     * Executes the executeUpdate function async and returns the completable future or null and a error
+     * Executes the executeQuery function async and returns the completable future
+     * which is completed with the generated rows as {@link CachedRowSet}
      *
      * @param arg the argument used to execute the update with
      * @return The completable which is completed with a CachedRowSet or null if failed
