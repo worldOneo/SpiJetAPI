@@ -5,9 +5,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.scoreboard.DisplaySlot;
 import org.bukkit.scoreboard.Objective;
 import org.bukkit.scoreboard.Scoreboard;
+import org.bukkit.scoreboard.ScoreboardManager;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
@@ -16,8 +16,12 @@ public class SpiJetBoard {
     private final Scoreboard scoreboard;
     private final Objective objective;
 
+    @SuppressWarnings("deprecation") //Scoreboard#registerNewObjective is the only method available in legacy.
     public SpiJetBoard(String title) {
-        this.scoreboard = Bukkit.getScoreboardManager().getNewScoreboard();
+        ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
+        if (scoreboardManager == null)
+            throw new IllegalStateException("No ScoreboardManager available as no worlds are loaded.");
+        this.scoreboard = scoreboardManager.getNewScoreboard();
         this.objective = scoreboard.registerNewObjective("Board", "dummy");
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
         setDisplayName(title);
@@ -70,7 +74,7 @@ public class SpiJetBoard {
     }
 
     public Set<String> getEntries() {
-        return Collections.unmodifiableSet(scoreboard.getEntries());
+        return scoreboard.getEntries();
     }
 
     public void send(Player... players) {
