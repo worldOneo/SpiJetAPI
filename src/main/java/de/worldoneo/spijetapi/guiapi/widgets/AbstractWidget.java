@@ -14,11 +14,12 @@ import org.bukkit.entity.Player;
 public abstract class AbstractWidget implements IWidget {
     private int slot;
 
-
     /**
      * @param igui the GUI to add this Widget to
+     * @deprecated use {@link IGUI#addWidget} instead
      */
-    public void addToGUI(IGUI<?> igui) {
+    @Deprecated
+    public void addToGUI(IGUI igui) {
         igui.addWidget(this);
     }
 

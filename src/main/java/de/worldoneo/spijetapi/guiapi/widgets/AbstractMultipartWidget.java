@@ -14,8 +14,10 @@ import org.bukkit.entity.Player;
 public abstract class AbstractMultipartWidget implements IMultipartWidget {
     /**
      * @param igui the {@link IGUI} on which to add the {@link AbstractMultipartWidget}
+     * @deprecated use {@link IGUI#addWidget} instead
      */
-    public void addToGUI(IGUI<?> igui) {
+    @Deprecated
+    public void addToGUI(IGUI igui) {
         igui.addWidget(this);
     }
 

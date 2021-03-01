@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 public interface GUIManager<T extends Cancellable> {
-    void open(IGUI<T> gui, Player player);
+    void open(IGUI gui, Player player);
 
     void render(Player player);
 
