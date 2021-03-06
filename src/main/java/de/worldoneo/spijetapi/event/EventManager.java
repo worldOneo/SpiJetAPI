@@ -12,6 +12,12 @@ import java.util.Map;
 public class EventManager {
     private final Map<Class<? extends SpiEvent>, List<RegisteredListener>> registeredEvents = new HashMap<>();
 
+    /**
+     * Registers all of listeners functions annotated with {@link SpiHandler}.
+     * As this function uses reflection it should not be called often.
+     *
+     * @param listener The object to register the listeners from.
+     */
     public void registerListener(Object listener) {
         for (Method method : listener.getClass().getMethods()) {
             Class<?> type;
@@ -27,8 +33,15 @@ public class EventManager {
         }
     }
 
+    /**
+     * Fires the {@link SpiEvent} for every registered listener.
+     * If {@link SpiEvent#isAsync()} is true, the event is called
+     * in another thread.
+     *
+     * @param event The event to fire.
+     */
     public void runEvent(SpiEvent event) {
-        if(event.isAsync()) SpiScheduler.getInstance().runAsync(() -> runEvent0(event));
+        if (event.isAsync()) SpiScheduler.getInstance().runAsync(() -> runEvent0(event));
         else runEvent0(event);
     }
 

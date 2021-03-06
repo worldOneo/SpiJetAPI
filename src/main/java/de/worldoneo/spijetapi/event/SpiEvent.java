@@ -5,7 +5,8 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 /**
- * The SpiEvent class is used to handle/create events for the {@link EventManager}
+ * The SpiEvent class is used to handle/create events for the {@link EventManager}.
+ * If async is true, the event will be executed in a different thread.
  */
 @Data
 @NoArgsConstructor

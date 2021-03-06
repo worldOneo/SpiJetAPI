@@ -1,6 +1,7 @@
 package de.worldoneo.spijetapi.guiapi.gui;
 
 import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
+import de.worldoneo.spijetapi.guiapi.modifier.IModifier;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
 import de.worldoneo.spijetapi.utils.Pair;
@@ -15,6 +16,7 @@ import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Accessors(chain = true)
@@ -24,6 +26,7 @@ public class GUI implements IGUI {
     private String GUITitle = "Made by GUIAPI";
     protected List<IWidget> widgets = new ArrayList<>();
     protected List<IMultipartWidget> multipartWidgets = new ArrayList<>();
+    protected List<IModifier> modifiers = new LinkedList<>();
     private InventoryType inventoryType = InventoryType.CHEST;
     private boolean cancelClickDefault = true;
     private int size = 9;
@@ -49,6 +52,11 @@ public class GUI implements IGUI {
         Inventory inventory = getInventoryType() == InventoryType.CHEST
                 ? Bukkit.createInventory(null, getSize(), getGUITitle())
                 : Bukkit.createInventory(null, getInventoryType(), getGUITitle());
+        renderOn(inventory);
+        return inventory;
+    }
+
+    public void renderOn(Inventory inventory) {
         getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
@@ -61,7 +69,8 @@ public class GUI implements IGUI {
                     pairMultipartWidgetHashMap.put(p, multipartWidget);
                     inventory.setItem(p.getValue(), p.getKey());
                 }));
-        return inventory;
+
+        modifiers.forEach(m -> m.accept(inventory));
     }
 
     /**
@@ -93,5 +102,10 @@ public class GUI implements IGUI {
         IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
         if (widget != null) widget.clickEvent(e);
         if (multipartWidget != null) multipartWidget.clickEvent(e);
+    }
+
+    @Override
+    public void addModifier(IModifier modifier) {
+        modifiers.add(modifier);
     }
 }

@@ -20,7 +20,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
 
     private InventoryGUIManager() {
         SpigotSpiJetAPI spigotSpiJetAPI = SpigotSpiJetAPI.getInstance();
-        spigotSpiJetAPI.getServer().getPluginManager().registerEvents(new OnInventoryClickListener(), spigotSpiJetAPI);
+        spigotSpiJetAPI.getServer().getPluginManager().registerEvents(new InventoryGUIListener(), spigotSpiJetAPI);
     }
 
     public static InventoryGUIManager getInstance() {
@@ -39,6 +39,10 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
         playerIGUIMap.put(player, new Pair<>(title, igui));
         Bukkit.getScheduler().runTask(SpigotSpiJetAPI.getInstance(),
                 () -> player.openInventory(renamedInventory));
+    }
+
+    public void removePlayer(Player pLayer) {
+        playerIGUIMap.remove(pLayer);
     }
 
     @Override

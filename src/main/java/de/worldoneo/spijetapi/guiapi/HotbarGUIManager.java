@@ -23,7 +23,7 @@ public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
 
     private HotbarGUIManager() {
         SpigotSpiJetAPI instance = SpigotSpiJetAPI.getInstance();
-        instance.getServer().getPluginManager().registerEvents(new OnPlayerInteractListener(), instance);
+        instance.getServer().getPluginManager().registerEvents(new HotbarGUIListener(), instance);
     }
 
     @Override
