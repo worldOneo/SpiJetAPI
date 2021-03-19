@@ -29,7 +29,7 @@ public class ConfigUtils {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
         ensureFile(file);
-        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter fileWriter = Files.newBufferedWriter(file.toPath());
         String content = new Yaml(options).dumpAsMap(object);
         fileWriter.write(content);
         fileWriter.close();
