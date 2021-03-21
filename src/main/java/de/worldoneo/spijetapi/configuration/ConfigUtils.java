@@ -2,6 +2,7 @@ package de.worldoneo.spijetapi.configuration;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import lombok.experimental.UtilityClass;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.yaml.snakeyaml.DumperOptions;
@@ -12,6 +13,7 @@ import org.yaml.snakeyaml.representer.Representer;
 import java.io.*;
 import java.nio.file.Files;
 
+@UtilityClass
 public class ConfigUtils {
     private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
 
@@ -27,7 +29,7 @@ public class ConfigUtils {
         options.setDefaultFlowStyle(DumperOptions.FlowStyle.BLOCK);
         options.setPrettyFlow(true);
         ensureFile(file);
-        FileWriter fileWriter = new FileWriter(file);
+        BufferedWriter fileWriter = Files.newBufferedWriter(file.toPath());
         String content = new Yaml(options).dumpAsMap(object);
         fileWriter.write(content);
         fileWriter.close();
@@ -42,7 +44,7 @@ public class ConfigUtils {
      * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
      * @throws IOException                            When the file couldn't be read or written.
      */
-    @Nullable
+    @NotNull
     public static <T> T load(File file, T defaultConfig, Class<T> clazz) throws IOException {
         if (!file.exists()) {
             save(file, defaultConfig);
@@ -62,19 +64,15 @@ public class ConfigUtils {
      * @throws org.yaml.snakeyaml.error.YAMLException When the config couldn't be parsed to an object of that class.
      * @throws IOException                            When the file couldn't be read.
      */
-    @Nullable
+    @NotNull
     public static <T> T load(File file, Class<T> clazz) throws IOException {
-        try {
-            Representer representer = new Representer();
-            representer.getPropertyUtils().setSkipMissingProperties(true);
-            Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz.getClassLoader()), representer);
-            FileInputStream fileInputStream = new FileInputStream(file);
-            Object o = yaml.loadAs(fileInputStream, clazz);
-            fileInputStream.close();
-            return clazz.cast(o);
-        } catch (ClassCastException ignored) {
-            return null;
-        }
+        Representer representer = new Representer();
+        representer.getPropertyUtils().setSkipMissingProperties(true);
+        Yaml yaml = new Yaml(new CustomClassLoaderConstructor(clazz.getClassLoader()), representer);
+        FileInputStream fileInputStream = new FileInputStream(file);
+        T o = yaml.loadAs(fileInputStream, clazz);
+        fileInputStream.close();
+        return o;
     }
 
     @NotNull

@@ -1,6 +1,7 @@
 package de.worldoneo.spijetapi.guiapi.gui;
 
 import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
+import de.worldoneo.spijetapi.guiapi.modifier.IModifier;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
 import de.worldoneo.spijetapi.utils.Pair;
@@ -9,27 +10,28 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedList;
 import java.util.List;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public class GUI implements IGUI<InventoryClickEvent> {
+public class GUI implements IGUI {
     private String GUITitle = "Made by GUIAPI";
-    private List<IWidget> widgets = new ArrayList<>();
-    private List<IMultipartWidget> multipartWidgets = new ArrayList<>();
+    protected List<IWidget> widgets = new ArrayList<>();
+    protected List<IMultipartWidget> multipartWidgets = new ArrayList<>();
+    protected List<IModifier> modifiers = new LinkedList<>();
     private InventoryType inventoryType = InventoryType.CHEST;
     private boolean cancelClickDefault = true;
     private int size = 9;
-    private HashMap<Pair<ItemStack, Integer>, IWidget> pairWidgetHashMap = new HashMap<>();
-    private HashMap<Pair<ItemStack, Integer>, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
+    protected HashMap<Pair<ItemStack, Integer>, IWidget> pairWidgetHashMap = new HashMap<>();
+    protected HashMap<Pair<ItemStack, Integer>, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
 
     /**
      * Opens the GUI for the player
@@ -50,6 +52,11 @@ public class GUI implements IGUI<InventoryClickEvent> {
         Inventory inventory = getInventoryType() == InventoryType.CHEST
                 ? Bukkit.createInventory(null, getSize(), getGUITitle())
                 : Bukkit.createInventory(null, getInventoryType(), getGUITitle());
+        renderOn(inventory);
+        return inventory;
+    }
+
+    public void renderOn(Inventory inventory) {
         getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
@@ -62,7 +69,8 @@ public class GUI implements IGUI<InventoryClickEvent> {
                     pairMultipartWidgetHashMap.put(p, multipartWidget);
                     inventory.setItem(p.getValue(), p.getKey());
                 }));
-        return inventory;
+
+        modifiers.forEach(m -> m.accept(inventory));
     }
 
     /**
@@ -83,21 +91,21 @@ public class GUI implements IGUI<InventoryClickEvent> {
 
 
     @Override
-    public void clickEvent(InventoryClickEvent e) {
-        if (e.getCurrentItem() == null) {
+    public void clickEvent(ClickContext e) {
+        if (e.getItemStack() == null) {
             return;
         }
+
         if (cancelClickDefault) e.setCancelled(true);
-        Pair<ItemStack, Integer> pair = new Pair<>(e.getCurrentItem(), e.getSlot());
-        IWidget widget = pairWidgetHashMap.get(pair);
-        IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(pair);
-        ClickContext clickContext = new ClickContext(e.getCurrentItem(), (Player) e.getWhoClicked(), false,
-                InventoryGUIManager.getInstance(), this, e.getSlot());
-        if (multipartWidget != null) {
-            multipartWidget.clickEvent(clickContext);
-        }
-        if (widget != null) {
-            widget.clickEvent(clickContext);
-        }
+        Pair<ItemStack, Integer> key = new Pair<>(e.getItemStack(), e.getSlot());
+        IWidget widget = pairWidgetHashMap.get(key);
+        IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
+        if (widget != null) widget.clickEvent(e);
+        if (multipartWidget != null) multipartWidget.clickEvent(e);
+    }
+
+    @Override
+    public void addModifier(IModifier modifier) {
+        modifiers.add(modifier);
     }
 }

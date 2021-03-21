@@ -13,6 +13,6 @@ public class ClickContext {
     private Player player;
     private boolean cancelled;
     private GUIManager<?> guiManager;
-    private IGUI<?> gui;
+    private IGUI gui;
     private int slot;
 }

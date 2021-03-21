@@ -1,6 +1,7 @@
 package de.worldoneo.spijetapi.guiapi;
 
 import de.worldoneo.spijetapi.SpigotSpiJetAPI;
+import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.gui.IGUI;
 import de.worldoneo.spijetapi.utils.Pair;
 import de.worldoneo.spijetapi.utils.SpiJetUtils;
@@ -15,18 +16,19 @@ import java.util.Random;
 
 public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     private static final InventoryGUIManager instance = new InventoryGUIManager();
-    private final HashMap<Player, Pair<String, IGUI<InventoryClickEvent>>> playerIGUIMap = new HashMap<>();
+    private final HashMap<Player, Pair<String, IGUI>> playerIGUIMap = new HashMap<>();
 
     private InventoryGUIManager() {
         SpigotSpiJetAPI spigotSpiJetAPI = SpigotSpiJetAPI.getInstance();
-        spigotSpiJetAPI.getServer().getPluginManager().registerEvents(new OnInventoryClickListener(), spigotSpiJetAPI);
+        spigotSpiJetAPI.getServer().getPluginManager().registerEvents(new InventoryGUIListener(), spigotSpiJetAPI);
     }
 
     public static InventoryGUIManager getInstance() {
         return instance;
     }
 
-    public void open(IGUI<InventoryClickEvent> igui, Player player) {
+    @Override
+    public void open(IGUI igui, Player player) {
         Inventory inventory = igui.render();
         String title = igui.getGUITitle();
         title = title + generateID();
@@ -35,27 +37,34 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
                 : Bukkit.createInventory(null, inventory.getType(), title);
         renamedInventory.setContents(inventory.getContents());
         playerIGUIMap.put(player, new Pair<>(title, igui));
-        player.openInventory(renamedInventory);
+        Bukkit.getScheduler().runTask(SpigotSpiJetAPI.getInstance(),
+                () -> player.openInventory(renamedInventory));
+    }
+
+    public void removePlayer(Player pLayer) {
+        playerIGUIMap.remove(pLayer);
     }
 
     @Override
     public void render(Player player) {
-        IGUI<InventoryClickEvent> igui = playerIGUIMap.getOrDefault(player, new Pair<>(null, null)).getValue();
+        IGUI igui = playerIGUIMap.getOrDefault(player, new Pair<>(null, null)).getValue();
         if (igui == null) return;
         open(igui, player);
     }
 
     public void handle(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
-        Pair<String, IGUI<InventoryClickEvent>> pair = playerIGUIMap.get(player);
+        Pair<String, IGUI> pair = playerIGUIMap.get(player);
         if (pair == null) {
             return;
         }
         String title = pair.getKey();
-        IGUI<InventoryClickEvent> iGUI = pair.getValue();
+        IGUI iGUI = pair.getValue();
 
         if (!title.equals(e.getView().getTitle())) return;
-        iGUI.clickEvent(e);
+        ClickContext cc = new ClickContext(e.getCurrentItem(), player,
+                false, this, iGUI, e.getSlot());
+        iGUI.clickEvent(cc);
     }
 
     private String generateID() {

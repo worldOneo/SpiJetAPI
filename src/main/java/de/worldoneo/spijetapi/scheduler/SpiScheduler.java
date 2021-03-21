@@ -1,11 +1,11 @@
 package de.worldoneo.spijetapi.scheduler;
 
 import com.google.common.util.concurrent.ThreadFactoryBuilder;
-import gnu.trove.TCollections;
-import gnu.trove.map.TIntObjectMap;
-import gnu.trove.map.hash.TIntObjectHashMap;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 import java.util.concurrent.TimeUnit;
@@ -16,7 +16,7 @@ public class SpiScheduler {
             .setNameFormat("SpiThread #%1$d")
             .build());
     private final AtomicInteger taskCounter = new AtomicInteger();
-    private final TIntObjectMap<SpiTask> tasks = TCollections.synchronizedMap(new TIntObjectHashMap<>());
+    private final Map<Integer, SpiTask> tasks = Collections.synchronizedMap(new HashMap<>());
     private final Object lock = new Object();
 
 
