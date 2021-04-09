@@ -54,7 +54,6 @@ public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
         if (gui == null) return;
         ClickContext clickContext = new ClickContext(itemStack, player
                 , false, this, gui, slot);
-        System.out.println("Handeling: " + clickContext);
         gui.clickEvent(clickContext);
         if (clickContext.isCancelled()) event.setCancelled(true);
     }
@@ -76,8 +75,7 @@ public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
         Player whoClicked = (Player) event.getWhoClicked();
         if (!playerIGUIHashMap.containsKey(whoClicked)
                 || event.getClickedInventory() == null
-                || (
-                (type = event.getClickedInventory().getType()) != InventoryType.PLAYER
+                || ((type = event.getClickedInventory().getType()) != InventoryType.PLAYER
                         && type != InventoryType.CREATIVE)
         ) return;
         handle(whoClicked, event, event.getSlot(), event.getCurrentItem());
