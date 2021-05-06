@@ -1,9 +1,6 @@
 package de.worldoneo.spijetapi.utils;
 
-import de.worldoneo.spijetapi.utils.function.ThrowingBiFunction;
-import de.worldoneo.spijetapi.utils.function.ThrowingConsumer;
-import de.worldoneo.spijetapi.utils.function.ThrowingFunction;
-import de.worldoneo.spijetapi.utils.function.ThrowingSupplier;
+import de.worldoneo.spijetapi.utils.function.*;
 import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.CompletableFuture;
@@ -45,27 +42,27 @@ public class RuntimeErrorWrapper {
      * Wraps a function with a checked exception into an Function which throws an {@link RuntimeException}.
      * This can be used to run in an {@link CompletableFuture} and handle the error gracefully.
      *
-     * @param func The function to wrap
-     * @param <R>  The return type of the function
-     * @param <A>  The argument type of the function
-     * @param <E>  The exception type of the function
-     * @return A supplier which throws a RuntimeException if it throws any
+     * @param function The function to wrap
+     * @param <R>      The return type of the function
+     * @param <A>      The argument type of the function
+     * @param <E>      The exception type of the function
+     * @return A function which throws a RuntimeException if it throws any
      */
-    public static <R, A, E extends Throwable> Function<A, R> wrap(ThrowingFunction<R, A, E> func) {
-        return transform(func, ThrowingFunction::apply);
+    public static <R, A, E extends Throwable> Function<A, R> wrap(ThrowingFunction<R, A, E> function) {
+        return transform(function, ThrowingFunction::apply);
     }
 
     /**
      * Wraps a supplier with a checked exception into an supplier which throws an {@link RuntimeException}.
      * This can be used to run in an {@link CompletableFuture} and handle the error gracefully.
      *
-     * @param supp The supplier to wrap
-     * @param <R>  The return type of the function
-     * @param <E>  The exception type of the function
+     * @param supplier The supplier to wrap
+     * @param <R>      The return type of the function
+     * @param <E>      The exception type of the function
      * @return A supplier which throws a RuntimeException if it throws any
      */
-    public static <R, E extends Throwable> Supplier<R> wrap(ThrowingSupplier<R, E> supp) {
-        Function<Void, R> ret = transform(supp, (a, b) -> a.get());
+    public static <R, E extends Throwable> Supplier<R> wrap(ThrowingSupplier<R, E> supplier) {
+        Function<Void, R> ret = transform(supplier, (a, b) -> a.get());
         return () -> ret.apply(null);
     }
 
@@ -73,17 +70,33 @@ public class RuntimeErrorWrapper {
      * Wraps a consumer with a checked exception into an supplier which throws an {@link RuntimeException}.
      * This can be used to run in an {@link CompletableFuture} and handle the error gracefully.
      *
-     * @param cons The supplier to wrap
-     * @param <A>  The argument type of the function
-     * @param <E>  The exception type of the function
-     * @return A supplier which throws a RuntimeException if it throws any
+     * @param consumer The supplier to wrap
+     * @param <A>      The argument type of the function
+     * @param <E>      The exception type of the function
+     * @return A consumer which throws a RuntimeException if it throws any
      */
-    public static <A, E extends Throwable> Consumer<A> wrap(ThrowingConsumer<A, E> cons) {
-        Function<A, Void> ret = transform(cons, (a, b) -> {
+    public static <A, E extends Throwable> Consumer<A> wrap(ThrowingConsumer<A, E> consumer) {
+        Function<A, Void> ret = transform(consumer, (a, b) -> {
             a.accept(b);
             return null;
         });
         return ret::apply;
+    }
+
+    /**
+     * Wraps a runnable with a checked exception into an supplier which throws an {@link RuntimeException}.
+     * This can be used to run in an {@link CompletableFuture} and handle the error gracefully.
+     *
+     * @param runnable The supplier to wrap
+     * @param <E>      The exception type of the function
+     * @return A runnable which throws a RuntimeException if it throws any
+     */
+    public static <E extends Throwable> Runnable wrap(ThrowingRunnable<E> runnable) {
+        Function<Void, Void> ret = transform(runnable, (a, b) -> {
+            a.run();
+            return null;
+        });
+        return () -> ret.apply(null);
     }
 
     private static <A, R, T, E extends Throwable> Function<A, R>
