@@ -4,17 +4,21 @@ import de.worldoneo.spijetapi.SpigotSpiJetAPI;
 import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.gui.IGUI;
 import de.worldoneo.spijetapi.utils.Pair;
-import de.worldoneo.spijetapi.utils.SpiJetUtils;
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
-import java.util.HashMap;
-import java.util.Random;
+import java.util.*;
+import java.util.stream.Collectors;
 
 public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
+    public static final List<ChatColor> ID_COLORS = Arrays.stream(ChatColor.values())
+            .filter(ChatColor::isColor)
+            .collect(Collectors.toList());
+
     private static final InventoryGUIManager instance = new InventoryGUIManager();
     private final HashMap<Player, Pair<String, IGUI>> playerIGUIMap = new HashMap<>();
 
@@ -55,25 +59,24 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     public void handle(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
         Pair<String, IGUI> pair = playerIGUIMap.get(player);
-        if (pair == null) {
-            return;
-        }
+
+        if (pair == null) return;
+
         String title = pair.getKey();
         IGUI iGUI = pair.getValue();
 
         if (!title.equals(e.getView().getTitle())) return;
+
         ClickContext cc = new ClickContext(e.getCurrentItem(), player,
                 false, this, iGUI, e.getSlot());
+
         iGUI.clickEvent(cc);
+        if (cc.isCancelled()) e.setCancelled(true);
     }
 
     private String generateID() {
-        char[] chars = "1234567890abcdeflnokm".toCharArray();
-        StringBuilder stringBuilder = new StringBuilder();
         Random random = new Random();
-        for (int i = 0; i < 2; i++) {
-            stringBuilder.append("&").append(chars[random.nextInt(chars.length)]);
-        }
-        return SpiJetUtils.colorize(stringBuilder.toString());
+        return ID_COLORS.get(random.nextInt(ID_COLORS.size())).toString() + " " +
+                ID_COLORS.get(random.nextInt(ID_COLORS.size()));
     }
 }

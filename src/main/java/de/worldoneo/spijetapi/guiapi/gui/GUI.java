@@ -4,7 +4,6 @@ import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
 import de.worldoneo.spijetapi.guiapi.modifier.IModifier;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
-import de.worldoneo.spijetapi.utils.Pair;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -14,24 +13,21 @@ import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.ItemStack;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.*;
 
 @Accessors(chain = true)
 @Getter
 @Setter
 public class GUI implements IGUI {
-    private String GUITitle = "Made by GUIAPI";
     protected List<IWidget> widgets = new ArrayList<>();
     protected List<IMultipartWidget> multipartWidgets = new ArrayList<>();
     protected List<IModifier> modifiers = new LinkedList<>();
+    protected HashMap<Integer, IWidget> pairWidgetHashMap = new HashMap<>();
+    protected HashMap<Integer, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
+    private String GUITitle = "Made by GUIAPI";
     private InventoryType inventoryType = InventoryType.CHEST;
     private boolean cancelClickDefault = true;
     private int size = 9;
-    protected HashMap<Pair<ItemStack, Integer>, IWidget> pairWidgetHashMap = new HashMap<>();
-    protected HashMap<Pair<ItemStack, Integer>, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
 
     /**
      * Opens the GUI for the player
@@ -60,13 +56,13 @@ public class GUI implements IGUI {
         getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
-            pairWidgetHashMap.put(new Pair<>(itemStack, slot), widget);
+            pairWidgetHashMap.put(slot, widget);
             inventory.setItem(slot, itemStack);
         });
 
         multipartWidgets.forEach(multipartWidget ->
                 multipartWidget.render().forEach(p -> {
-                    pairMultipartWidgetHashMap.put(p, multipartWidget);
+                    pairMultipartWidgetHashMap.put(p.getValue(), multipartWidget);
                     inventory.setItem(p.getValue(), p.getKey());
                 }));
 
@@ -92,12 +88,10 @@ public class GUI implements IGUI {
 
     @Override
     public void clickEvent(ClickContext e) {
-        if (e.getItemStack() == null) {
-            return;
-        }
+        if (e.getItemStack() == null) return;
 
         if (cancelClickDefault) e.setCancelled(true);
-        Pair<ItemStack, Integer> key = new Pair<>(e.getItemStack(), e.getSlot());
+        int key = e.getSlot();
         IWidget widget = pairWidgetHashMap.get(key);
         IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
         if (widget != null) widget.clickEvent(e);

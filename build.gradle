@@ -1,7 +1,7 @@
 plugins {
     id 'java-library'
     id 'maven-publish'
-    id 'io.freefair.lombok' version "5.3.0"
+    id 'io.freefair.lombok' version "6.0.0-m2"
     id 'com.github.johnrengelman.shadow' version '6.0.0'
 }
 
