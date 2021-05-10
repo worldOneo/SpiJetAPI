@@ -5,9 +5,7 @@ import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.Consumer;
-import java.util.function.Function;
-import java.util.function.Supplier;
+import java.util.function.*;
 
 /**
  * The RuntimeErrorWrapper needs to be treated with care.
