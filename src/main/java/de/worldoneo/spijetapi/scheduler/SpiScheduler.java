@@ -12,15 +12,13 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpiScheduler {
+    private static final SpiScheduler instance = new SpiScheduler();
     private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
             .setNameFormat("SpiThread #%1$d")
             .build());
     private final AtomicInteger taskCounter = new AtomicInteger();
     private final Map<Integer, SpiTask> tasks = Collections.synchronizedMap(new HashMap<>());
     private final Object lock = new Object();
-
-
-    private static final SpiScheduler instance = new SpiScheduler();
 
     private SpiScheduler() {
     }

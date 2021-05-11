@@ -44,8 +44,8 @@ particleWrapper.createSpherical(Particle.REDSTONE, player.getLocation, 100, 2, 2
 
 ## GUI-API
 
-The "normal" ways to create GUIs is often based on slot and/or string comparison of the item used as a button and the InventoryClickEvent.
-This GUI-API aims to connect the events and the creation of the API to create GUIs easier.
+The "normal" ways to create GUIs is often based on slot and/or string comparison of the item used as a button and the
+InventoryClickEvent. This GUI-API aims to connect the events and the creation of the API to create GUIs easier.
 
 ```java
 GUI gui = new GUI();
@@ -61,6 +61,7 @@ gui.addWidget(button); //Add the button to the gui
 InventoryGUIManager.getInstance().open(gui, player); //open the gui as inventory
 
 ```
+
 That's all no need to check stuff. No need to register listeners.
 
 ## Configurations

@@ -15,12 +15,11 @@ public class SpiTask implements Runnable {
     private final long delay;
     private final long pause;
     private final SpiScheduler spiScheduler;
+    @Getter(AccessLevel.NONE)
+    private final AtomicBoolean running = new AtomicBoolean(true);
     private Throwable lastException;
     @Setter
     private Consumer<Throwable> exceptionHandler = Throwable::printStackTrace;
-
-    @Getter(AccessLevel.NONE)
-    private final AtomicBoolean running = new AtomicBoolean(true);
 
     public SpiTask(SpiScheduler spiScheduler, int taskID, Runnable runnable, long delay, long pause, TimeUnit timeUnit) {
         this.taskID = taskID;
