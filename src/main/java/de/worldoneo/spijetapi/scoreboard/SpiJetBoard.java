@@ -12,11 +12,11 @@ import java.util.List;
 import java.util.Set;
 
 public class SpiJetBoard {
-
     private final Scoreboard scoreboard;
     private final Objective objective;
 
-    @SuppressWarnings("deprecation") //Scoreboard#registerNewObjective is the only method available in legacy.
+
+    @SuppressWarnings("deprecation") //Scoreboard#registerNewObjective(String, String) is the only method available in legacy.
     public SpiJetBoard(String title) {
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         if (scoreboardManager == null)

@@ -2,10 +2,11 @@ plugins {
     id 'java-library'
     id 'maven-publish'
     id 'io.freefair.lombok' version "6.0.0-m2"
-    id 'com.github.johnrengelman.shadow' version '6.0.0'
+    id 'com.github.johnrengelman.shadow' version "7.0.0"
 }
+def major = 0, minor = 1, micro = 5
 
-version "${VERSION}"
+version "$major.$minor.$micro"
 group "com.github.worldOneo"
 
 repositories {
@@ -30,16 +31,17 @@ dependencies {
 
     compileOnly "org.spigotmc:spigot-api:${MCVERSION}"
     compileOnly "net.md-5:bungeecord-api:${BUNGEEVERSION}"
-    implementation group: 'org.jetbrains', name: 'annotations', version: '20.1.0'
+    implementation group: 'org.jetbrains', name: 'annotations', version: JETBRAINSANNOTATIONSVERSION
 
-    shadow "com.zaxxer:HikariCP:3.4.5"
+    shadow "com.zaxxer:HikariCP:${HIKARICPVERSION}"
     shadow "org.slf4j:slf4j-nop:1.7.30"
 }
 
 processResources {
+    setDuplicatesStrategy(DuplicatesStrategy.INCLUDE)
     from(sourceSets.main.resources.srcDirs) {
-        expand 'VERSION': version
-        include 'plugin.yml', 'bungee.yml'
+        expand(["VERSION": version, "NAME": rootProject.name])
+        include '*.yml'
     }
 }
 
@@ -75,7 +77,7 @@ task javadocJar(type: Jar, dependsOn: javadoc) {
 
 publishing {
     publications {
-        mavenJava(MavenPublication) {
+        maven(MavenPublication) {
             artifact javadocJar
             artifact sourcesJar
             artifact shadowJar

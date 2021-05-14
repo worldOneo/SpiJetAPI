@@ -33,12 +33,12 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
 
     public HikariDataSource build() {
         HikariDataSource hikariDataSource = new HikariDataSource();
+        hikariDataSource.setMaximumPoolSize(poolSize);
         if (username != null) hikariDataSource.setUsername(username);
         if (password != null) hikariDataSource.setPassword(password);
         if (jdbcUrl != null) hikariDataSource.setJdbcUrl(jdbcUrl);
         if (dataSourceClassName != null) hikariDataSource.setDataSourceClassName(dataSourceClassName);
         if (driverClassName != null) hikariDataSource.setDriverClassName(driverClassName);
-        hikariDataSource.setMaximumPoolSize(poolSize);
         hikariDataSource.setAutoCommit(autoCommit);
         hikariDataSource.setConnectionTimeout(connectionTimeout);
         hikariDataSource.setIdleTimeout(idleTimeout);
