@@ -27,9 +27,7 @@ public class ConfigSynchronizer {
     public ConfigSynchronizer(SQLExecutor<SQLQueryBuilder> sqlExecutor, String table, boolean setup) throws SQLException {
         this.sqlExecutor = sqlExecutor;
         this.table = table;
-        if (setup) {
-            this.sqlExecutor.executeUpdate(new SQLQueryBuilder(String.format(CREATE_CODE, table)));
-        }
+        if (setup) this.sqlExecutor.executeUpdate(new SQLQueryBuilder(String.format(CREATE_CODE, table)));
     }
 
     public ConfigSynchronizer(SQLExecutor<SQLQueryBuilder> sqlExecutor, String table) throws SQLException {
@@ -45,7 +43,7 @@ public class ConfigSynchronizer {
         Base64.Encoder encoder = Base64.getEncoder();
         byte[] base64 = encoder.encode(bytes);
         String base64String = new String(base64);
-        sqlExecutor.executeUpdate(
+        this.sqlExecutor.executeUpdate(
                 new SQLQueryBuilder(String.format("INSERT INTO `%s` (content, file) VALUES (?, ?) ON DUPLICATE KEY UPDATE content=?;", table))
                         .setParameter(1, base64String)
                         .setParameter(2, key)
@@ -61,8 +59,8 @@ public class ConfigSynchronizer {
      * @throws SQLException When the query couldn't be executed.
      */
     public byte[] loadConfig(String key) throws SQLException {
-        RowSet rowSet = sqlExecutor.executeQuery(
-                new SQLQueryBuilder(String.format("SELECT * FROM `%s` WHERE file = ?;", table))
+        RowSet rowSet = this.sqlExecutor.executeQuery(
+                new SQLQueryBuilder(String.format("SELECT * FROM `%s` WHERE file = ?;", this.table))
                         .setParameter(1, key)
         );
         if (!rowSet.next()) return null;
@@ -82,6 +80,6 @@ public class ConfigSynchronizer {
     public void loadConfig(String key, Path path) throws SQLException, IOException {
         File file = path.toFile();
         ConfigUtils.ensureFile(file);
-        Files.write(path, loadConfig(key));
+        Files.write(path, this.loadConfig(key));
     }
 }

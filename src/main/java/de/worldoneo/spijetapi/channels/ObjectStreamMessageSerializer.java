@@ -9,10 +9,10 @@ public class ObjectStreamMessageSerializer<T extends Serializable> implements Me
     @SuppressWarnings("unchecked") // Unchecked cast due to ObjectInputStream
     @NotNull
     public T deserialize(byte[] message) throws IOException {
-        ByteArrayInputStream bais = new ByteArrayInputStream(message);
-        ObjectInputStream ois = new ObjectInputStream(bais);
+        ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
+        ObjectInputStream objectInputStream = new ObjectInputStream(byteArrayInputStream);
         try {
-            return (T) ois.readObject();
+            return (T) objectInputStream.readObject();
         } catch (ClassNotFoundException e) {
             throw new IOException("Object type mismatch", e);
         }
@@ -20,10 +20,10 @@ public class ObjectStreamMessageSerializer<T extends Serializable> implements Me
 
     @Override
     public byte[] serialize(@NotNull T message) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        ObjectOutputStream oos = new ObjectOutputStream(out);
-        oos.writeObject(message);
-        oos.flush();
-        return out.toByteArray();
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        ObjectOutputStream objectOutputStream = new ObjectOutputStream(byteArrayOutputStream);
+        objectOutputStream.writeObject(message);
+        objectOutputStream.flush();
+        return byteArrayOutputStream.toByteArray();
     }
 }

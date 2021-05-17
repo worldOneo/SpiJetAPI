@@ -47,17 +47,17 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
         if (!channel.equals("BungeeCord"))
             return;
 
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(message);
-             DataInputStream dais = new DataInputStream(bais)) {
-            if (!dais.readUTF().equals(channelName)) return;
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
+             DataInputStream dais = new DataInputStream(byteArrayInputStream)) {
+            if (!dais.readUTF().equals(this.channelName)) return;
 
             int length = dais.readShort();
             byte[] buff = new byte[length];
             dais.readFully(buff);
-            T data = serializer.deserialize(buff);
-            messageReceived(player, data);
+            T data = this.serializer.deserialize(buff);
+            this.messageReceived(player, data);
         } catch (IOException exception) {
-            messageError(player, exception);
+            this.messageError(player, exception);
         }
     }
 
@@ -70,10 +70,10 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
      */
     public void sendMessage(@NotNull T message) throws IOException {
         Player sender = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
-
         if (sender == null)
             throw new IOException("No player online to send the message!");
-        sendMessage(message, sender);
+
+        this.sendMessage(message, sender);
     }
 
     /**
@@ -84,7 +84,7 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
      * @throws IOException if an error occurred while sending the message or serialisation failed
      */
     public void sendMessage(@NotNull T message, @NotNull Player player) throws IOException {
-        sendMessage(message, player, "ALL");
+        this.sendMessage(message, player, "ALL");
     }
 
     /**
@@ -96,17 +96,17 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
      * @throws IOException if an error occurred while sending the message or serialisation failed
      */
     public void sendMessage(@NotNull T message, @NotNull Player player, @NotNull String targets) throws IOException {
-        ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DataOutputStream dataout = new DataOutputStream(out);
+        ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
+        DataOutputStream dataOutputStream = new DataOutputStream(byteArrayOutputStream);
 
-        dataout.writeUTF("Forward");
-        dataout.writeUTF(targets);
-        dataout.writeUTF(channelName);
-        byte[] data = serializer.serialize(message);
-        dataout.writeShort(data.length);
-        dataout.write(data);
-        dataout.flush();
+        dataOutputStream.writeUTF("Forward");
+        dataOutputStream.writeUTF(targets);
+        dataOutputStream.writeUTF(this.channelName);
+        byte[] data = this.serializer.serialize(message);
+        dataOutputStream.writeShort(data.length);
+        dataOutputStream.write(data);
+        dataOutputStream.flush();
 
-        player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
+        player.sendPluginMessage(this.plugin, "BungeeCord", byteArrayOutputStream.toByteArray());
     }
 }

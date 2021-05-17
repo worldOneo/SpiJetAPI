@@ -14,6 +14,7 @@ import java.util.concurrent.CompletableFuture;
 
 public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<T> {
     protected static final AsyncExecutor defaultAsyncExecutor = new ScalingAsyncExecutor();
+
     @Getter
     @Setter
     private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
@@ -50,7 +51,7 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeUpdateAsync(T arg) {
-        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, getAsyncExecutor().getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, this.getAsyncExecutor().getThreadPoolExecutor());
     }
 
     /**
@@ -61,6 +62,6 @@ public abstract class SQLManager<T> implements SQLExecutor<T>, AsyncSQLExecutor<
      * @return The completable which is completed with a CachedRowSet or null if failed
      */
     public CompletableFuture<CachedRowSet> executeQueryAsync(T arg) {
-        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, getAsyncExecutor().getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, this.getAsyncExecutor().getThreadPoolExecutor());
     }
 }

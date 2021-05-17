@@ -92,12 +92,12 @@ public class ListWidget extends AbstractMultipartWidget {
     @Override
     public List<Pair<ItemStack, Integer>> render() {
         List<Pair<ItemStack, Integer>> pairList = new ArrayList<>();
-        int tempBackSlot = backSlot == null ? slots.get(0) : backSlot;
-        int tempForwardSlot = forwardSlot == null ? slots.get(slots.size() - 1) : forwardSlot;
+        int tempBackSlot = this.backSlot == null ? this.slots.get(0) : this.backSlot;
+        int tempForwardSlot = this.forwardSlot == null ? this.slots.get(this.slots.size() - 1) : this.forwardSlot;
         pairList.add(new Pair<>(this.back, tempBackSlot));
         pairList.add(new Pair<>(this.forward, tempForwardSlot));
-        Iterator<Integer> iterator = slots.iterator();
-        Iterator<ItemStack> itemStackIterator = itemStacks.stream().skip(index).limit(slots.size() - 2).iterator();
+        Iterator<Integer> iterator = this.slots.iterator();
+        Iterator<ItemStack> itemStackIterator = this.itemStacks.stream().skip(this.index).limit(this.slots.size() - 2).iterator();
         while (iterator.hasNext() && itemStackIterator.hasNext()) {
             int slot = iterator.next();
             ItemStack itemStack = itemStackIterator.next();
@@ -111,28 +111,26 @@ public class ListWidget extends AbstractMultipartWidget {
 
 
     /**
-     * @param e The {@link InventoryClickEvent} to handle
+     * @param clickContext The {@link InventoryClickEvent} to handle
      */
     @Override
-    public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
-        ItemStack itemStack = e.getItemStack();
-        Player player = e.getPlayer();
-        GUIManager<?> guiManager = e.getGuiManager();
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.setCancelled(true);
+        ItemStack itemStack = clickContext.getItemStack();
+        Player player = clickContext.getPlayer();
+        GUIManager<?> guiManager = clickContext.getGuiManager();
         if (itemStack == null) return;
 
         if (itemStack.equals(this.back)) {
-            index -= slots.size() - 2;
-            index = index < 0 ? 0 : index;
-            open(player, guiManager);
-        } else if (itemStack.equals(forward)) {
-            int tmpIndex = index + slots.size() - 2;
-            if (itemStacks.stream().skip(tmpIndex).count() != 0) {
-                index = tmpIndex;
-            }
-            open(player, guiManager);
-        } else if (callback != null) {
-            callback.accept(itemStack);
+            this.index -= this.slots.size() - 2;
+            this.index = this.index < 0 ? 0 : this.index;
+            this.open(player, guiManager);
+        } else if (itemStack.equals(this.forward)) {
+            int tmpIndex = this.index + this.slots.size() - 2;
+            if (this.itemStacks.stream().skip(tmpIndex).count() != 0) this.index = tmpIndex;
+            this.open(player, guiManager);
+        } else if (this.callback != null) {
+            this.callback.accept(itemStack);
         }
     }
 }

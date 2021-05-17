@@ -56,6 +56,6 @@ public class Button extends AbstractButton {
      */
     @Override
     public ItemStack render() {
-        return new ItemStackBuilder(material, amount, title).build();
+        return new ItemStackBuilder(this.material, this.amount, this.title).build();
     }
 }

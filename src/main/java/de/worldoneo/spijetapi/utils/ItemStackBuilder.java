@@ -14,17 +14,17 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
 
     public ItemStackBuilder(Material material, int amount, String displayName, List<String> lore) {
         this(material, amount, displayName);
-        setLore(lore);
+        this.setLore(lore);
     }
 
     public ItemStackBuilder(Material material, int amount, String displayName) {
         this(material, amount);
-        setDisplayName(displayName);
+        this.setDisplayName(displayName);
     }
 
     public ItemStackBuilder(Material material, int amount) {
         this(material);
-        setAmount(amount);
+        this.setAmount(amount);
     }
 
     public ItemStackBuilder(Material material) {
@@ -36,33 +36,33 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
     }
 
     public ItemStackBuilder setDisplayName(String displayName) {
-        changeItemMeta(itemMeta -> itemMeta.setDisplayName(displayName));
+        this.changeItemMeta(itemMeta -> itemMeta.setDisplayName(displayName));
         return this;
     }
 
     public ItemStackBuilder setLore(List<String> lore) {
-        changeItemMeta(itemMeta -> itemMeta.setLore(lore));
+        this.changeItemMeta(itemMeta -> itemMeta.setLore(lore));
         return this;
     }
 
     public ItemStackBuilder setAmount(int amount) {
-        itemStack.setAmount(amount);
+        this.itemStack.setAmount(amount);
         return this;
     }
 
     public ItemStackBuilder addEnchantment(Enchantment enchantment, int level) {
-        itemStack.addEnchantment(enchantment, level);
+        this.itemStack.addEnchantment(enchantment, level);
         return this;
 
     }
 
     public ItemStackBuilder setFlags(ItemFlag... itemFlags) {
-        changeItemMeta(itemMeta -> itemMeta.addItemFlags(itemFlags));
+        this.changeItemMeta(itemMeta -> itemMeta.addItemFlags(itemFlags));
         return this;
     }
 
     public ItemStackBuilder addLore(List<String> lore) {
-        changeItemMeta(itemMeta -> {
+        this.changeItemMeta(itemMeta -> {
             if (itemMeta.hasLore() && itemMeta.getLore() != null) {
                 List<String> currentLores = itemMeta.getLore();
                 currentLores.addAll(lore);
@@ -75,13 +75,13 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
     }
 
     public void changeItemMeta(Consumer<ItemMeta> callable) {
-        ItemMeta itemMeta = itemStack.getItemMeta();
+        ItemMeta itemMeta = this.itemStack.getItemMeta();
         callable.accept(itemMeta);
         itemStack.setItemMeta(itemMeta);
     }
 
     @Override
     public ItemStack build() {
-        return itemStack.clone();
+        return this.itemStack.clone();
     }
 }

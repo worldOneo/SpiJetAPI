@@ -16,76 +16,77 @@ public class SpiJetBoard {
     private final Objective objective;
 
 
-    @SuppressWarnings("deprecation") //Scoreboard#registerNewObjective(String, String) is the only method available in legacy.
+    @SuppressWarnings("deprecation")
+    //Scoreboard#registerNewObjective(String, String) is the only method available in legacy.
     public SpiJetBoard(String title) {
         ScoreboardManager scoreboardManager = Bukkit.getScoreboardManager();
         if (scoreboardManager == null)
             throw new IllegalStateException("No ScoreboardManager available as no worlds are loaded.");
         this.scoreboard = scoreboardManager.getNewScoreboard();
-        this.objective = scoreboard.registerNewObjective("Board", "dummy");
+        this.objective = this.scoreboard.registerNewObjective("Board", "dummy");
         this.objective.setDisplaySlot(DisplaySlot.SIDEBAR);
-        setDisplayName(title);
+        this.setDisplayName(title);
     }
 
     public String getDisplayName() {
-        return objective.getDisplayName();
+        return this.objective.getDisplayName();
     }
 
     public void setDisplayName(String displayName) {
-        objective.setDisplayName(displayName);
+        this.objective.setDisplayName(displayName);
     }
 
     public void setEntry(int score, String text) {
-        for (String entry : scoreboard.getEntries()) {
-            if (objective.getScore(entry).getScore() == score) {
+        for (String entry : this.scoreboard.getEntries()) {
+            if (this.objective.getScore(entry).getScore() == score) {
                 if (entry.equals(text)) {
                     return;
                 }
-                scoreboard.resetScores(entry);
+                this.scoreboard.resetScores(entry);
                 break;
             }
         }
-        objective.getScore(text).setScore(score);
+        this.objective.getScore(text).setScore(score);
     }
 
     public int addEntry(String text) {
-        int i = scoreboard.getEntries().size();
-        setEntry(i, text);
+        int i = this.scoreboard.getEntries().size();
+        this. setEntry(i, text);
         return i;
     }
 
     public void removeEntry(int score) {
-        for (String entry : scoreboard.getEntries()) {
-            if (objective.getScore(entry).getScore() == score) {
-                scoreboard.resetScores(entry);
+        for (String entry : this.scoreboard.getEntries()) {
+            if (this.objective.getScore(entry).getScore() == score) {
+                this.scoreboard.resetScores(entry);
                 break;
             }
         }
     }
 
     public void removeEntry(String string) {
-        scoreboard.resetScores(string);
+        this.scoreboard.resetScores(string);
     }
 
     public void clear() {
-        for (String entry : scoreboard.getEntries()) {
-            scoreboard.resetScores(entry);
+        for (String entry : this.scoreboard.getEntries()) {
+            this.scoreboard.resetScores(entry);
         }
     }
 
     public Set<String> getEntries() {
-        return scoreboard.getEntries();
+        return this.scoreboard.getEntries();
     }
 
     public void send(Player... players) {
         if (players != null) {
-            send(Arrays.asList(players));
+            this.send(Arrays.asList(players));
         }
     }
 
     public void send(List<Player> players) {
-        for (Player player : players) {
-            player.setScoreboard(scoreboard);
+        for (Player onlinePlayer : players) {
+            onlinePlayer.setScoreboard(this.scoreboard);
         }
     }
 }

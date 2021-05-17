@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpiScheduler {
-    private static final SpiScheduler instance = new SpiScheduler();
+    private static final SpiScheduler INSTANCE = new SpiScheduler();
     private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
             .setNameFormat("SpiThread #%1$d")
             .build());
@@ -24,7 +24,7 @@ public class SpiScheduler {
     }
 
     public static SpiScheduler getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     /**
@@ -35,7 +35,7 @@ public class SpiScheduler {
      * @return the task which is running
      */
     public SpiTask runAsync(Runnable runnable) {
-        return schedule(runnable, 0);
+        return this.schedule(runnable, 0);
     }
 
     /**
@@ -47,7 +47,7 @@ public class SpiScheduler {
      * @return the task which is running
      */
     public SpiTask schedule(Runnable runnable, long pause) {
-        return schedule(runnable, pause, TimeUnit.MILLISECONDS);
+        return this.schedule(runnable, pause, TimeUnit.MILLISECONDS);
     }
 
     /**
@@ -59,7 +59,7 @@ public class SpiScheduler {
      * @return the task which is running
      */
     public SpiTask schedule(Runnable runnable, long pause, TimeUnit timeUnit) {
-        return schedule(runnable, 0L, pause, timeUnit);
+        return this.schedule(runnable, 0L, pause, timeUnit);
     }
 
     /**
@@ -72,12 +72,12 @@ public class SpiScheduler {
      * @return the task which is running
      */
     public SpiTask schedule(Runnable runnable, long delay, long pause, TimeUnit timeUnit) {
-        int taskId = taskCounter.getAndIncrement();
+        int taskId = this.taskCounter.getAndIncrement();
         SpiTask spiTask = new SpiTask(this, taskId, runnable, delay, pause, timeUnit);
-        synchronized (lock) {
-            tasks.put(taskId, spiTask);
+        synchronized (this.lock) {
+            this.tasks.put(taskId, spiTask);
         }
-        executorService.execute(spiTask);
+        this.executorService.execute(spiTask);
         return spiTask;
     }
 
@@ -98,8 +98,8 @@ public class SpiScheduler {
      * @param spiTask the task to remove from the scheduler
      */
     public void cancel0(SpiTask spiTask) {
-        synchronized (lock) {
-            tasks.remove(spiTask.getTaskID());
+        synchronized (this.lock) {
+            this.tasks.remove(spiTask.getTaskID());
         }
     }
 
@@ -109,7 +109,7 @@ public class SpiScheduler {
      * @param id the id of the task to cancel
      */
     public void cancel(int id) {
-        cancel(tasks.get(id));
+        cancel(this.tasks.get(id));
     }
 }
 

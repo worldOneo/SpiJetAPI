@@ -3,6 +3,7 @@ package de.worldoneo.spijetapi.sql;
 import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.RuntimeErrorWrapper;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
+import lombok.Cleanup;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
@@ -31,17 +32,17 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     @Override
     public CachedRowSet executeUpdate(DataSource dataSource) throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query, Statement.RETURN_GENERATED_KEYS)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(this.query, Statement.RETURN_GENERATED_KEYS)) {
 
-            for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
+            for (Map.Entry<Integer, Object> objectEntry : this.parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
             }
+
             preparedStatement.executeUpdate();
 
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
+            @Cleanup ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
             cachedRowSet.populate(generatedKeys);
-            generatedKeys.close();
             return cachedRowSet;
         }
     }
@@ -49,16 +50,15 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     @Override
     public CachedRowSet executeQuery(DataSource dataSource) throws SQLException {
         try (Connection connection = dataSource.getConnection();
-             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+             PreparedStatement preparedStatement = connection.prepareStatement(this.query)) {
 
-            for (Map.Entry<Integer, Object> objectEntry : parameterMap.entrySet()) {
+            for (Map.Entry<Integer, Object> objectEntry : this.parameterMap.entrySet()) {
                 preparedStatement.setObject(objectEntry.getKey(), objectEntry.getValue());
             }
 
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
-            ResultSet data = preparedStatement.executeQuery();
+            @Cleanup ResultSet data = preparedStatement.executeQuery();
             cachedRowSet.populate(data);
-            data.close();
             return cachedRowSet;
         }
     }
@@ -73,7 +73,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     @Deprecated
     public void executeUpdate(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         try {
-            CachedRowSet cachedRowSet = executeUpdate(dataSource);
+            CachedRowSet cachedRowSet = this.executeUpdate(dataSource);
             consumer.accept(cachedRowSet);
         } catch (SQLException ignored) {
         }
@@ -89,7 +89,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
     @Deprecated
     public void executeQuery(DataSource dataSource, Consumer<CachedRowSet> consumer) {
         try {
-            CachedRowSet cachedRowSet = executeQuery(dataSource);
+            CachedRowSet cachedRowSet = this.executeQuery(dataSource);
             consumer.accept(cachedRowSet);
         } catch (SQLException ignored) {
         }
@@ -104,7 +104,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      */
     @Deprecated
     public void executeQueryAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
-        asyncExecutor.submit(() -> executeQuery(dataSource, consumer));
+        this.asyncExecutor.submit(() -> this.executeQuery(dataSource, consumer));
     }
 
     /**
@@ -116,7 +116,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      */
     @Deprecated
     public void executeUpdateAsync(DataSource dataSource, Consumer<CachedRowSet> consumer) {
-        asyncExecutor.submit(() -> executeUpdate(dataSource, consumer));
+        this.asyncExecutor.submit(() -> this.executeUpdate(dataSource, consumer));
     }
 
     /**
@@ -127,7 +127,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      * @return this
      */
     public SQLQueryBuilder setParameter(int key, Object value) {
-        parameterMap.put(key, value);
+        this.parameterMap.put(key, value);
         return this;
     }
 
@@ -139,7 +139,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      */
     @Nullable
     public Object getParameter(int key) {
-        return parameterMap.get(key);
+        return this.parameterMap.get(key);
     }
 
     /**
@@ -149,10 +149,11 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      */
     @Override
     public SQLQueryBuilder build() {
-        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(query);
-        for (Map.Entry<Integer, Object> parameter : parameterMap.entrySet()) {
+        SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(this.query);
+        for (Map.Entry<Integer, Object> parameter : this.parameterMap.entrySet()) {
             sqlQueryBuilder.setParameter(parameter.getKey(), parameter.getValue());
         }
+
         sqlQueryBuilder.setAsyncExecutor(this.getAsyncExecutor());
         return sqlQueryBuilder;
     }
@@ -162,7 +163,7 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      * @return the future of this update
      */
     public CompletableFuture<CachedRowSet> executeUpdateAsync(DataSource arg) {
-        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeUpdate, arg, this.asyncExecutor.getThreadPoolExecutor());
     }
 
     /**
@@ -170,6 +171,6 @@ public class SQLQueryBuilder implements SpiJetBuilder<SQLQueryBuilder>, SQLExecu
      * @return the future of this query
      */
     public CompletableFuture<CachedRowSet> executeQueryAsync(DataSource arg) {
-        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(this::executeQuery, arg, this.asyncExecutor.getThreadPoolExecutor());
     }
 }

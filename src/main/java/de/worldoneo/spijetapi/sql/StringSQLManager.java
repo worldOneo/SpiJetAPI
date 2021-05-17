@@ -28,7 +28,7 @@ public class StringSQLManager extends SQLManager<String> {
 
     @Override
     public CachedRowSet executeUpdate(String arg) throws SQLException {
-        try (Connection connection = hikariDataSource.getConnection()) {
+        try (Connection connection = this.hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg, Statement.RETURN_GENERATED_KEYS);
             preparedStatement.executeUpdate();
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
@@ -39,7 +39,7 @@ public class StringSQLManager extends SQLManager<String> {
 
     @Override
     public CachedRowSet executeQuery(String arg) throws SQLException {
-        try (Connection connection = hikariDataSource.getConnection()) {
+        try (Connection connection = this.hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg);
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
             cachedRowSet.populate(preparedStatement.executeQuery());
@@ -48,6 +48,6 @@ public class StringSQLManager extends SQLManager<String> {
     }
 
     public QuerySQLManager toSqlManager() {
-        return new QuerySQLManager(hikariDataSource);
+        return new QuerySQLManager(this.hikariDataSource);
     }
 }

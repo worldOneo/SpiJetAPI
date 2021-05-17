@@ -25,24 +25,23 @@ public class DataSourceBuilder implements SpiJetBuilder<HikariDataSource> {
     @Setter(AccessLevel.NONE)
     private Map<String, Object> customProperties = new HashMap<>();
 
-
     public DataSourceBuilder addProperty(String key, Object value) {
-        customProperties.put(key, value);
+        this.customProperties.put(key, value);
         return this;
     }
 
     public HikariDataSource build() {
         HikariDataSource hikariDataSource = new HikariDataSource();
-        hikariDataSource.setMaximumPoolSize(poolSize);
-        if (username != null) hikariDataSource.setUsername(username);
-        if (password != null) hikariDataSource.setPassword(password);
-        if (jdbcUrl != null) hikariDataSource.setJdbcUrl(jdbcUrl);
-        if (dataSourceClassName != null) hikariDataSource.setDataSourceClassName(dataSourceClassName);
-        if (driverClassName != null) hikariDataSource.setDriverClassName(driverClassName);
-        hikariDataSource.setAutoCommit(autoCommit);
-        hikariDataSource.setConnectionTimeout(connectionTimeout);
-        hikariDataSource.setIdleTimeout(idleTimeout);
-        for (Map.Entry<String, Object> entry : customProperties.entrySet()) {
+        hikariDataSource.setMaximumPoolSize(this.poolSize);
+        if (this.username != null) hikariDataSource.setUsername(this.username);
+        if (this.password != null) hikariDataSource.setPassword(this.password);
+        if (this.jdbcUrl != null) hikariDataSource.setJdbcUrl(this.jdbcUrl);
+        if (this.dataSourceClassName != null) hikariDataSource.setDataSourceClassName(this.dataSourceClassName);
+        if (this.driverClassName != null) hikariDataSource.setDriverClassName(this.driverClassName);
+        hikariDataSource.setAutoCommit(this.autoCommit);
+        hikariDataSource.setConnectionTimeout(this.connectionTimeout);
+        hikariDataSource.setIdleTimeout(this.idleTimeout);
+        for (Map.Entry<String, Object> entry : this.customProperties.entrySet()) {
             hikariDataSource.addDataSourceProperty(entry.getKey(), entry.getValue());
         }
         return hikariDataSource;

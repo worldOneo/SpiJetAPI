@@ -29,15 +29,24 @@ public class PlaceHolder extends AbstractWidget {
      */
     @Override
     public ItemStack render() {
-        return new ItemStackBuilder(itemStack).setDisplayName(" ").build();
+        return new ItemStackBuilder(this.itemStack).setDisplayName(" ").build();
     }
 
     /**
      * This event is always just cancelled.
      */
     @Override
-    public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.setCancelled(true);
+    }
+
+    /**
+     * Gets the material of the current ItemStack
+     *
+     * @return the material of the current ItemStack
+     */
+    public Material getMaterial() {
+        return this.itemStack.getType();
     }
 
     /**
@@ -49,14 +58,5 @@ public class PlaceHolder extends AbstractWidget {
     public PlaceHolder setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
-    }
-
-    /**
-     * Gets the material of the current ItemStack
-     *
-     * @return the material of the current ItemStack
-     */
-    public Material getMaterial() {
-        return itemStack.getType();
     }
 }

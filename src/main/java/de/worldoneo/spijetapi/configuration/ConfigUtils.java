@@ -14,7 +14,7 @@ import java.nio.file.Files;
 
 @UtilityClass
 public class ConfigUtils {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * Saves an Object to a YAML file
@@ -45,9 +45,7 @@ public class ConfigUtils {
      */
     @NotNull
     public static <T> T load(File file, T defaultConfig, Class<T> clazz) throws IOException {
-        if (!file.exists()) {
-            save(file, defaultConfig);
-        }
+        if (!file.exists()) save(file, defaultConfig);
         T config = load(file, clazz);
         save(file, config);
         return config;
@@ -78,7 +76,7 @@ public class ConfigUtils {
     public static <T> T loadJson(File file, Class<T> classOfT) throws IOException {
         try (InputStream inputStream = new FileInputStream(file);
              Reader reader = new InputStreamReader(inputStream)) {
-            return gson.fromJson(reader, classOfT);
+            return GSON.fromJson(reader, classOfT);
         }
     }
 
@@ -94,9 +92,7 @@ public class ConfigUtils {
      */
     @NotNull
     public static <T> T loadJson(File file, Class<T> classOfT, Object defaultData) throws IOException {
-        if (ensureFile(file)) {
-            saveJson(file, defaultData);
-        }
+        if (ensureFile(file)) saveJson(file, defaultData);
         T data = loadJson(file, classOfT);
         saveJson(file, data);
         return data;
@@ -111,7 +107,7 @@ public class ConfigUtils {
      */
     public static void saveJson(File file, Object dataObject) throws IOException {
         ensureFile(file);
-        String data = gson.toJson(dataObject);
+        String data = GSON.toJson(dataObject);
         Files.write(file.toPath(), data.getBytes());
     }
 

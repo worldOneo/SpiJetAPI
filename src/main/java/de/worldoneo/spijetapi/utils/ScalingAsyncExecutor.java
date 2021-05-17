@@ -16,11 +16,11 @@ public class ScalingAsyncExecutor extends AsyncExecutor {
         setMaxThreads(maxThreads);
     }
 
-    public void setMaxThreads(int maxThreads) {
-        getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
+    public int getMaxThreads() {
+        return this.getThreadPoolExecutor().getMaximumPoolSize();
     }
 
-    public int getMaxThreads() {
-        return getThreadPoolExecutor().getMaximumPoolSize();
+    public void setMaxThreads(int maxThreads) {
+        this.getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
     }
 }

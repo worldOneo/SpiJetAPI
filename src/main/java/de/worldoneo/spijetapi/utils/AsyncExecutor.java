@@ -11,7 +11,7 @@ public class AsyncExecutor {
     }
 
     public AsyncExecutor(int corePoolSize) {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(corePoolSize);
+        this.threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(corePoolSize);
     }
 
     /**
@@ -43,14 +43,14 @@ public class AsyncExecutor {
     }
 
     public final ThreadPoolExecutor getThreadPoolExecutor() {
-        return threadPoolExecutor;
-    }
-
-    public void setCorePoolSize(int corePoolSize) {
-        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
+        return this.threadPoolExecutor;
     }
 
     public int getCorePoolSize() {
         return getThreadPoolExecutor().getCorePoolSize();
+    }
+
+    public void setCorePoolSize(int corePoolSize) {
+        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
     }
 }

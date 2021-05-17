@@ -4,7 +4,8 @@
 
 # SpiJetAPI - (1.8.8 - 1.16)
 
-An API Which contains all the small things I use in my Projects
+An API Which contains all the small things I use in my Projects.
+It adds lots of abstraction to the plain Spigot API resulting in rappid development.
 
 # Examples:
 

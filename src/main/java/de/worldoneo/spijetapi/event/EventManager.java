@@ -28,8 +28,8 @@ public class EventManager {
             method.setAccessible(true);
             Class<? extends SpiEvent> event = type.asSubclass(SpiEvent.class);
 
-            registeredEvents.putIfAbsent(event, new LinkedList<>());
-            registeredEvents.get(event).add(new RegisteredListener(listener, method));
+            this.registeredEvents.putIfAbsent(event, new LinkedList<>());
+            this.registeredEvents.get(event).add(new RegisteredListener(listener, method));
         }
     }
 
@@ -41,16 +41,16 @@ public class EventManager {
      * @param event The event to fire.
      */
     public void runEvent(SpiEvent event) {
-        if (event.isAsync()) SpiScheduler.getInstance().runAsync(() -> runEvent0(event));
+        if (event.isAsync()) SpiScheduler.getInstance().runAsync(() -> this.runEvent0(event));
         else runEvent0(event);
     }
 
     private void runEvent0(SpiEvent event) {
-        if (!registeredEvents.containsKey(event.getClass())) return;
+        if (!this.registeredEvents.containsKey(event.getClass())) return;
 
-        registeredEvents.get(event.getClass()).forEach(e -> {
+        this.registeredEvents.get(event.getClass()).forEach(listener -> {
             try {
-                e.getMethod().invoke(e.getObj(), event);
+                listener.getMethod().invoke(listener.getObj(), event);
             } catch (InvocationTargetException | IllegalAccessException exception) {
                 exception.printStackTrace();
             }

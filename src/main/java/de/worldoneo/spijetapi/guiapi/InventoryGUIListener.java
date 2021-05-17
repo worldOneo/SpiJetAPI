@@ -7,8 +7,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class InventoryGUIListener implements Listener {
     @EventHandler
-    public void onInventoryClickEvent(InventoryClickEvent e) {
-        InventoryGUIManager.getInstance().handle(e);
+    public void onInventoryClickEvent(InventoryClickEvent event) {
+        InventoryGUIManager.getInstance().handle(event);
     }
 
     @EventHandler
