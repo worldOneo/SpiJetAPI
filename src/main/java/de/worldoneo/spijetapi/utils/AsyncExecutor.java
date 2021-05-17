@@ -11,7 +11,11 @@ public class AsyncExecutor {
     }
 
     public AsyncExecutor(int corePoolSize) {
-        threadPoolExecutor = (ThreadPoolExecutor) Executors.newFixedThreadPool(corePoolSize);
+        this((ThreadPoolExecutor) Executors.newFixedThreadPool(corePoolSize));
+    }
+
+    public AsyncExecutor(ThreadPoolExecutor threadPoolExecutor) {
+        this.threadPoolExecutor = threadPoolExecutor;
     }
 
     /**
