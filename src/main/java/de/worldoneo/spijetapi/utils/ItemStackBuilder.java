@@ -35,7 +35,6 @@ public class ItemStackBuilder implements SpiJetBuilder<ItemStack> {
         this.itemStack = itemStack;
     }
 
-
     public ItemStackBuilder setDisplayName(String displayName) {
         changeItemMeta(itemMeta -> itemMeta.setDisplayName(displayName));
         return this;
