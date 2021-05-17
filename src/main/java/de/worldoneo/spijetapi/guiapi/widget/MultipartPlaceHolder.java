@@ -42,7 +42,7 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
     @Override
     public List<Pair<ItemStack, Integer>> render() {
         ItemStack itemStack = new ItemStackBuilder(this.itemStack).setDisplayName(" ").build();
-        return slots.stream()
+        return this.slots.stream()
                 .map(integer -> new Pair<>(itemStack, integer))
                 .collect(Collectors.toList());
     }
@@ -51,10 +51,18 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
      * Just cancels the clickEvent
      */
     @Override
-    public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.setCancelled(true);
     }
 
+    /**
+     * Gets the material of the current ItemStack
+     *
+     * @return the material of the current ItemStack
+     */
+    public Material getMaterial() {
+        return this.itemStack.getType();
+    }
 
     /**
      * Sets the ItemStack to a new empty named {@link ItemStack}
@@ -65,14 +73,5 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
     public MultipartPlaceHolder setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
-    }
-
-    /**
-     * Gets the material of the current ItemStack
-     *
-     * @return the material of the current ItemStack
-     */
-    public Material getMaterial() {
-        return itemStack.getType();
     }
 }

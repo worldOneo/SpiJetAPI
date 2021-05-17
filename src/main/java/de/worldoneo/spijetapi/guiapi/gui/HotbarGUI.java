@@ -12,10 +12,10 @@ public class HotbarGUI extends GUI {
 
     @Override
     public Inventory render() {
-        pairWidgetHashMap.clear();
-        pairMultipartWidgetHashMap.clear();
+        this.pairWidgetHashMap.clear();
+        this.pairMultipartWidgetHashMap.clear();
         Inventory inventory = Bukkit.createInventory(null, 36);
-        renderOn(inventory);
+        super.renderOn(inventory);
         return inventory;
     }
 }

@@ -42,9 +42,9 @@ public class JsonSQLStorage {
      * @throws SQLException if an error occurred while creating the table.
      */
     private void setup() throws SQLException {
-        String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), tableName);
+        String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), this.tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedCreationString);
-        sqlExecutor.executeUpdate(sqlQueryBuilder);
+        this.sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
     /**
@@ -58,16 +58,12 @@ public class JsonSQLStorage {
      */
     @Nullable
     public <T> T getData(UUID uuid, Class<T> classOfT) throws SQLException {
-        String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName);
+        String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), this.tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedString);
         sqlQueryBuilder.setParameter(1, uuid.toString());
-        CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
-        if (cachedRowSet == null) {
-            return null;
-        }
-        if (!cachedRowSet.next()) {
-            return null;
-        }
+        CachedRowSet cachedRowSet = this.sqlExecutor.executeQuery(sqlQueryBuilder);
+        if (cachedRowSet == null) return null;
+        if (!cachedRowSet.next()) return null;
         return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
     }
 
@@ -81,20 +77,20 @@ public class JsonSQLStorage {
      */
     public CachedRowSet setData(UUID uuid, Object dataObject) throws SQLException {
         String data = GSON.toJson(dataObject);
-        String format = String.format(SQLStrings.SETTER_STRING.getString(), tableName);
+        String format = String.format(SQLStrings.SETTER_STRING.getString(), this.tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(format);
         sqlQueryBuilder.setParameter(1, uuid.toString());
         sqlQueryBuilder.setParameter(2, data);
         sqlQueryBuilder.setParameter(3, data);
-        return sqlExecutor.executeUpdate(sqlQueryBuilder);
+        return this.sqlExecutor.executeUpdate(sqlQueryBuilder);
     }
 
     public CompletableFuture<CachedRowSet> setDataAsync(UUID uuid, Object dataObject) {
-        return RuntimeErrorWrapper.tryOrThrow(d -> this.setData(uuid, d), dataObject, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(d -> this.setData(uuid, d), dataObject, this.asyncExecutor.getThreadPoolExecutor());
     }
 
     public <T> CompletableFuture<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return RuntimeErrorWrapper.tryOrThrow(c -> getData(uuid, c), classOfT, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(c -> this.getData(uuid, c), classOfT, this.asyncExecutor.getThreadPoolExecutor());
     }
 
     @Getter

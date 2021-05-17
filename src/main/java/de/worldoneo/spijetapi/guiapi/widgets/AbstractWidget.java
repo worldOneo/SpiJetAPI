@@ -15,12 +15,12 @@ public abstract class AbstractWidget implements IWidget {
     private int slot;
 
     /**
-     * @param igui the GUI to add this Widget to
+     * @param iGui the GUI to add this Widget to
      * @deprecated use {@link IGUI#addWidget} instead
      */
     @Deprecated
-    public void addToGUI(IGUI igui) {
-        igui.addWidget(this);
+    public void addToGUI(IGUI iGui) {
+        iGui.addWidget(this);
     }
 
     /**
@@ -29,7 +29,7 @@ public abstract class AbstractWidget implements IWidget {
      * @param player The {@link Player} to open the {@link IGUI} for.
      */
     protected void open(Player player) {
-        open(player, InventoryGUIManager.getInstance());
+        this.open(player, InventoryGUIManager.getInstance());
     }
 
     protected void open(Player player, GUIManager<?> guiManager) {

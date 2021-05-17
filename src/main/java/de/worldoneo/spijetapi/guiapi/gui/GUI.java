@@ -27,7 +27,7 @@ public class GUI implements IGUI {
     protected List<IModifier> modifiers = new LinkedList<>();
     protected HashMap<Integer, IWidget> pairWidgetHashMap = new HashMap<>();
     protected HashMap<Integer, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
-    private String GUITitle = "Made by GUIAPI";
+    private String guiTitle = "Made by GUIAPI";
     private InventoryType inventoryType = InventoryType.CHEST;
     private boolean cancelClickDefault = true;
     private int size = 9;
@@ -46,30 +46,30 @@ public class GUI implements IGUI {
      */
     @Override
     public Inventory render() {
-        pairMultipartWidgetHashMap.clear();
-        pairWidgetHashMap.clear();
+        this.pairMultipartWidgetHashMap.clear();
+        this.pairWidgetHashMap.clear();
         Inventory inventory = getInventoryType() == InventoryType.CHEST
-                ? Bukkit.createInventory(null, getSize(), getGUITitle())
-                : Bukkit.createInventory(null, getInventoryType(), getGUITitle());
-        renderOn(inventory);
+                ? Bukkit.createInventory(null, this.size, this.guiTitle)
+                : Bukkit.createInventory(null, this.inventoryType, this.guiTitle);
+        this.renderOn(inventory);
         return inventory;
     }
 
     public void renderOn(Inventory inventory) {
-        getWidgets().forEach(widget -> {
+        this.getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
-            pairWidgetHashMap.put(slot, widget);
+            this.pairWidgetHashMap.put(slot, widget);
             inventory.setItem(slot, itemStack);
         });
 
-        multipartWidgets.forEach(multipartWidget ->
-                multipartWidget.render().forEach(p -> {
-                    pairMultipartWidgetHashMap.put(p.getValue(), multipartWidget);
-                    inventory.setItem(p.getValue(), p.getKey());
+        this.multipartWidgets.forEach(multipartWidget ->
+                multipartWidget.render().forEach(pair -> {
+                    this.pairMultipartWidgetHashMap.put(pair.getValue(), multipartWidget);
+                    inventory.setItem(pair.getValue(), pair.getKey());
                 }));
 
-        modifiers.forEach(m -> m.accept(inventory));
+        this.modifiers.forEach(m -> m.accept(inventory));
     }
 
     /**
@@ -77,7 +77,7 @@ public class GUI implements IGUI {
      */
     @Override
     public void addWidget(IWidget widget) {
-        widgets.add(widget);
+        this.widgets.add(widget);
     }
 
     /**
@@ -85,24 +85,24 @@ public class GUI implements IGUI {
      */
     @Override
     public void addWidget(IMultipartWidget multipartWidget) {
-        multipartWidgets.add(multipartWidget);
+        this.multipartWidgets.add(multipartWidget);
     }
 
 
     @Override
-    public void clickEvent(ClickContext e) {
-        if (e.getItemStack() == null) return;
+    public void clickEvent(ClickContext clickContext) {
+        if (clickContext.getItemStack() == null) return;
 
-        if (cancelClickDefault) e.setCancelled(true);
-        int key = e.getSlot();
-        IWidget widget = pairWidgetHashMap.get(key);
-        IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
-        if (widget != null) widget.clickEvent(e);
-        if (multipartWidget != null) multipartWidget.clickEvent(e);
+        if (this.cancelClickDefault) clickContext.setCancelled(true);
+        int key = clickContext.getSlot();
+        IWidget widget = this.pairWidgetHashMap.get(key);
+        IMultipartWidget multipartWidget = this.pairMultipartWidgetHashMap.get(key);
+        if (widget != null) widget.clickEvent(clickContext);
+        if (multipartWidget != null) multipartWidget.clickEvent(clickContext);
     }
 
     @Override
     public void addModifier(IModifier modifier) {
-        modifiers.add(modifier);
+        this.modifiers.add(modifier);
     }
 }

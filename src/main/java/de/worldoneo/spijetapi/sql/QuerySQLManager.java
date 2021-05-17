@@ -25,15 +25,15 @@ public class QuerySQLManager extends SQLManager<SQLQueryBuilder> {
 
     @Override
     public CachedRowSet executeUpdate(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
-        return sqlQueryBuilder.executeUpdate(hikariDataSource);
+        return sqlQueryBuilder.executeUpdate(this.hikariDataSource);
     }
 
     @Override
     public CachedRowSet executeQuery(SQLQueryBuilder sqlQueryBuilder) throws SQLException {
-        return sqlQueryBuilder.executeQuery(hikariDataSource);
+        return sqlQueryBuilder.executeQuery(this.hikariDataSource);
     }
 
     public StringSQLManager toStringSQLManager() {
-        return new StringSQLManager(hikariDataSource);
+        return new StringSQLManager(this.hikariDataSource);
     }
 }

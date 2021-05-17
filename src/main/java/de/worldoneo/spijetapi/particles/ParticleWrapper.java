@@ -17,13 +17,13 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      * @param particle the Particle type
      * @param location the base location the "middle"
      * @param amount   the total amount of Particles
-     * @param spreadx  the spreadx (Random spread on the x dimension)
-     * @param spready  the spready (Random spread on the y dimension)
-     * @param spreadz  the spreadz (Random spread on the z dimension)
+     * @param spreadX  the spreadX (Random spread on the x dimension)
+     * @param spreadY  the spreadY (Random spread on the y dimension)
+     * @param spreadZ  the spreadZ (Random spread on the z dimension)
      */
     @Override
-    public void createField(Object particle, Location location, int amount, double spreadx, double spready, double spreadz) {
-        createField(location, amount, spreadx, spready, spreadz, l -> createParticle(particle, l, amount));
+    public void createField(Object particle, Location location, int amount, double spreadX, double spreadY, double spreadZ) {
+        this.createField(location, amount, spreadX, spreadY, spreadZ, l -> this.createParticle(particle, l, amount));
     }
 
     /**
@@ -32,27 +32,27 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      * @param particle the Particle type
      * @param location the base location the "middle"
      * @param amount   the total amount of Particles
-     * @param spreadx  the spreadx (Random spread on the x dimension)
-     * @param spready  the spready (Random spread on the y dimension)
-     * @param spreadz  the spreadz (Random spread on the z dimension)
+     * @param spreadX  the spreadX (Random spread on the x dimension)
+     * @param spreadY  the spreadY (Random spread on the y dimension)
+     * @param spreadZ  the spreadZ (Random spread on the z dimension)
      * @param players  the players to send the particle to
      */
     public void createField(Object particle, Location location, int amount,
-                            double spreadx, double spready, double spreadz,
+                            double spreadX, double spreadY, double spreadZ,
                             Collection<? extends Player> players) {
-        createField(location, amount, spreadx, spready, spreadz, l -> createParticle(particle, l, 1, players));
+        createField(location, amount, spreadX, spreadY, spreadZ, l -> this.createParticle(particle, l, 1, players));
     }
 
-    public void createField(Location location, int amount, double spreadx,
-                            double spready, double spreadz, Consumer<Location> spawner) {
+    public void createField(Location location, int amount, double spreadX,
+                            double spreadY, double spreadZ, Consumer<Location> spawner) {
         Random r = new Random();
         double dx, dy, dz;
-        double mx = -spreadx;
-        double my = -spready;
-        double mz = -spreadz;
-        double tx = spreadx * 2;
-        double ty = spready * 2;
-        double tz = spreadz * 2;
+        double mx = -spreadX;
+        double my = -spreadY;
+        double mz = -spreadZ;
+        double tx = spreadX * 2;
+        double ty = spreadY * 2;
+        double tz = spreadZ * 2;
 
         for (int i = 0; i < amount; i++) {
             dx = mx + r.nextDouble() * tx;
@@ -67,26 +67,26 @@ public abstract class ParticleWrapper implements IParticleWrapper {
     }
 
     @Override
-    public void createSpherical(Object particle, Location location, int amount, double spreadx,
-                                double spready, double spreadz, Collection<? extends Player> players) {
-        createSpherical(location, amount, spreadx, spready, spreadz, l -> createParticle(particle, l, amount, players));
+    public void createSpherical(Object particle, Location location, int amount, double spreadX,
+                                double spreadY, double spreadZ, Collection<? extends Player> players) {
+        this.createSpherical(location, amount, spreadX, spreadY, spreadZ, l -> this.createParticle(particle, l, amount, players));
     }
 
     @Override
-    public void createSpherical(Object particle, Location location, int amount, double spreadx, double spready, double spreadz) {
-        createSpherical(location, amount, spreadx, spready, spreadz, l -> createParticle(particle, l, amount));
+    public void createSpherical(Object particle, Location location, int amount, double spreadX, double spreadY, double spreadZ) {
+        this.createSpherical(location, amount, spreadX, spreadY, spreadZ, l -> this.createParticle(particle, l, amount));
     }
 
-    public void createSpherical(Location location, int amount, double spreadx,
-                                double spready, double spreadz, Consumer<Location> spawner) {
+    public void createSpherical(Location location, int amount, double spreadX,
+                                double spreadY, double spreadZ, Consumer<Location> spawner) {
         Random r = new Random();
         double dx, dy, dz, u, mag, c;
-        double mx = -spreadx;
-        double my = -spready;
-        double mz = -spreadz;
-        double tx = spreadx * 2;
-        double ty = spready * 2;
-        double tz = spreadz * 2;
+        double mx = -spreadX;
+        double my = -spreadY;
+        double mz = -spreadZ;
+        double tx = spreadX * 2;
+        double ty = spreadY * 2;
+        double tz = spreadZ * 2;
         for (int i = 0; i < amount; i++) {
             u = r.nextDouble();
             dx = mx + r.nextDouble() * tx;
@@ -123,7 +123,7 @@ public abstract class ParticleWrapper implements IParticleWrapper {
     @Override
     public void createLine(Object particle, World world, int amount,
                            double x, double y, double z, double x1, double y1, double z1) {
-        createLine(world, amount, x, y, z, x1, y1, z1, l -> createParticle(particle, l, 1));
+        this.createLine(world, amount, x, y, z, x1, y1, z1, l -> this.createParticle(particle, l, 1));
     }
 
     /**
@@ -142,7 +142,7 @@ public abstract class ParticleWrapper implements IParticleWrapper {
     public void createLine(Object particle, World world, int amount,
                            double x, double y, double z, double x1, double y1,
                            double z1, Collection<? extends Player> players) {
-        createLine(world, amount, x, y, z, x1, y1, z1, l -> createParticle(particle, l, 1, players));
+        this.createLine(world, amount, x, y, z, x1, y1, z1, l -> this.createParticle(particle, l, 1, players));
     }
 
     public void createLine(World world, int amount,
@@ -171,7 +171,7 @@ public abstract class ParticleWrapper implements IParticleWrapper {
     @Override
     public void createCircle(Object particle, Location location,
                              int amount, double radius, Collection<? extends Player> players) {
-        createCircle(location, amount, radius, l -> createParticle(particle, l, 1, players));
+        this.createCircle(location, amount, radius, l -> this.createParticle(particle, l, 1, players));
     }
 
     /**
@@ -184,7 +184,7 @@ public abstract class ParticleWrapper implements IParticleWrapper {
      */
     @Override
     public void createCircle(Object particle, Location location, int amount, double radius) {
-        createCircle(location, amount, radius, l -> createParticle(particle, l, 1));
+        this.createCircle(location, amount, radius, l -> this.createParticle(particle, l, 1));
     }
 
     public void createCircle(Location location, int amount, double radius, Consumer<Location> spawner) {

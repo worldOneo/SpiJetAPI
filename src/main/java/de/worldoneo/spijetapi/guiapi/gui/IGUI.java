@@ -6,7 +6,7 @@ import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
 import org.bukkit.inventory.Inventory;
 
 public interface IGUI {
-    void clickEvent(ClickContext e);
+    void clickEvent(ClickContext clickContext);
 
     /**
      * Defines the Title of the IGUI.
@@ -14,7 +14,7 @@ public interface IGUI {
      *
      * @return the Title of the IGUI.
      */
-    default String getGUITitle() {
+    default String getGuiTitle() {
         return "";
     }
 

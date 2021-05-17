@@ -1,8 +1,5 @@
 package de.worldoneo.spijetapi.utils;
 
-import java.util.concurrent.Executors;
-import java.util.concurrent.ThreadPoolExecutor;
-
 public class ScalingAsyncExecutor extends AsyncExecutor {
     public static final int DEFAULT_MAX_THREADS = 64;
 
@@ -15,16 +12,15 @@ public class ScalingAsyncExecutor extends AsyncExecutor {
     }
 
     public ScalingAsyncExecutor(int corePoolSize, int maxThreads) {
-        super((ThreadPoolExecutor) Executors.newCachedThreadPool());
+        super(corePoolSize);
         setMaxThreads(maxThreads);
-        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
     }
 
     public int getMaxThreads() {
-        return getThreadPoolExecutor().getMaximumPoolSize();
+        return this.getThreadPoolExecutor().getMaximumPoolSize();
     }
 
     public void setMaxThreads(int maxThreads) {
-        getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
+        this.getThreadPoolExecutor().setMaximumPoolSize(maxThreads);
     }
 }

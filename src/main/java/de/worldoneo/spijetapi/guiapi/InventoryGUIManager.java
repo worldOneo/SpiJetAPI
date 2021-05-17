@@ -22,7 +22,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
             .filter(ChatColor::isColor)
             .collect(Collectors.toList());
 
-    private static final InventoryGUIManager instance = new InventoryGUIManager();
+    private static final InventoryGUIManager INSTANCE = new InventoryGUIManager();
     private final HashMap<Player, Pair<String, IGUI>> playerIGUIMap = new HashMap<>();
 
     private InventoryGUIManager() {
@@ -31,37 +31,37 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     }
 
     public static InventoryGUIManager getInstance() {
-        return instance;
+        return INSTANCE;
     }
 
     @Override
     public void open(IGUI igui, Player player) {
         Inventory inventory = igui.render();
-        String title = igui.getGUITitle();
+        String title = igui.getGuiTitle();
         title = title + generateID();
         Inventory renamedInventory = inventory.getType() == InventoryType.CHEST
                 ? Bukkit.createInventory(null, inventory.getSize(), title)
                 : Bukkit.createInventory(null, inventory.getType(), title);
         renamedInventory.setContents(inventory.getContents());
-        playerIGUIMap.put(player, new Pair<>(title, igui));
+        this.playerIGUIMap.put(player, new Pair<>(title, igui));
         Bukkit.getScheduler().runTask(SpigotSpiJetAPI.getInstance(),
                 () -> player.openInventory(renamedInventory));
     }
 
     public void removePlayer(Player pLayer) {
-        playerIGUIMap.remove(pLayer);
+        this.playerIGUIMap.remove(pLayer);
     }
 
     @Override
     public void render(Player player) {
-        IGUI igui = playerIGUIMap.getOrDefault(player, new Pair<>(null, null)).getValue();
+        IGUI igui = this.playerIGUIMap.getOrDefault(player, new Pair<>(null, null)).getValue();
         if (igui == null) return;
-        open(igui, player);
+        this.open(igui, player);
     }
 
     public void handle(InventoryClickEvent e) {
         Player player = (Player) e.getWhoClicked();
-        Pair<String, IGUI> pair = playerIGUIMap.get(player);
+        Pair<String, IGUI> pair = this.playerIGUIMap.get(player);
 
         if (pair == null) return;
 
