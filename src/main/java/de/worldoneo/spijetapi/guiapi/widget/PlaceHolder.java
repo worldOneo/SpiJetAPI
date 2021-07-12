@@ -41,6 +41,15 @@ public class PlaceHolder extends AbstractWidget {
     }
 
     /**
+     * Gets the material of the current ItemStack
+     *
+     * @return the material of the current ItemStack
+     */
+    public Material getMaterial() {
+        return itemStack.getType();
+    }
+
+    /**
      * Sets the ItemStack to a new empty named ItemStack
      *
      * @param material the material of the new ItemStack
@@ -49,14 +58,5 @@ public class PlaceHolder extends AbstractWidget {
     public PlaceHolder setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
-    }
-
-    /**
-     * Gets the material of the current ItemStack
-     *
-     * @return the material of the current ItemStack
-     */
-    public Material getMaterial() {
-        return itemStack.getType();
     }
 }

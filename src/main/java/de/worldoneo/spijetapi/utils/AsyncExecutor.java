@@ -1,6 +1,10 @@
 package de.worldoneo.spijetapi.utils;
 
-import java.util.concurrent.*;
+import java.util.concurrent.Callable;
+import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.Executors;
+import java.util.concurrent.Future;
+import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
 public class AsyncExecutor {
@@ -50,11 +54,11 @@ public class AsyncExecutor {
         return threadPoolExecutor;
     }
 
-    public void setCorePoolSize(int corePoolSize) {
-        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
-    }
-
     public int getCorePoolSize() {
         return getThreadPoolExecutor().getCorePoolSize();
+    }
+
+    public void setCorePoolSize(int corePoolSize) {
+        getThreadPoolExecutor().setCorePoolSize(corePoolSize);
     }
 }

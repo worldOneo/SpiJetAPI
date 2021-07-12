@@ -2,7 +2,12 @@ package de.worldoneo.spijetapi.channels;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 public class ObjectStreamMessageSerializer<T extends Serializable> implements MessageSerializer<T> {
     @Override
