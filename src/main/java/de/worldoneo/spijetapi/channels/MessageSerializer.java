@@ -12,7 +12,9 @@ import java.io.IOException;
  * serializer.deserialize(serializer.serialize(i)).equals(i);
  * </code>
  * </p>
- * is true, otherwise it must throw an error
+ * is true, otherwise it must throw an error.
+ * As this is a serializer for the {@link MessagingChannel} which is an abstraction of networking,
+ * there is no point to send a null.
  *
  * @param <T> the Type for the serializer to serialize
  */

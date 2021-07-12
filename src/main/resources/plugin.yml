@@ -1,4 +1,4 @@
-name: SpiJetAPI
+name: ${NAME}
 main: de.worldoneo.spijetapi.SpigotSpiJetAPI
 version: ${VERSION}
 api-version: 1.16

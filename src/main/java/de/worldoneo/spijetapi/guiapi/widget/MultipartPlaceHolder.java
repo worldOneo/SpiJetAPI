@@ -55,6 +55,14 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
         e.setCancelled(true);
     }
 
+    /**
+     * Gets the material of the current ItemStack
+     *
+     * @return the material of the current ItemStack
+     */
+    public Material getMaterial() {
+        return itemStack.getType();
+    }
 
     /**
      * Sets the ItemStack to a new empty named {@link ItemStack}
@@ -65,14 +73,5 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
     public MultipartPlaceHolder setMaterial(Material material) {
         this.itemStack = SpigotUtils.createNamedItemStack(material, " ");
         return this;
-    }
-
-    /**
-     * Gets the material of the current ItemStack
-     *
-     * @return the material of the current ItemStack
-     */
-    public Material getMaterial() {
-        return itemStack.getType();
     }
 }

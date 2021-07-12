@@ -11,7 +11,10 @@ import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Random;
 import java.util.stream.Collectors;
 
 public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {

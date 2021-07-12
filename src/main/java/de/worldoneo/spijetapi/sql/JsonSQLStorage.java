@@ -17,26 +17,10 @@ import java.util.concurrent.CompletableFuture;
 @Setter
 @Getter
 public class JsonSQLStorage {
-    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
+    private static final Gson GSON = new Gson();
     private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
     private final String tableName;
-    private static final Gson GSON = new Gson();
-
-    @Getter
-    private enum SQLStrings {
-        TABLE_CREATION_STRING("CREATE TABLE IF NOT EXISTS `%s` (" +
-                "`uuid` VARCHAR(36) NOT NULL," +
-                "`jsonDocument` JSON NOT NULL COLLATE 'utf8mb4_bin'," +
-                "PRIMARY KEY (`uuid`(8))" +
-                ");"),
-        GETTER_STRING("SELECT * from `%s` WHERE uuid=?;"),
-        SETTER_STRING("INSERT INTO `%s` (uuid, jsonDocument) VALUES (?, ?) ON DUPLICATE KEY UPDATE jsonDocument=?;");
-        final String string;
-
-        SQLStrings(String string) {
-            this.string = string;
-        }
-    }
+    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
 
     public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName) throws SQLException {
         this.sqlExecutor = sqlExecutor;
@@ -111,5 +95,21 @@ public class JsonSQLStorage {
 
     public <T> CompletableFuture<T> getDataAsync(UUID uuid, Class<T> classOfT) {
         return RuntimeErrorWrapper.tryOrThrow(c -> getData(uuid, c), classOfT, asyncExecutor.getThreadPoolExecutor());
+    }
+
+    @Getter
+    private enum SQLStrings {
+        TABLE_CREATION_STRING("CREATE TABLE IF NOT EXISTS `%s` (" +
+                "`uuid` VARCHAR(36) NOT NULL," +
+                "`jsonDocument` JSON NOT NULL COLLATE 'utf8mb4_bin'," +
+                "PRIMARY KEY (`uuid`(8))" +
+                ");"),
+        GETTER_STRING("SELECT * from `%s` WHERE uuid=?;"),
+        SETTER_STRING("INSERT INTO `%s` (uuid, jsonDocument) VALUES (?, ?) ON DUPLICATE KEY UPDATE jsonDocument=?;");
+        final String string;
+
+        SQLStrings(String string) {
+            this.string = string;
+        }
     }
 }

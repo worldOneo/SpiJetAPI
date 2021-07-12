@@ -8,7 +8,11 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.ByteArrayInputStream;
+import java.io.ByteArrayOutputStream;
+import java.io.DataInputStream;
+import java.io.DataOutputStream;
+import java.io.IOException;
 
 public abstract class MessagingChannel<T> implements PluginMessageListener {
     @Getter
@@ -68,7 +72,7 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
      * @throws IOException if no player is online to send the message or the serializer fails
      *                     throws an error
      */
-    public void sendMessage(T message) throws IOException {
+    public void sendMessage(@NotNull T message) throws IOException {
         Player sender = Iterables.getFirst(Bukkit.getOnlinePlayers(), null);
 
         if (sender == null)

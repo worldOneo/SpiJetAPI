@@ -1,11 +1,17 @@
 package de.worldoneo.spijetapi.utils;
 
-import de.worldoneo.spijetapi.utils.function.*;
+import de.worldoneo.spijetapi.utils.function.ThrowingBiFunction;
+import de.worldoneo.spijetapi.utils.function.ThrowingConsumer;
+import de.worldoneo.spijetapi.utils.function.ThrowingFunction;
+import de.worldoneo.spijetapi.utils.function.ThrowingRunnable;
+import de.worldoneo.spijetapi.utils.function.ThrowingSupplier;
 import lombok.experimental.UtilityClass;
 
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.Executor;
-import java.util.function.*;
+import java.util.function.Consumer;
+import java.util.function.Function;
+import java.util.function.Supplier;
 
 /**
  * The RuntimeErrorWrapper needs to be treated with care.

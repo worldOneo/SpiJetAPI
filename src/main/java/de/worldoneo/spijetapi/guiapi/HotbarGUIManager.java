@@ -17,9 +17,9 @@ import org.bukkit.inventory.PlayerInventory;
 import java.util.HashMap;
 
 public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
-    private final HashMap<Player, IGUI> playerIGUIHashMap = new HashMap<>();
     @Getter
     private static final HotbarGUIManager instance = new HotbarGUIManager();
+    private final HashMap<Player, IGUI> playerIGUIHashMap = new HashMap<>();
 
     private HotbarGUIManager() {
         SpigotSpiJetAPI instance = SpigotSpiJetAPI.getInstance();
@@ -76,7 +76,7 @@ public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
         if (!playerIGUIHashMap.containsKey(whoClicked)
                 || event.getClickedInventory() == null
                 || ((type = event.getClickedInventory().getType()) != InventoryType.PLAYER
-                        && type != InventoryType.CREATIVE)
+                && type != InventoryType.CREATIVE)
         ) return;
         handle(whoClicked, event, event.getSlot(), event.getCurrentItem());
     }
