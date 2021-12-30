@@ -2,7 +2,7 @@
 
 [![](https://jitpack.io/v/worldOneo/SpiJetAPI.svg)](https://jitpack.io/#worldOneo/SpiJetAPI)
 
-# SpiJetAPI - (1.8.8 - 1.16)
+# SpiJetAPI - (1.8.8 - 1.18)
 
 An API Which contains all the small things I use in my Projects.
 It adds lots of abstraction to the plain Spigot API resulting in rappid development.
