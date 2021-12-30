@@ -17,14 +17,12 @@ public class ConfigSynchronizer {
             "`content` LONGTEXT NULL DEFAULT NULL COLLATE 'utf8_bin'," +
             "PRIMARY KEY (`file`(50)) USING BTREE" +
             ")" +
-            "COLLATE='utf8_bin'" +
-            "ENGINE=InnoDB" +
-            ";";
+            "COLLATE='utf8_bin';";
 
-    private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
+    private final SQLExecutor sqlExecutor;
     private final String table;
 
-    public ConfigSynchronizer(SQLExecutor<SQLQueryBuilder> sqlExecutor, String table, boolean setup) throws SQLException {
+    public ConfigSynchronizer(SQLExecutor sqlExecutor, String table, boolean setup) throws SQLException {
         this.sqlExecutor = sqlExecutor;
         this.table = table;
         if (setup) {
@@ -32,7 +30,7 @@ public class ConfigSynchronizer {
         }
     }
 
-    public ConfigSynchronizer(SQLExecutor<SQLQueryBuilder> sqlExecutor, String table) throws SQLException {
+    public ConfigSynchronizer(SQLExecutor sqlExecutor, String table) throws SQLException {
         this(sqlExecutor, table, true);
     }
 
