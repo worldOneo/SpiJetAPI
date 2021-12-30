@@ -11,7 +11,7 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.sql.Statement;
 
-public class StringSQLManager extends SQLManager<String> {
+public class StringSQLManager {
     private final HikariDataSource hikariDataSource;
 
     public StringSQLManager(@NonNull HikariDataSource hikariDataSource) {
@@ -26,7 +26,6 @@ public class StringSQLManager extends SQLManager<String> {
         this(dataSourceBuilder.build());
     }
 
-    @Override
     public CachedRowSet executeUpdate(String arg) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg, Statement.RETURN_GENERATED_KEYS);
@@ -37,7 +36,7 @@ public class StringSQLManager extends SQLManager<String> {
         }
     }
 
-    @Override
+
     public CachedRowSet executeQuery(String arg) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
             PreparedStatement preparedStatement = connection.prepareStatement(arg);

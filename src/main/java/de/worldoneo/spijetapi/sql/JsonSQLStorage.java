@@ -2,7 +2,6 @@ package de.worldoneo.spijetapi.sql;
 
 import com.google.gson.Gson;
 import com.zaxxer.hikari.HikariDataSource;
-import de.worldoneo.spijetapi.utils.AsyncExecutor;
 import de.worldoneo.spijetapi.utils.RuntimeErrorWrapper;
 import de.worldoneo.spijetapi.utils.SpiJetBuilder;
 import lombok.Getter;
@@ -13,16 +12,17 @@ import javax.sql.rowset.CachedRowSet;
 import java.sql.SQLException;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
+import java.util.concurrent.ExecutorService;
 
 @Setter
 @Getter
 public class JsonSQLStorage {
     private static final Gson GSON = new Gson();
-    private final SQLExecutor<SQLQueryBuilder> sqlExecutor;
+    private final SQLExecutor sqlExecutor;
     private final String tableName;
-    private AsyncExecutor asyncExecutor = SQLManager.defaultAsyncExecutor;
+    private ExecutorService asyncExecutor = SQLManager.defaultAsyncExecutor;
 
-    public JsonSQLStorage(SQLExecutor<SQLQueryBuilder> sqlExecutor, String tableName) throws SQLException {
+    public JsonSQLStorage(SQLExecutor sqlExecutor, String tableName) throws SQLException {
         this.sqlExecutor = sqlExecutor;
         this.tableName = tableName;
         setup();
@@ -90,11 +90,11 @@ public class JsonSQLStorage {
     }
 
     public CompletableFuture<CachedRowSet> setDataAsync(UUID uuid, Object dataObject) {
-        return RuntimeErrorWrapper.tryOrThrow(d -> this.setData(uuid, d), dataObject, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(d -> this.setData(uuid, d), dataObject, getAsyncExecutor());
     }
 
     public <T> CompletableFuture<T> getDataAsync(UUID uuid, Class<T> classOfT) {
-        return RuntimeErrorWrapper.tryOrThrow(c -> getData(uuid, c), classOfT, asyncExecutor.getThreadPoolExecutor());
+        return RuntimeErrorWrapper.tryOrThrow(c -> getData(uuid, c), classOfT, getAsyncExecutor());
     }
 
     @Getter
