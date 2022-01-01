@@ -70,7 +70,7 @@ public class SQLQueryBuilder implements SQLExecutable {
      */
     public SQLQueryBuilder setParameters(Object... parameters) {
         for (int i = 0; i < parameters.length; i++) {
-            setParameter(i + 1, parameters);
+            setParameter(i + 1, parameters[i]);
         }
         return this;
     }
