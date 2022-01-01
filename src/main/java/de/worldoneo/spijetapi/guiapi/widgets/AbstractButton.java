@@ -27,7 +27,7 @@ public abstract class AbstractButton extends AbstractWidget {
      */
     @Override
     public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+        e.cancel();
         clickEventConsumer.accept(e);
     }
 }

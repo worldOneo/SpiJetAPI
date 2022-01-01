@@ -1,11 +1,11 @@
 package de.worldoneo.spijetapi.guiapi;
 
-import de.worldoneo.spijetapi.guiapi.gui.IGUI;
+import de.worldoneo.spijetapi.guiapi.gui.IGui;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
-public interface GUIManager<T extends Cancellable> {
-    void open(IGUI gui, Player player);
+public interface IGuiManager<T extends Cancellable> {
+    void open(IGui gui, Player player);
 
     void render(Player player);
 

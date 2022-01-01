@@ -1,6 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
-import de.worldoneo.spijetapi.guiapi.GUIManager;
+import de.worldoneo.spijetapi.guiapi.IGuiManager;
 import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
@@ -11,7 +11,6 @@ import lombok.Setter;
 import lombok.experimental.Accessors;
 import org.bukkit.Material;
 import org.bukkit.entity.Player;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 import java.util.ArrayList;
@@ -109,16 +108,12 @@ public class ListWidget extends AbstractMultipartWidget {
         return pairList;
     }
 
-
-    /**
-     * @param e The {@link InventoryClickEvent} to handle
-     */
     @Override
     public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+        e.cancel();
         ItemStack itemStack = e.getItemStack();
         Player player = e.getPlayer();
-        GUIManager<?> guiManager = e.getGuiManager();
+        IGuiManager<?> guiManager = e.getGuiManager();
         if (itemStack == null) return;
 
         if (itemStack.equals(this.back)) {
@@ -127,7 +122,7 @@ public class ListWidget extends AbstractMultipartWidget {
             open(player, guiManager);
         } else if (itemStack.equals(forward)) {
             int tmpIndex = index + slots.size() - 2;
-            if (itemStacks.stream().skip(tmpIndex).count() != 0) {
+            if (itemStacks.stream().skip(tmpIndex).findAny().isPresent()) {
                 index = tmpIndex;
             }
             open(player, guiManager);
