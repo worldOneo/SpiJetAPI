@@ -15,7 +15,7 @@ public class HotbarGui extends InventoryGui {
     public RawGui render() {
         pairWidgetHashMap.clear();
         pairMultipartWidgetHashMap.clear();
-        RawGui rawGui = new RawGui(this, 36);
+        RawGui rawGui = new RawGui(this, Gui.PLAYER_INVENTORY_SLOTS);
         renderOn(rawGui.getInventory());
         return rawGui;
     }

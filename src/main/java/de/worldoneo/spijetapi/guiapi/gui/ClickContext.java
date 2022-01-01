@@ -4,6 +4,7 @@ import de.worldoneo.spijetapi.guiapi.GuiManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.inventory.ItemStack;
 
 @Data
@@ -15,6 +16,7 @@ public class ClickContext {
     private GuiManager<?> guiManager;
     private IGui gui;
     private int slot;
+    private final Cancellable event;
 
     /**
      * Equal to setCancelled(true)

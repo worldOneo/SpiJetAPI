@@ -53,7 +53,7 @@ public class HotbarGuiManager implements GuiManager<PlayerInteractEvent> {
         IGui gui = playerIGUIHashMap.get(player);
         if (gui == null) return;
         ClickContext clickContext = new ClickContext(itemStack, player
-                , false, this, gui, slot);
+                , false, this, gui, slot, event);
         gui.clickEvent(clickContext);
         if (clickContext.isCancelled()) event.setCancelled(true);
     }

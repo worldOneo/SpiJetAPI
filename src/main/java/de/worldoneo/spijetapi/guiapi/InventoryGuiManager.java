@@ -54,8 +54,7 @@ public class InventoryGuiManager implements GuiManager<InventoryClickEvent> {
 
         IGui gui = ((RawGui) holder).getGui();
         ClickContext clickContext = new ClickContext(e.getCurrentItem(), player,
-                false, this, gui,
-                e.getSlot());
+                false, this, gui, e.getSlot(), e);
 
         gui.clickEvent(clickContext);
         if (clickContext.isCancelled()) e.setCancelled(true);
