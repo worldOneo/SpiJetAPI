@@ -7,24 +7,24 @@ import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 
-public class HotbarGUIListener implements Listener {
+public class HotbarGuiListener implements Listener {
     @EventHandler
     public void onInteractEvent(PlayerInteractEvent e) {
-        HotbarGUIManager.getInstance().handle(e);
+        HotbarGuiManager.getInstance().handle(e);
     }
 
     @EventHandler
     public void onItemDropEvent(PlayerDropItemEvent event) {
-        HotbarGUIManager.getInstance().preventDrop(event);
+        HotbarGuiManager.getInstance().preventDrop(event);
     }
 
     @EventHandler
     public void onItemDropEvent(InventoryClickEvent event) {
-        HotbarGUIManager.getInstance().preventMove(event);
+        HotbarGuiManager.getInstance().preventMove(event);
     }
 
     @EventHandler
     public void onQuitEvent(PlayerQuitEvent event) {
-        HotbarGUIManager.getInstance().removePlayer(event.getPlayer());
+        HotbarGuiManager.getInstance().removePlayer(event.getPlayer());
     }
 }

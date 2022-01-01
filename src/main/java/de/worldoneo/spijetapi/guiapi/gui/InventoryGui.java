@@ -1,6 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.gui;
 
-import de.worldoneo.spijetapi.guiapi.InventoryGUIManager;
+import de.worldoneo.spijetapi.guiapi.InventoryGuiManager;
 import de.worldoneo.spijetapi.guiapi.modifier.IModifier;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
@@ -17,19 +17,20 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.function.Consumer;
 
 @Accessors(chain = true)
 @Getter
 @Setter
-public class GUI implements IGUI {
+public class InventoryGui implements IGui {
     protected List<IWidget> widgets = new ArrayList<>();
     protected List<IMultipartWidget> multipartWidgets = new ArrayList<>();
     protected List<IModifier> modifiers = new LinkedList<>();
     protected HashMap<Integer, IWidget> pairWidgetHashMap = new HashMap<>();
     protected HashMap<Integer, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
-    private String GUITitle = "Made by GUIAPI";
+    private String GUITitle = "Made by SpiJetAPI";
     private InventoryType inventoryType = InventoryType.CHEST;
-    private boolean cancelClickDefault = true;
+    private Consumer<ClickContext> defaultClickHandler = c -> c.setCancelled(true);
     private int size = 9;
 
     /**
@@ -38,24 +39,24 @@ public class GUI implements IGUI {
      * @param player to open this GUI for
      */
     public void open(Player player) {
-        InventoryGUIManager.getInstance().open(this, player);
+        InventoryGuiManager.getInstance().open(this, player);
     }
 
     /**
      * @return returns the rendered Inventory from all widgets
      */
     @Override
-    public Inventory render() {
+    public RawGui render() {
         pairMultipartWidgetHashMap.clear();
         pairWidgetHashMap.clear();
-        Inventory inventory = getInventoryType() == InventoryType.CHEST
-                ? Bukkit.createInventory(null, getSize(), getGUITitle())
-                : Bukkit.createInventory(null, getInventoryType(), getGUITitle());
-        renderOn(inventory);
-        return inventory;
+        RawGui gui = getInventoryType() == InventoryType.CHEST
+                ? new RawGui(this, getSize(), getGUITitle())
+                : new RawGui(this, getInventoryType(), getGUITitle());
+        renderOn(gui.getInventory());
+        return gui;
     }
 
-    public void renderOn(Inventory inventory) {
+    protected void renderOn(Inventory inventory) {
         getWidgets().forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
@@ -92,13 +93,12 @@ public class GUI implements IGUI {
     @Override
     public void clickEvent(ClickContext e) {
         if (e.getItemStack() == null) return;
-
-        if (cancelClickDefault) e.setCancelled(true);
         int key = e.getSlot();
         IWidget widget = pairWidgetHashMap.get(key);
         IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
         if (widget != null) widget.clickEvent(e);
-        if (multipartWidget != null) multipartWidget.clickEvent(e);
+        if (widget == null && multipartWidget != null) multipartWidget.clickEvent(e);
+        if (widget == null && multipartWidget == null) defaultClickHandler.accept(e);
     }
 
     @Override

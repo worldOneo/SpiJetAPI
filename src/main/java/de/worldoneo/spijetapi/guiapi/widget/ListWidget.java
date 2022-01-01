@@ -1,6 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.widget;
 
-import de.worldoneo.spijetapi.guiapi.GUIManager;
+import de.worldoneo.spijetapi.guiapi.GuiManager;
 import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
 import de.worldoneo.spijetapi.guiapi.widgets.AbstractMultipartWidget;
 import de.worldoneo.spijetapi.utils.Pair;
@@ -115,10 +115,10 @@ public class ListWidget extends AbstractMultipartWidget {
      */
     @Override
     public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+        e.cancel();
         ItemStack itemStack = e.getItemStack();
         Player player = e.getPlayer();
-        GUIManager<?> guiManager = e.getGuiManager();
+        GuiManager<?> guiManager = e.getGuiManager();
         if (itemStack == null) return;
 
         if (itemStack.equals(this.back)) {
@@ -127,7 +127,7 @@ public class ListWidget extends AbstractMultipartWidget {
             open(player, guiManager);
         } else if (itemStack.equals(forward)) {
             int tmpIndex = index + slots.size() - 2;
-            if (itemStacks.stream().skip(tmpIndex).count() != 0) {
+            if (itemStacks.stream().skip(tmpIndex).findAny().isPresent()) {
                 index = tmpIndex;
             }
             open(player, guiManager);

@@ -37,7 +37,7 @@ public class PlaceHolder extends AbstractWidget {
      */
     @Override
     public void clickEvent(ClickContext e) {
-        e.setCancelled(true);
+        e.cancel();
     }
 
     /**
