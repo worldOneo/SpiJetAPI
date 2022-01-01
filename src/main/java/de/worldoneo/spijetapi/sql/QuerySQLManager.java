@@ -38,14 +38,14 @@ public class QuerySQLManager extends SQLManager {
     @Override
     public CachedRowSet executeUpdate(SQLExecutable executable) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
-            return executable.executeQuery(connection);
+            return executable.executeUpdate(connection);
         }
     }
 
     @Override
     public CachedRowSet executeQuery(SQLExecutable executable) throws SQLException {
         try (Connection connection = hikariDataSource.getConnection()) {
-            return executable.executeUpdate(connection);
+            return executable.executeQuery(connection);
         }
     }
 
