@@ -4,7 +4,7 @@ import de.worldoneo.spijetapi.guiapi.gui.IGui;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
-public interface GuiManager<T extends Cancellable> {
+public interface IGuiManager<T extends Cancellable> {
     void open(IGui gui, Player player);
 
     void render(Player player);

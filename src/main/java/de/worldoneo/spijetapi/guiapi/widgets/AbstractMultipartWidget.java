@@ -1,6 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.widgets;
 
-import de.worldoneo.spijetapi.guiapi.GuiManager;
+import de.worldoneo.spijetapi.guiapi.IGuiManager;
 import de.worldoneo.spijetapi.guiapi.InventoryGuiManager;
 import de.worldoneo.spijetapi.guiapi.gui.IGui;
 import lombok.Getter;
@@ -31,7 +31,7 @@ public abstract class AbstractMultipartWidget implements IMultipartWidget {
         open(player, InventoryGuiManager.getInstance());
     }
 
-    protected void open(Player player, GuiManager<?> guiManager) {
+    protected void open(Player player, IGuiManager<?> guiManager) {
         guiManager.render(player);
     }
 }

@@ -11,7 +11,7 @@ import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nullable;
 
-public class InventoryGuiManager implements GuiManager<InventoryClickEvent> {
+public class InventoryGuiManager implements IGuiManager<InventoryClickEvent> {
     private static final InventoryGuiManager instance = new InventoryGuiManager();
 
     private InventoryGuiManager() {

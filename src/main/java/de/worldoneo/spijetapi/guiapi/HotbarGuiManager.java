@@ -16,7 +16,7 @@ import org.bukkit.inventory.PlayerInventory;
 
 import java.util.HashMap;
 
-public class HotbarGuiManager implements GuiManager<PlayerInteractEvent> {
+public class HotbarGuiManager implements IGuiManager<PlayerInteractEvent> {
     @Getter
     private static final HotbarGuiManager instance = new HotbarGuiManager();
     private final HashMap<Player, IGui> playerIGUIHashMap = new HashMap<>();

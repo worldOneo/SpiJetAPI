@@ -1,6 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.gui;
 
-import de.worldoneo.spijetapi.guiapi.GuiManager;
+import de.worldoneo.spijetapi.guiapi.IGuiManager;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import org.bukkit.entity.Player;
@@ -13,7 +13,7 @@ public class ClickContext {
     private ItemStack itemStack;
     private Player player;
     private boolean cancelled;
-    private GuiManager<?> guiManager;
+    private IGuiManager<?> guiManager;
     private IGui gui;
     private int slot;
     private final Cancellable event;
