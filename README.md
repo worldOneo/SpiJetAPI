@@ -22,8 +22,7 @@ HikariDataSource hds = dsb.build();
 
 //Query Something
 SQLQueryBuilder sqb = new SQLQueryBuilder("SELECT * FROM simpsons WHERE name=? AND age=?;");
-sqb.setParameter(1, "Homer");
-sqb.setParameter(2, 42);
+sqb.setParameters("Homer", 42);
 
 //Query sync
 CachedRowSet crs = sqb.executeQuery(hds);
@@ -49,9 +48,9 @@ The "normal" ways to create GUIs is often based on slot and/or string comparison
 InventoryClickEvent. This GUI-API aims to connect the events and the creation of the API to create GUIs easier.
 
 ```java
-GUI gui = new GUI();
+InventoryGui gui = Gui.inventory();
 gui
- .setSize(27) //3 rows
+ .setSize(Gui.rowsToSlots(3))
  .setGUITitle("My First GUI!");
 Button button = new Button(this::action); //This function (this::action) is called on click
 button
@@ -59,7 +58,7 @@ button
  .setMaterial(Material.PAPER) //Define the material
  .setTitle("Click me!"); //Set the name
 gui.addWidget(button); //Add the button to the gui
-InventoryGUIManager.getInstance().open(gui, player); //open the gui as inventory
+gui.open(player); //open the gui as inventory
 
 ```
 
@@ -74,15 +73,15 @@ File ymlConfig = new File(getDataFolder(), "config.yml");
 File jsonConfig = new File(getDataFolder(), "config.json");
 
 //load data
-//Get yml config write default if not exist
-YamlConfiguration yamlConfiguration = ConfigUtils.load(ymlConfig, getResource("config.yml"));
+//Get yml config write default if not exist (can be any java bean class)
+MyOptionClass myOptionClass = ConfigUtils.load(ymlConfig, MyOptionClass.class, new MyOptionClass());
 
 //Get json config write default if not exist (Can be any kind of data class) 
 MyOptionClass myOptionClass = ConfigUtils.loadJson(jsonConfig, MyOptionClass.class, new MyOptionClass());
 
 //Save data
 //Save yml data
-yamlConfiguration.save(ymlConfig);
+yamlConfiguration.save(ymlConfig, myOptionClass);
 
 //Save json data
 ConfigUtils.saveJson(jsonConfig, myOptionClass);
