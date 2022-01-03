@@ -7,6 +7,9 @@ import java.util.concurrent.Future;
 import java.util.concurrent.ThreadPoolExecutor;
 import java.util.function.Supplier;
 
+/**
+ * @deprecated Use the java concurrent API or task API instead
+ */
 public class AsyncExecutor {
     private final ThreadPoolExecutor threadPoolExecutor;
 
@@ -24,14 +27,14 @@ public class AsyncExecutor {
 
     /**
      * Runs the callable async and returns its future.
-     * Its recommended to take a look at <code>#complete(Supplier)</code>
+     * Its recommended taking a look at <code>#complete(Supplier)</code>
      * as it provides better handling.
      *
      * @param callable the callable to run async
      * @param <T>      the type which the callable returns
      * @return the future of the async running callable
      */
-    public <T> Future<T> submit(Callable<T> callable) {
+    public <T> Future<T> submit(Callable<T> callable){
         return getThreadPoolExecutor().submit(callable);
     }
 
