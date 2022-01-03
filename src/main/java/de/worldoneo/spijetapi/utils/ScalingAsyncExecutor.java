@@ -3,6 +3,9 @@ package de.worldoneo.spijetapi.utils;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ThreadPoolExecutor;
 
+/**
+ * @deprecated Use the java concurrent API or task API instead
+ */
 public class ScalingAsyncExecutor extends AsyncExecutor {
     public static final int DEFAULT_MAX_THREADS = 64;
 
