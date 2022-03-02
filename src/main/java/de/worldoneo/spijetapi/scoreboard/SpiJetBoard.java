@@ -15,7 +15,6 @@ public class SpiJetBoard {
     private final Scoreboard scoreboard;
     private final Objective objective;
 
-
     @SuppressWarnings("deprecation")
     //Scoreboard#registerNewObjective(String, String) is the only method available in legacy.
     public SpiJetBoard(String title) {
@@ -85,8 +84,8 @@ public class SpiJetBoard {
     }
 
     public void send(List<Player> players) {
-        for (Player onlinePlayer : players) {
-            onlinePlayer.setScoreboard(this.scoreboard);
+        for (Player player : players) {
+            player.setScoreboard(this.scoreboard);
         }
     }
 }

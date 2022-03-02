@@ -1,7 +1,7 @@
 package de.worldoneo.spijetapi.particles;
 
 public class ParticleUtils {
-    private static final ParticleUtils INSTANCE = new ParticleUtils();
+    private static final ParticleUtils instance = new ParticleUtils();
     private final ParticleWrapper particleWrapper;
 
     private ParticleUtils() {
@@ -16,6 +16,6 @@ public class ParticleUtils {
     }
 
     public static ParticleWrapper getWrapper() {
-        return INSTANCE.particleWrapper;
+        return instance.particleWrapper;
     }
 }

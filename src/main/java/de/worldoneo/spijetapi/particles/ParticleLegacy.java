@@ -11,8 +11,8 @@ import java.util.Objects;
 @SuppressWarnings("deprecation") //It's legacy. Of course it's deprecated.
 public class ParticleLegacy extends ParticleWrapper {
     public void createParticle(Object particle, Location location, int data, Collection<? extends Player> players) {
-        for (Player onlinePlayer : players) {
-            onlinePlayer.playEffect(location, (Effect) particle, data);
+        for (Player player : players) {
+            player.playEffect(location, (Effect) particle, data);
         }
     }
 

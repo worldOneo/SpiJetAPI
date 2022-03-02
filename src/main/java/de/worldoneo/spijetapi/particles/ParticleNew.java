@@ -10,8 +10,8 @@ import java.util.Objects;
 
 public class ParticleNew extends ParticleWrapper {
     public void createParticle(Object particle, Location location, int amount, Collection<? extends Player> players) {
-        for (Player onlinePlayer : players) {
-            onlinePlayer.spawnParticle((Particle) particle, location, amount, null);
+        for (Player player : players) {
+            player.spawnParticle((Particle) particle, location, amount, null);
         }
     }
 

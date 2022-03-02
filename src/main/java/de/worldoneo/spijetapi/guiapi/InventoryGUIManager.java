@@ -22,7 +22,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
             .filter(ChatColor::isColor)
             .collect(Collectors.toList());
 
-    private static final InventoryGUIManager INSTANCE = new InventoryGUIManager();
+    private static final InventoryGUIManager instance = new InventoryGUIManager();
     private final HashMap<Player, Pair<String, IGUI>> playerIGUIMap = new HashMap<>();
 
     private InventoryGUIManager() {
@@ -31,7 +31,7 @@ public class InventoryGUIManager implements GUIManager<InventoryClickEvent> {
     }
 
     public static InventoryGUIManager getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     @Override

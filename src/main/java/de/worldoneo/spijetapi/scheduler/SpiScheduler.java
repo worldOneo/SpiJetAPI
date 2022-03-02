@@ -12,7 +12,7 @@ import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicInteger;
 
 public class SpiScheduler {
-    private static final SpiScheduler INSTANCE = new SpiScheduler();
+    private static final SpiScheduler instance = new SpiScheduler();
     private final ExecutorService executorService = Executors.newCachedThreadPool(new ThreadFactoryBuilder()
             .setNameFormat("SpiThread #%1$d")
             .build());
@@ -24,7 +24,7 @@ public class SpiScheduler {
     }
 
     public static SpiScheduler getInstance() {
-        return INSTANCE;
+        return instance;
     }
 
     /**
