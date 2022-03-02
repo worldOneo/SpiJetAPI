@@ -18,7 +18,7 @@ import java.util.HashMap;
 
 public class HotbarGUIManager implements GUIManager<PlayerInteractEvent> {
     @Getter
-    private static final HotbarGUIManager INSTANCE = new HotbarGUIManager();
+    private static final HotbarGUIManager instance = new HotbarGUIManager();
     private final HashMap<Player, IGUI> playerIGUIHashMap = new HashMap<>();
 
     private HotbarGUIManager() {
