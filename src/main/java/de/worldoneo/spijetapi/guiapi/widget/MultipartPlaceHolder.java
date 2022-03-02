@@ -51,8 +51,8 @@ public class MultipartPlaceHolder extends AbstractMultipartWidget {
      * Just cancels the clickEvent
      */
     @Override
-    public void clickEvent(ClickContext e) {
-        e.cancel();
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.cancel();
     }
 
     /**

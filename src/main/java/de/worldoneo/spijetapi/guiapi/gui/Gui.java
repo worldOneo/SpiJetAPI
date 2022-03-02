@@ -53,7 +53,7 @@ public class Gui {
      */
     @Contract("_, _ -> new")
     public static InventoryGui inventory(InventoryType inventoryType, String title) {
-        return new InventoryGui().setInventoryType(inventoryType).setGUITitle(title);
+        return new InventoryGui().setInventoryType(inventoryType).setGuiTitle(title);
     }
 
     /**
@@ -76,7 +76,7 @@ public class Gui {
      */
     @Contract("_, _ -> new")
     public static InventoryGui inventory(int size, String title) {
-        return new InventoryGui().setSize(size).setGUITitle(title);
+        return new InventoryGui().setSize(size).setGuiTitle(title);
     }
 
     /**

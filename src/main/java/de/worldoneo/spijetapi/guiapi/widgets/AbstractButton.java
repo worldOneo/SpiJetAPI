@@ -23,11 +23,11 @@ public abstract class AbstractButton extends AbstractWidget {
     /**
      * Call the function which the {@link AbstractButton} is initialized with.
      *
-     * @param e the {@link InventoryClickEvent} to call the function with.
+     * @param clickContext the {@link InventoryClickEvent} to call the function with.
      */
     @Override
-    public void clickEvent(ClickContext e) {
-        e.cancel();
-        clickEventConsumer.accept(e);
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.cancel();
+        clickEventConsumer.accept(clickContext);
     }
 }
