@@ -15,16 +15,16 @@ public abstract class AbstractWidget implements IWidget {
     private int slot;
 
     /**
-     * @param igui the GUI to add this Widget to
+     * @param iGui the GUI to add this Widget to
      * @deprecated use {@link IGui#addWidget} instead
      */
     @Deprecated
-    public void addToGUI(IGui igui) {
-        igui.addWidget(this);
+    public void addToGUI(IGui iGui) {
+        iGui.addWidget(this);
     }
 
     /**
-     * Opens the {@link IGui} of this IMultipartWidget if and only if the igui is set
+     * Opens the {@link IGui} of this IMultipartWidget if and only if the iGui is set
      *
      * @param player The {@link Player} to open the {@link IGui} for.
      */

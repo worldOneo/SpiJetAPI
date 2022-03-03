@@ -24,8 +24,8 @@ public class InventoryGuiManager implements IGuiManager<InventoryClickEvent> {
     }
 
     @Override
-    public void open(IGui igui, Player player) {
-        InventoryHolder gui = igui.render();
+    public void open(IGui iGui, Player player) {
+        InventoryHolder gui = iGui.render();
         Bukkit.getScheduler().runTask(SpigotSpiJetAPI.getInstance(),
                 () -> player.openInventory(gui.getInventory()));
     }

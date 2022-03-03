@@ -13,17 +13,17 @@ import org.bukkit.entity.Player;
 @Getter
 public abstract class AbstractMultipartWidget implements IMultipartWidget {
     /**
-     * @param igui the {@link IGui} on which to add the {@link AbstractMultipartWidget}
+     * @param iGui the {@link IGui} on which to add the {@link AbstractMultipartWidget}
      * @deprecated use {@link IGui#addWidget} instead
      */
     @Deprecated
-    public void addToGUI(IGui igui) {
-        igui.addWidget(this);
+    public void addToGUI(IGui iGui) {
+        iGui.addWidget(this);
     }
 
 
     /**
-     * Opens the {@link IGui} of this IMultipartWidget if and only if the igui is set
+     * Opens the {@link IGui} of this IMultipartWidget if and only if the iGui is set
      *
      * @param player The {@link Player} to open the {@link IGui} for.
      */
