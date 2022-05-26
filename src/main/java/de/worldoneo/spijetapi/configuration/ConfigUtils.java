@@ -20,7 +20,7 @@ import java.nio.file.Files;
 
 @UtilityClass
 public class ConfigUtils {
-    private static final Gson gson = new GsonBuilder().setPrettyPrinting().create();
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
 
     /**
      * Saves an Object to a YAML file
@@ -84,7 +84,7 @@ public class ConfigUtils {
     public static <T> T loadJson(File file, Class<T> classOfT) throws IOException {
         try (InputStream inputStream = new FileInputStream(file);
              Reader reader = new InputStreamReader(inputStream)) {
-            return gson.fromJson(reader, classOfT);
+            return GSON.fromJson(reader, classOfT);
         }
     }
 
@@ -117,7 +117,7 @@ public class ConfigUtils {
      */
     public static void saveJson(File file, Object dataObject) throws IOException {
         ensureFile(file);
-        String data = gson.toJson(dataObject);
+        String data = GSON.toJson(dataObject);
         Files.write(file.toPath(), data.getBytes());
     }
 

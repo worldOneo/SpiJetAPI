@@ -109,11 +109,11 @@ public class ListWidget extends AbstractMultipartWidget {
     }
 
     @Override
-    public void clickEvent(ClickContext e) {
-        e.cancel();
-        ItemStack itemStack = e.getItemStack();
-        Player player = e.getPlayer();
-        IGuiManager<?> guiManager = e.getGuiManager();
+    public void clickEvent(ClickContext clickContext) {
+        clickContext.cancel();
+        ItemStack itemStack = clickContext.getItemStack();
+        Player player = clickContext.getPlayer();
+        IGuiManager<?> guiManager = clickContext.getGuiManager();
         if (itemStack == null) return;
 
         if (itemStack.equals(this.back)) {

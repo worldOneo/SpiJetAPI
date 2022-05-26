@@ -24,8 +24,8 @@ public class InventoryGuiManager implements IGuiManager<InventoryClickEvent> {
     }
 
     @Override
-    public void open(IGui igui, Player player) {
-        InventoryHolder gui = igui.render();
+    public void open(IGui iGui, Player player) {
+        InventoryHolder gui = iGui.render();
         Bukkit.getScheduler().runTask(SpigotSpiJetAPI.getInstance(),
                 () -> player.openInventory(gui.getInventory()));
     }
@@ -47,16 +47,16 @@ public class InventoryGuiManager implements IGuiManager<InventoryClickEvent> {
         open(gui, player);
     }
 
-    public void handle(InventoryClickEvent e) {
-        Player player = (Player) e.getWhoClicked();
-        InventoryHolder holder = e.getInventory().getHolder();
+    public void handle(InventoryClickEvent event) {
+        Player player = (Player) event.getWhoClicked();
+        InventoryHolder holder = event.getInventory().getHolder();
         if (!(holder instanceof RawGui)) return;
 
         IGui gui = ((RawGui) holder).getGui();
-        ClickContext clickContext = new ClickContext(e.getCurrentItem(), player,
-                false, this, gui, e.getSlot(), e);
+        ClickContext clickContext = new ClickContext(event.getCurrentItem(), player,
+                false, this, gui, event.getSlot(), event);
 
         gui.clickEvent(clickContext);
-        if (clickContext.isCancelled()) e.setCancelled(true);
+        if (clickContext.isCancelled()) event.setCancelled(true);
     }
 }

@@ -9,8 +9,8 @@ import org.bukkit.event.player.PlayerQuitEvent;
 
 public class HotbarGuiListener implements Listener {
     @EventHandler
-    public void onInteractEvent(PlayerInteractEvent e) {
-        HotbarGuiManager.getInstance().handle(e);
+    public void onInteractEvent(PlayerInteractEvent event) {
+        HotbarGuiManager.getInstance().handle(event);
     }
 
     @EventHandler

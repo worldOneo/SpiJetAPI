@@ -7,7 +7,6 @@ import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.experimental.Accessors;
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryType;
 import org.bukkit.inventory.Inventory;
@@ -28,7 +27,7 @@ public class InventoryGui implements IGui {
     protected List<IModifier> modifiers = new LinkedList<>();
     protected HashMap<Integer, IWidget> pairWidgetHashMap = new HashMap<>();
     protected HashMap<Integer, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
-    private String GUITitle = "Made by SpiJetAPI";
+    private String guiTitle = "Made by SpiJetAPI";
     private InventoryType inventoryType = InventoryType.CHEST;
     private Consumer<ClickContext> defaultClickHandler = c -> c.setCancelled(true);
     private int size = 9;
@@ -50,8 +49,8 @@ public class InventoryGui implements IGui {
         pairMultipartWidgetHashMap.clear();
         pairWidgetHashMap.clear();
         RawGui gui = getInventoryType() == InventoryType.CHEST
-                ? new RawGui(this, getSize(), getGUITitle())
-                : new RawGui(this, getInventoryType(), getGUITitle());
+                ? new RawGui(this, getSize(), this.getGuiTitle())
+                : new RawGui(this, getInventoryType(), this.getGuiTitle());
         renderOn(gui.getInventory());
         return gui;
     }
@@ -91,18 +90,26 @@ public class InventoryGui implements IGui {
 
 
     @Override
-    public void clickEvent(ClickContext e) {
-        if (e.getItemStack() == null) return;
-        int key = e.getSlot();
+    public void clickEvent(ClickContext clickContext) {
+        if (clickContext.getItemStack() == null) return;
+        int key = clickContext.getSlot();
         IWidget widget = pairWidgetHashMap.get(key);
         IMultipartWidget multipartWidget = pairMultipartWidgetHashMap.get(key);
-        if (widget != null) widget.clickEvent(e);
-        if (widget == null && multipartWidget != null) multipartWidget.clickEvent(e);
-        if (widget == null && multipartWidget == null) defaultClickHandler.accept(e);
+        if (widget != null) widget.clickEvent(clickContext);
+        if (widget == null && multipartWidget != null) multipartWidget.clickEvent(clickContext);
+        if (widget == null && multipartWidget == null) defaultClickHandler.accept(clickContext);
     }
 
     @Override
     public void addModifier(IModifier modifier) {
         modifiers.add(modifier);
+    }
+
+    /**
+     * @deprecated use {@link #getGuiTitle()} instead
+     * @return the title of this GUI
+     */
+    public String getGUITitle() {
+        return this.guiTitle;
     }
 }

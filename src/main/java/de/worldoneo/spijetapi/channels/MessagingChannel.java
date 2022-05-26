@@ -51,13 +51,13 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
         if (!channel.equals("BungeeCord"))
             return;
 
-        try (ByteArrayInputStream bais = new ByteArrayInputStream(message);
-             DataInputStream dais = new DataInputStream(bais)) {
-            if (!dais.readUTF().equals(channelName)) return;
+        try (ByteArrayInputStream byteArrayInputStream = new ByteArrayInputStream(message);
+             DataInputStream dataInputStream = new DataInputStream(byteArrayInputStream)) {
+            if (!dataInputStream.readUTF().equals(channelName)) return;
 
-            int length = dais.readShort();
+            int length = dataInputStream.readShort();
             byte[] buff = new byte[length];
-            dais.readFully(buff);
+            dataInputStream.readFully(buff);
             T data = serializer.deserialize(buff);
             messageReceived(player, data);
         } catch (IOException exception) {
@@ -101,15 +101,15 @@ public abstract class MessagingChannel<T> implements PluginMessageListener {
      */
     public void sendMessage(@NotNull T message, @NotNull Player player, @NotNull String targets) throws IOException {
         ByteArrayOutputStream out = new ByteArrayOutputStream();
-        DataOutputStream dataout = new DataOutputStream(out);
+        DataOutputStream dataOutputStream = new DataOutputStream(out);
 
-        dataout.writeUTF("Forward");
-        dataout.writeUTF(targets);
-        dataout.writeUTF(channelName);
+        dataOutputStream.writeUTF("Forward");
+        dataOutputStream.writeUTF(targets);
+        dataOutputStream.writeUTF(channelName);
         byte[] data = serializer.serialize(message);
-        dataout.writeShort(data.length);
-        dataout.write(data);
-        dataout.flush();
+        dataOutputStream.writeShort(data.length);
+        dataOutputStream.write(data);
+        dataOutputStream.flush();
 
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }

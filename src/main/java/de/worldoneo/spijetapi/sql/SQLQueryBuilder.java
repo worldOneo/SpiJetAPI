@@ -42,9 +42,9 @@ public class SQLQueryBuilder implements SQLExecutable {
             preparedStatement.executeUpdate();
 
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
-            ResultSet generatedKeys = preparedStatement.getGeneratedKeys();
-            cachedRowSet.populate(generatedKeys);
-            generatedKeys.close();
+            try (ResultSet generatedKeys = preparedStatement.getGeneratedKeys()) {
+                cachedRowSet.populate(generatedKeys);
+            }
             return cachedRowSet;
         }
     }
@@ -95,9 +95,9 @@ public class SQLQueryBuilder implements SQLExecutable {
             }
 
             CachedRowSet cachedRowSet = RowSetCreator.createRowSet();
-            ResultSet data = preparedStatement.executeQuery();
-            cachedRowSet.populate(data);
-            data.close();
+            try (ResultSet data = preparedStatement.executeQuery()) {
+                cachedRowSet.populate(data);
+            }
             return cachedRowSet;
         }
     }

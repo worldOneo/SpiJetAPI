@@ -15,9 +15,9 @@ public interface IWidget {
     /**
      * This function is called when the widget is clicked.
      *
-     * @param e the {@link InventoryClickEvent} which caused this function call
+     * @param clickContext the {@link ClickContext} which caused this function call
      */
-    void clickEvent(ClickContext e);
+    void clickEvent(ClickContext clickContext);
 
     /**
      * @return the slot of this IWidget

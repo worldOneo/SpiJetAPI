@@ -3,11 +3,10 @@ package de.worldoneo.spijetapi.guiapi.gui;
 import de.worldoneo.spijetapi.guiapi.modifier.IModifier;
 import de.worldoneo.spijetapi.guiapi.widgets.IMultipartWidget;
 import de.worldoneo.spijetapi.guiapi.widgets.IWidget;
-import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 public interface IGui {
-    void clickEvent(ClickContext e);
+    void clickEvent(ClickContext clickContext);
 
     /**
      * Defines the Title of the GUI.
@@ -15,7 +14,7 @@ public interface IGui {
      *
      * @return the Title of the IGUI.
      */
-    default String getGUITitle() {
+    default String getGuiTitle() {
         return "";
     }
 

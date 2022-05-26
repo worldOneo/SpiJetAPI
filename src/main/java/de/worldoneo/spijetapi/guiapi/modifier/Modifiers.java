@@ -15,24 +15,24 @@ public class Modifiers {
      * @return a new {@link IModifier}
      */
     public static IModifier fillEmpty(ItemStack itemStack) {
-        return inv -> {
-            for (int i = 0; i < inv.getSize(); i++) {
-                if (inv.getItem(i) == null) inv.setItem(i, itemStack);
+        return inventory -> {
+            for (int i = 0; i < inventory.getSize(); i++) {
+                if (inventory.getItem(i) == null) inventory.setItem(i, itemStack);
             }
         };
     }
 
     /**
      * Creates a generator which fills every empty slot of the inventory
-     * with the an {@link ItemStack} recieved from the generator.
+     * with the an {@link ItemStack} received from the generator.
      *
      * @param generator the ItemStack to fill the empty slots with.
      * @return a new {@link IModifier}
      */
     public static IModifier fillEmpty(Supplier<ItemStack> generator) {
-        return inv -> {
-            for (int i = 0; i < inv.getSize(); i++) {
-                if (inv.getItem(i) == null) inv.setItem(i, generator.get());
+        return inventory -> {
+            for (int i = 0; i < inventory.getSize(); i++) {
+                if (inventory.getItem(i) == null) inventory.setItem(i, generator.get());
             }
         };
     }

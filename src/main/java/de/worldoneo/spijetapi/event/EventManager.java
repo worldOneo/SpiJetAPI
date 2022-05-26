@@ -48,9 +48,9 @@ public class EventManager {
     private void runEvent0(SpiEvent event) {
         if (!registeredEvents.containsKey(event.getClass())) return;
 
-        registeredEvents.get(event.getClass()).forEach(e -> {
+        registeredEvents.get(event.getClass()).forEach(listener -> {
             try {
-                e.getMethod().invoke(e.getObj(), event);
+                listener.getMethod().invoke(listener.getObj(), event);
             } catch (InvocationTargetException | IllegalAccessException exception) {
                 exception.printStackTrace();
             }
