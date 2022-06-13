@@ -91,13 +91,7 @@ public class SpiScheduler {
         spiTask.cancel();
     }
 
-    /**
-     * <b>This function is not functional on its own!</b>
-     * do not use it if you aren't sure if you now what you are doing.
-     *
-     * @param spiTask the task to remove from the scheduler
-     */
-    public void cancel0(SpiTask spiTask) {
+   void cancel0(SpiTask spiTask) {
         synchronized (lock) {
             tasks.remove(spiTask.getTaskID());
         }

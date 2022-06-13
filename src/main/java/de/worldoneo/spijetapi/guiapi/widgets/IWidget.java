@@ -1,7 +1,6 @@
 package de.worldoneo.spijetapi.guiapi.widgets;
 
 import de.worldoneo.spijetapi.guiapi.gui.ClickContext;
-import org.bukkit.event.inventory.InventoryClickEvent;
 import org.bukkit.inventory.ItemStack;
 
 public interface IWidget {

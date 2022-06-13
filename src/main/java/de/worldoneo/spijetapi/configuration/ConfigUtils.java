@@ -82,7 +82,7 @@ public class ConfigUtils {
 
     @NotNull
     public static <T> T loadJson(File file, Class<T> classOfT) throws IOException {
-        try (InputStream inputStream = new FileInputStream(file);
+        try (InputStream inputStream = Files.newInputStream(file.toPath());
              Reader reader = new InputStreamReader(inputStream)) {
             return GSON.fromJson(reader, classOfT);
         }

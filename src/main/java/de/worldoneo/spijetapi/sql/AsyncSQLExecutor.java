@@ -8,10 +8,9 @@ import java.sql.SQLException;
 import java.util.concurrent.CompletableFuture;
 
 public interface AsyncSQLExecutor {
-    CompletableFuture<CachedRowSet> executeUpdateAsync(SQLExecutable arg) throws SQLException;
+    CompletableFuture<CachedRowSet> executeUpdateAsync(SQLExecutable arg);
 
-    CompletableFuture<CachedRowSet> executeQueryAsync(SQLExecutable arg) throws SQLException;
+    CompletableFuture<CachedRowSet> executeQueryAsync(SQLExecutable arg);
 
-    CompletableFuture<Void> executeTransactionAsync(
-            ThrowingConsumer<Connection, SQLException> transaction) throws SQLException;
+    CompletableFuture<Void> executeTransactionAsync(ThrowingConsumer<Connection, SQLException> transaction);
 }

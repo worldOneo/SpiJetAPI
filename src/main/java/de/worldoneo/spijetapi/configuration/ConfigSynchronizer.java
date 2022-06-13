@@ -26,7 +26,7 @@ public class ConfigSynchronizer {
         this.sqlExecutor = sqlExecutor;
         this.table = table;
         if (setup) {
-            this.sqlExecutor.executeUpdate(new SQLQueryBuilder(String.format(CREATE_CODE, table)));
+            this.sqlExecutor.executeUpdate(new SQLQueryBuilder(String.format(CREATE_CODE, table))).close();
         }
     }
 
@@ -48,7 +48,7 @@ public class ConfigSynchronizer {
                         .setParameter(1, base64String)
                         .setParameter(2, key)
                         .setParameter(3, base64String)
-        );
+        ).close();
     }
 
     /**
@@ -59,13 +59,14 @@ public class ConfigSynchronizer {
      * @throws SQLException When the query couldn't be executed.
      */
     public byte[] loadConfig(String key) throws SQLException {
-        RowSet rowSet = sqlExecutor.executeQuery(
+        try(RowSet rowSet = sqlExecutor.executeQuery(
                 new SQLQueryBuilder(String.format("SELECT * FROM `%s` WHERE file = ?;", table))
                         .setParameter(1, key)
-        );
-        if (!rowSet.next()) return null;
-        String content = rowSet.getString("content");
-        return Base64.getDecoder().decode(content);
+        )) {
+            if (!rowSet.next()) return null;
+            String content = rowSet.getString("content");
+            return Base64.getDecoder().decode(content);
+        }
     }
 
     /**
