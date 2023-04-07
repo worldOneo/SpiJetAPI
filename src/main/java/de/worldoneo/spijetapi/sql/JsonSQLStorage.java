@@ -44,7 +44,7 @@ public class JsonSQLStorage {
     private void setup() throws SQLException {
         String formattedCreationString = String.format(SQLStrings.TABLE_CREATION_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedCreationString);
-        sqlExecutor.executeUpdate(sqlQueryBuilder);
+        sqlExecutor.executeUpdate(sqlQueryBuilder).close();
     }
 
     /**
@@ -61,14 +61,15 @@ public class JsonSQLStorage {
         String formattedString = String.format(SQLStrings.GETTER_STRING.getString(), tableName);
         SQLQueryBuilder sqlQueryBuilder = new SQLQueryBuilder(formattedString);
         sqlQueryBuilder.setParameter(1, uuid.toString());
-        CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder);
-        if (cachedRowSet == null) {
-            return null;
+        try (CachedRowSet cachedRowSet = sqlExecutor.executeQuery(sqlQueryBuilder)) {
+            if (cachedRowSet == null) {
+                return null;
+            }
+            if (!cachedRowSet.next()) {
+                return null;
+            }
+            return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
         }
-        if (!cachedRowSet.next()) {
-            return null;
-        }
-        return GSON.fromJson(cachedRowSet.getString("jsonDocument"), classOfT);
     }
 
     /**

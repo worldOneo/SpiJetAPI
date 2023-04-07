@@ -7,6 +7,7 @@ import de.worldoneo.spijetapi.guiapi.gui.RawGui;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.inventory.InventoryClickEvent;
+import org.bukkit.inventory.Inventory;
 import org.bukkit.inventory.InventoryHolder;
 
 import javax.annotation.Nullable;
@@ -49,7 +50,9 @@ public class InventoryGuiManager implements IGuiManager<InventoryClickEvent> {
 
     public void handle(InventoryClickEvent event) {
         Player player = (Player) event.getWhoClicked();
-        InventoryHolder holder = event.getInventory().getHolder();
+        Inventory clickedInventory = event.getClickedInventory();
+        if (clickedInventory == null) return;
+        InventoryHolder holder = clickedInventory.getHolder();
         if (!(holder instanceof RawGui)) return;
 
         IGui gui = ((RawGui) holder).getGui();
