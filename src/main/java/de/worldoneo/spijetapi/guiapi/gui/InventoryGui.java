@@ -19,17 +19,22 @@ import java.util.List;
 import java.util.function.Consumer;
 
 @Accessors(chain = true)
-@Getter
-@Setter
 public class InventoryGui implements IGui {
     protected List<IWidget> widgets = new ArrayList<>();
     protected List<IMultipartWidget> multipartWidgets = new ArrayList<>();
     protected List<IModifier> modifiers = new LinkedList<>();
     protected HashMap<Integer, IWidget> pairWidgetHashMap = new HashMap<>();
     protected HashMap<Integer, IMultipartWidget> pairMultipartWidgetHashMap = new HashMap<>();
+    @Setter
     private String guiTitle = "Made by SpiJetAPI";
+    @Getter
+    @Setter
     private InventoryType inventoryType = InventoryType.CHEST;
+    @Getter
+    @Setter
     private Consumer<ClickContext> defaultClickHandler = c -> c.setCancelled(true);
+    @Getter
+    @Setter
     private int size = 9;
 
     /**
@@ -49,14 +54,14 @@ public class InventoryGui implements IGui {
         pairMultipartWidgetHashMap.clear();
         pairWidgetHashMap.clear();
         RawGui gui = getInventoryType() == InventoryType.CHEST
-                ? new RawGui(this, getSize(), this.getGuiTitle())
-                : new RawGui(this, getInventoryType(), this.getGuiTitle());
+                ? new RawGui(this, getSize(), getGuiTitle())
+                : new RawGui(this, getInventoryType(), getGuiTitle());
         renderOn(gui.getInventory());
         return gui;
     }
 
     protected void renderOn(Inventory inventory) {
-        getWidgets().forEach(widget -> {
+        widgets.forEach(widget -> {
             ItemStack itemStack = widget.render();
             int slot = widget.getSlot();
             pairWidgetHashMap.put(slot, widget);
@@ -111,5 +116,10 @@ public class InventoryGui implements IGui {
      */
     public String getGUITitle() {
         return this.guiTitle;
+    }
+
+    @Override
+    public String getGuiTitle() {
+        return guiTitle;
     }
 }
